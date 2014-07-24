@@ -21,9 +21,13 @@ package org.ihtsdo.otf.tcc.api.coordinate;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.UUID;
-import org.ihtsdo.otf.tcc.api.store.Ts;
-import org.ihtsdo.otf.tcc.api.relationship.RelAssertionType;
+import org.ihtsdo.otf.tcc.api.contradiction.ContradictionManagerPolicy;
 import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
+import org.ihtsdo.otf.tcc.api.metadata.binding.TermAux;
+import org.ihtsdo.otf.tcc.api.relationship.RelAssertionType;
+import org.ihtsdo.otf.tcc.api.spec.ConceptSpec;
+import org.ihtsdo.otf.tcc.api.spec.SimpleConceptSpecification;
+import org.ihtsdo.otf.tcc.api.store.Ts;
 
 /**
  *
@@ -68,5 +72,27 @@ public class StandardViewCoordinates {
 
       return snomedVc;
    }
-
+      
+      public static ViewCoordinate getWbAuxiliary() throws IOException
+      {
+          ViewCoordinate vc = new ViewCoordinate();
+          vc.setName("Snomed Inferred Latest");
+          vc.setClassifierSpec(TermAux.IHTSDO_CLASSIFIER);
+          vc.setLanguageSpec(Snomed.US_LANGUAGE_REFEX);
+          vc.getLangPrefConceptSpecList().add(vc.getLanguageSpec());
+          vc.setAllowedStatus(EnumSet.of(Status.ACTIVE));
+          vc.setPrecedence(Precedence.PATH);
+          Path wbAuxPath = new Path();
+          wbAuxPath.setConceptSpec(TermAux.WB_AUX_PATH);
+          Position latest = new Position();
+          latest.setPath(wbAuxPath);
+          // Long.MAX_VALUE == latest
+          latest.setTime(Long.MAX_VALUE);
+          
+          vc.setViewPosition(latest);
+          vc.setRelationshipAssertionType(RelAssertionType.INFERRED);
+          vc.setContradictionManagerPolicy(ContradictionManagerPolicy.LAST_COMMIT_WINS);
+          vc.setLanguageSort(LanguageSort.RF2_LANG_REFEX);
+          return vc;
+      }
 }

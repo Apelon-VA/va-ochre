@@ -34,6 +34,7 @@ import org.ihtsdo.otf.tcc.api.blueprint.RefexDynamicCAB;
 import org.ihtsdo.otf.tcc.api.concept.ConceptChronicleBI;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.coordinate.EditCoordinate;
+import org.ihtsdo.otf.tcc.api.coordinate.StandardViewCoordinates;
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
 import org.ihtsdo.otf.tcc.api.lang.LanguageCode;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
@@ -85,7 +86,7 @@ public class RefexDynamicUsageDescriptionBuilder
 	 * @throws PropertyVetoException 
 	 */
 	public static RefexDynamicUsageDescription createNewRefexDynamicUsageDescriptionConcept(String refexFSN, String refexPreferredTerm, 
-			String refexDescription, RefexDynamicColumnInfo[] columns, UUID parentConcept, boolean annotationStyle, EditCoordinate ec, ViewCoordinate vc) throws 
+			String refexDescription, RefexDynamicColumnInfo[] columns, UUID parentConcept, boolean annotationStyle) throws 
 			IOException, ContradictionException, InvalidCAB, PropertyVetoException
 	{
 		LanguageCode lc = LanguageCode.EN_US;
@@ -192,7 +193,12 @@ public class RefexDynamicUsageDescriptionBuilder
 			}
 		}
 		
-		ConceptChronicleBI newCon = Ts.get().getTerminologyBuilder(ec, vc).construct(cab);
+		//Build this on the lowest level path, otherwise, othercode that references this will fail (as it doesn't know about custom paths)
+		ConceptChronicleBI newCon = Ts.get().getTerminologyBuilder(
+				new EditCoordinate(TermAux.USER.getLenient().getConceptNid(), 
+						TermAux.TERM_AUX_MODULE.getLenient().getNid(), 
+						TermAux.WB_AUX_PATH.getLenient().getConceptNid()), 
+				StandardViewCoordinates.getWbAuxiliary()).construct(cab);
 		Ts.get().addUncommitted(newCon);
 		Ts.get().commit(newCon);
 		
