@@ -40,6 +40,7 @@ import org.ihtsdo.otf.tcc.api.lang.LanguageCode;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
 import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
 import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRf2;
+import org.ihtsdo.otf.tcc.api.metadata.binding.TermAux;
 import org.ihtsdo.otf.tcc.api.refex.RefexChronicleBI;
 import org.ihtsdo.otf.tcc.api.refex.RefexType;
 import org.ihtsdo.otf.tcc.api.refex.type_nid.RefexNidVersionBI;
@@ -275,7 +276,7 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 	 * @throws IOException 
 	 */
 	@SuppressWarnings("deprecation")
-	public static ConceptChronicleBI createNewRefexDynamicColumnInfoConcept(String columnName, String columnDescription, EditCoordinate ec, ViewCoordinate vc) 
+	public static ConceptChronicleBI createNewRefexDynamicColumnInfoConcept(String columnName, String columnDescription) 
 			throws IOException, InvalidCAB, ContradictionException
 	{
 		if (columnName == null || columnName.length() == 0 || columnDescription == null || columnDescription.length() == 0)
@@ -305,7 +306,11 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 		
 		cab.addDescriptionCAB(dCab);
 		
-		ConceptChronicleBI newCon = Ts.get().getTerminologyBuilder(ec, vc).construct(cab);
+		ConceptChronicleBI newCon = Ts.get().getTerminologyBuilder(
+				new EditCoordinate(TermAux.USER.getLenient().getConceptNid(), 
+					TermAux.TERM_AUX_MODULE.getLenient().getNid(), 
+					TermAux.WB_AUX_PATH.getLenient().getConceptNid()), 
+				StandardViewCoordinates.getWbAuxiliary()).construct(cab);
 		Ts.get().addUncommitted(newCon);
 		Ts.get().commit(newCon);
 		
