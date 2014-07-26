@@ -24,6 +24,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.ihtsdo.otf.tcc.api.concept.ConceptChronicleBI;
 import org.ihtsdo.otf.tcc.api.concept.ConceptVersionBI;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.coordinate.StandardViewCoordinates;
@@ -84,6 +85,8 @@ public class RefexDynamicUsageDescription
 	int refexUsageDescriptorNid_;
 	private transient int stampNid_;
 	String refexUsageDescription_;
+	String name_;
+	boolean annotationStyle_;
 	RefexDynamicColumnInfo[] refexColumnInfo_;
 	private static LRURefexDynamicDescriptorCache<Integer, RefexDynamicUsageDescription> cache_ = 
 			new LRURefexDynamicDescriptorCache<Integer, RefexDynamicUsageDescription>(25);
@@ -123,6 +126,8 @@ public class RefexDynamicUsageDescription
 		ConceptVersionBI assemblageConcept = Ts.get().getConceptVersion(StandardViewCoordinates.getWbAuxiliary(), refexUsageDescriptorNid);
 		stampNid_ = assemblageConcept.getConceptAttributesActive().getStamp();
 		
+		annotationStyle_ = assemblageConcept.isAnnotationStyleRefex();
+		
 		for (DescriptionVersionBI<?> d : assemblageConcept.getDescriptionsActive())
 		{
 			if (d.getTypeNid() == SnomedMetadataRf2.SYNONYM_RF2.getNid())
@@ -141,7 +146,11 @@ public class RefexDynamicUsageDescription
 					}
 				}
 			}
-			if (refexUsageDescription_ != null)
+			if (d.getTypeNid() == SnomedMetadataRf2.FULLY_SPECIFIED_NAME_RF2.getNid())
+			{
+				name_ = d.getText();
+			}
+			if (refexUsageDescription_ != null && name_ != null)
 			{
 				break;
 			}
@@ -224,6 +233,25 @@ public class RefexDynamicUsageDescription
 	public String getRefexUsageDescription()
 	{
 		return refexUsageDescription_;
+	}
+	
+	/**
+	 * (Convenience method)
+	 * @return returns the FSN of the assemblage concept this was read from
+	 */
+	public String getRefexName()
+	{
+		return name_;
+	}
+	
+	/**
+	 * (convenience method)
+	 * @return true if this is an annotation style refex, false if a memberlist style refex.
+	 * Value comes from {@link ConceptChronicleBI#isAnnotationStyleRefex()} on the assemblage concept
+	 */
+	public boolean isAnnotationStyle()
+	{
+		return annotationStyle_;
 	}
 
 	/**
