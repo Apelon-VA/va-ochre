@@ -356,7 +356,13 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 			{
 				case COMPONENT_ID:
 				{
-					refexAnalog.setNid(getInt(ComponentProperty.COMPONENT_ID));
+					int newNid = getInt(ComponentProperty.COMPONENT_ID);
+					if (refexAnalog.getNid() != newNid)
+					{
+						//Dan notes - this call is unimplemented, and throws a property veto exception in the cases I've seen - don't think 
+						//this would (should?) ever change?
+						refexAnalog.setNid(newNid);
+					}
 					break;
 				}
 				case REFERENCED_COMPONENT_ID:
