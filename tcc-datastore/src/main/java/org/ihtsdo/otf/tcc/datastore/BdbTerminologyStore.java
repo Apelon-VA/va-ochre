@@ -341,6 +341,7 @@ public class BdbTerminologyStore extends Termstore {
             }
         } finally {
             executors.shutdown();
+            executors.awaitTermination(5000, TimeUnit.SECONDS);
         }
 
 //      ViewCoordinate vc = StandardViewCoordinates.getSnomedInferredLatest();
