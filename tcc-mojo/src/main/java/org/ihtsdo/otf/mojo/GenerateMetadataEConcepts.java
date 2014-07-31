@@ -44,7 +44,9 @@ import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
 import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRf2;
 import org.ihtsdo.otf.tcc.api.metadata.binding.TermAux;
 import org.ihtsdo.otf.tcc.api.refex.RefexType;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
 import org.ihtsdo.otf.tcc.api.spec.ConceptSpec;
 import org.ihtsdo.otf.tcc.api.spec.RelSpec;
 import org.ihtsdo.otf.tcc.api.uuid.UuidT5Generator;
@@ -57,8 +59,13 @@ import org.ihtsdo.otf.tcc.dto.component.refex.TtkRefexAbstractMemberChronicle;
 import org.ihtsdo.otf.tcc.dto.component.refex.type_uuid.TtkRefexUuidMemberChronicle;
 import org.ihtsdo.otf.tcc.dto.component.refexDynamic.TtkRefexDynamicMemberChronicle;
 import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.TtkRefexDynamicData;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexBoolean;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexByteArray;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDouble;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexFloat;
 import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexInteger;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexPolymorphic;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexLong;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexNid;
 import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexString;
 import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexUUID;
 import org.ihtsdo.otf.tcc.dto.component.relationship.TtkRelationshipChronicle;
@@ -208,62 +215,20 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				TtkConceptChronicle converted = convert(cs);
 				if (RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0].equals(cs.getUuids()[0]))
 				{
-					converted.setAnnotationStyleRefex(true);
-					//Add the special synonym to establish this as an assemblage concept
-					TtkDescriptionChronicle description = addDescription(converted, "This concept is used as an assemblage for defining new Refex extensions.  "
-							+ "The attached data columns describe what columns are required to define a new Refex. ",
-							DescriptionType.SYNONYM, false);
+					RefexDynamicColumnInfo[] columns = new RefexDynamicColumnInfo[4];
+					columns[0] = new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0], RefexDynamicDataType.INTEGER, null);
+					columns[1] = new RefexDynamicColumnInfo(1, RefexDynamic.REFEX_COLUMN_NAME.getUuids()[0], RefexDynamicDataType.UUID, null);
+					columns[2] = new RefexDynamicColumnInfo(2, RefexDynamic.REFEX_COLUMN_TYPE.getUuids()[0], RefexDynamicDataType.STRING, null);
+					columns[3] = new RefexDynamicColumnInfo(3, RefexDynamic.REFEX_COLUMN_DEFAULT_VALUE.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null);
 					
-					//Annotate the description as the 'special' type that means this concept is suitable for use as an assemblage concept
-					addDynamicAnnotation(description, RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0], new TtkRefexDynamicData[0]);
-					
-					//Define the 4 columns that may be used when creating other refex attachment data
-					//col 1 - column order
-					TtkRefexDynamicData[] data = new TtkRefexDynamicData[4];
-					data[0] = new TtkRefexInteger(0);
-					data[1] = new TtkRefexUUID(RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0]);
-					data[2] = new TtkRefexString(RefexDynamicDataType.INTEGER.name());
-					data[3] = null;
-					//Yes, describing itself
-					addDynamicAnnotation(converted.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0], data);
-					
-					//col 2 - column name
-					data = new TtkRefexDynamicData[4];
-					data[0] = new TtkRefexInteger(1);
-					data[1] = new TtkRefexUUID(RefexDynamic.REFEX_COLUMN_NAME.getUuids()[0]);
-					data[2] = new TtkRefexString(RefexDynamicDataType.UUID.name());
-					data[3] = null;
-					//Yes, describing itself
-					addDynamicAnnotation(converted.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0], data);
-					
-					//col 3 - column type
-					data = new TtkRefexDynamicData[4];
-					data[0] = new TtkRefexInteger(2);
-					data[1] = new TtkRefexUUID(RefexDynamic.REFEX_COLUMN_TYPE.getUuids()[0]);
-					data[2] = new TtkRefexString(RefexDynamicDataType.STRING.name());
-					data[3] = null;
-					//Yes, describing itself
-					addDynamicAnnotation(converted.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0], data);
-					
-					//col 4 - column default value
-					data = new TtkRefexDynamicData[4];
-					data[0] = new TtkRefexInteger(3);
-					data[1] = new TtkRefexUUID(RefexDynamic.REFEX_COLUMN_DEFAULT_VALUE.getUuids()[0]);
-					data[2] = new TtkRefexString(RefexDynamicDataType.POLYMORPHIC.name());
-					data[3] = null;
-					//Yes, describing itself
-					addDynamicAnnotation(converted.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0], data);
-					
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
+							"This concept is used as an assemblage for defining new Refex extensions.  "
+							+ "The attached data columns describe what columns are required to define a new Refex. ", columns);
 				}
 				else if (RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0].equals(cs.getUuids()[0]))
 				{
-					converted.setAnnotationStyleRefex(true);
-					TtkDescriptionChronicle description = addDescription(converted, "The definition describes the overall purpose of using this concept as a Refex Assemblage",
-							DescriptionType.SYNONYM, false);
-					
-					//Annotate the description as the 'special' type that means this concept is suitable for use as an assemblage concept
-					//Yes, assemblage is itself in this case, and there is no data.
-					addDynamicAnnotation(description, RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0], new TtkRefexDynamicData[0]);
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
+							"The definition describes the overall purpose of using this concept as a Refex Assemblage", new RefexDynamicColumnInfo[0]);
 				}
 				else if (RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0].equals(cs.getUuids()[0]))
 				{
@@ -519,6 +484,98 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 		{
 			throw new RuntimeException("Shouldn't be possible");
 		}
+	}
+	
+	/**
+	 * See {@link RefexDynamicUsageDescription} class for more details on this format.
+	 */
+	private void turnConceptIntoDynamicRefexAssemblageConcept(TtkConceptChronicle concept, boolean annotationStyle, String refexDescription,
+			RefexDynamicColumnInfo[] columns) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException
+	{
+		concept.setAnnotationStyleRefex(annotationStyle);
+		//Add the special synonym to establish this as an assemblage concept
+		TtkDescriptionChronicle description = addDescription(concept, refexDescription, DescriptionType.SYNONYM, false);
+		
+		//Annotate the description as the 'special' type that means this concept is suitable for use as an assemblage concept
+		addDynamicAnnotation(description, RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0], new TtkRefexDynamicData[0]);
+		
+		if (columns != null)
+		{
+			for (RefexDynamicColumnInfo col : columns)
+			{
+				TtkRefexDynamicData[] data = new TtkRefexDynamicData[4];
+				data[0] = new TtkRefexInteger(col.getColumnOrder());
+				data[1] = new TtkRefexUUID(col.getColumnDescriptionConcept());
+				data[2] = new TtkRefexString(col.getColumnDataType().name());
+				data[3] = convertDefaultDataColumn(col.getDefaultColumnValue(), col.getColumnDataType());
+				addDynamicAnnotation(concept.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0], data);
+			}
+		}
+	}
+	
+	private static TtkRefexDynamicData convertDefaultDataColumn(Object defaultValue, RefexDynamicDataType columnType) throws PropertyVetoException 
+	{
+		TtkRefexDynamicData result;
+		
+		if (defaultValue != null)
+		{
+			try
+			{
+				if (RefexDynamicDataType.BOOLEAN == columnType)
+				{
+					result = new TtkRefexBoolean((Boolean)defaultValue);
+				}
+				else if (RefexDynamicDataType.BYTEARRAY == columnType)
+				{
+					result = new TtkRefexByteArray((byte[])defaultValue);
+				}
+				else if (RefexDynamicDataType.DOUBLE == columnType)
+				{
+					result = new TtkRefexDouble((Double)defaultValue);
+				}
+				else if (RefexDynamicDataType.FLOAT == columnType)
+				{
+					result = new TtkRefexFloat((Float)defaultValue);
+				}
+				else if (RefexDynamicDataType.INTEGER == columnType)
+				{
+					result = new TtkRefexInteger((Integer)defaultValue);
+				}
+				else if (RefexDynamicDataType.LONG == columnType)
+				{
+					result = new TtkRefexLong((Long)defaultValue);
+				}
+				else if (RefexDynamicDataType.NID == columnType)
+				{
+					result = new TtkRefexNid((Integer)defaultValue);
+				}
+				else if (RefexDynamicDataType.STRING == columnType)
+				{
+					result = new TtkRefexString((String)defaultValue);
+				}
+				else if (RefexDynamicDataType.UUID == columnType)
+				{
+					result = new TtkRefexUUID((UUID)defaultValue);
+				}
+				else if (RefexDynamicDataType.POLYMORPHIC == columnType)
+				{
+					throw new RuntimeException("Error in column - if default value is provided, the type cannot be polymorphic");
+				}
+				else
+				{
+					throw new RuntimeException("Actually, the implementation is broken.  Ooops.");
+				}
+			}
+			catch (ClassCastException e)
+			{
+				throw new RuntimeException("Error in column - if default value is provided, the type must be compatible with the the column descriptor type");
+			}
+		}
+		else
+		{
+			result = null;
+		}
+		return result;
 	}
 	
 	public static void main(String[] args) throws MojoExecutionException, MojoFailureException
