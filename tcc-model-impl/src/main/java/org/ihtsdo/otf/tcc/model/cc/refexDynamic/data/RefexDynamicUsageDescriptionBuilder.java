@@ -133,60 +133,7 @@ public class RefexDynamicUsageDescriptionBuilder
 					throw new InvalidCAB("Error in column - if default value is provided, the type cannot be polymorphic");
 				}
 				data[2] = new RefexString(ci.getColumnDataType().name(), descriptorForADescriptor.getColumnInfo()[2].getColumnName());
-				if (ci.getDefaultColumnValue() != null)
-				{
-					try
-					{
-						if (RefexDynamicDataType.BOOLEAN == ci.getColumnDataType())
-						{
-							data[3] = new RefexBoolean((Boolean)ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.BYTEARRAY == ci.getColumnDataType())
-						{
-							data[3] = new RefexByteArray((byte[])ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.DOUBLE == ci.getColumnDataType())
-						{
-							data[3] = new RefexDouble((Double)ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.FLOAT == ci.getColumnDataType())
-						{
-							data[3] = new RefexFloat((Float)ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.INTEGER == ci.getColumnDataType())
-						{
-							data[3] = new RefexInteger((Integer)ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.LONG == ci.getColumnDataType())
-						{
-							data[3] = new RefexLong((Long)ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.NID == ci.getColumnDataType())
-						{
-							data[3] = new RefexNid((Integer)ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.STRING == ci.getColumnDataType())
-						{
-							data[3] = new RefexString((String)ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.UUID == ci.getColumnDataType())
-						{
-							data[3] = new RefexUUID((UUID)ci.getDefaultColumnValue(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
-						}
-						else if (RefexDynamicDataType.POLYMORPHIC == ci.getColumnDataType())
-						{
-							throw new InvalidCAB("Error in column - if default value is provided, the type cannot be polymorphic");
-						}
-					}
-					catch (ClassCastException e)
-					{
-						throw new InvalidCAB("Error in column - if default value is provided, the type must be compatible with the the column descriptor type");
-					}
-				}
-				else
-				{
-					data[3] = null;
-				}
+				data[3] = createDefaultDataColumn(ci.getDefaultColumnValue(), ci.getColumnDataType(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
 				rCab.setData(data);
 				//TODO file a another bug, this API is atrocious.  If you put the annotation on the concept, it gets silently ignored.
 				cab.getConceptAttributeAB().addAnnotationBlueprint(rCab);
@@ -203,5 +150,71 @@ public class RefexDynamicUsageDescriptionBuilder
 		Ts.get().commit(newCon);
 		
 		return new RefexDynamicUsageDescription(newCon.getConceptNid());
+	}
+	
+	private static RefexDynamicDataBI createDefaultDataColumn(Object defaultValue, RefexDynamicDataType columnType, String columnName) 
+			throws PropertyVetoException, InvalidCAB
+	{
+		RefexDynamicDataBI result;
+		
+		if (defaultValue != null)
+		{
+			try
+			{
+				if (RefexDynamicDataType.BOOLEAN == columnType)
+				{
+					result = new RefexBoolean((Boolean)defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.BYTEARRAY == columnType)
+				{
+					result = new RefexByteArray((byte[])defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.DOUBLE == columnType)
+				{
+					result = new RefexDouble((Double)defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.FLOAT == columnType)
+				{
+					result = new RefexFloat((Float)defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.INTEGER == columnType)
+				{
+					result = new RefexInteger((Integer)defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.LONG == columnType)
+				{
+					result = new RefexLong((Long)defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.NID == columnType)
+				{
+					result = new RefexNid((Integer)defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.STRING == columnType)
+				{
+					result = new RefexString((String)defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.UUID == columnType)
+				{
+					result = new RefexUUID((UUID)defaultValue, columnName);
+				}
+				else if (RefexDynamicDataType.POLYMORPHIC == columnType)
+				{
+					throw new InvalidCAB("Error in column - if default value is provided, the type cannot be polymorphic");
+				}
+				else
+				{
+					throw new InvalidCAB("Actually, the implementation is broken.  Ooops.");
+				}
+			}
+			catch (ClassCastException e)
+			{
+				throw new InvalidCAB("Error in column - if default value is provided, the type must be compatible with the the column descriptor type");
+			}
+		}
+		else
+		{
+			result = null;
+		}
+		return result;
 	}
 }
