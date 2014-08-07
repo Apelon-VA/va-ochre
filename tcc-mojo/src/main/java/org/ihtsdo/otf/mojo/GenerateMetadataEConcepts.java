@@ -30,6 +30,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -40,6 +41,7 @@ import org.ihtsdo.otf.tcc.api.blueprint.RelationshipCAB;
 import org.ihtsdo.otf.tcc.api.coordinate.Status;
 import org.ihtsdo.otf.tcc.api.lang.LanguageCode;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
+import org.ihtsdo.otf.tcc.api.metadata.binding.Search;
 import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
 import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRf2;
 import org.ihtsdo.otf.tcc.api.metadata.binding.TermAux;
@@ -215,11 +217,11 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				TtkConceptChronicle converted = convert(cs);
 				if (RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0].equals(cs.getUuids()[0]))
 				{
-					RefexDynamicColumnInfo[] columns = new RefexDynamicColumnInfo[4];
-					columns[0] = new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0], RefexDynamicDataType.INTEGER, null);
-					columns[1] = new RefexDynamicColumnInfo(1, RefexDynamic.REFEX_COLUMN_NAME.getUuids()[0], RefexDynamicDataType.UUID, null);
-					columns[2] = new RefexDynamicColumnInfo(2, RefexDynamic.REFEX_COLUMN_TYPE.getUuids()[0], RefexDynamicDataType.STRING, null);
-					columns[3] = new RefexDynamicColumnInfo(3, RefexDynamic.REFEX_COLUMN_DEFAULT_VALUE.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null);
+					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
+					columns.add(new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0], RefexDynamicDataType.INTEGER, null));
+					columns.add(new RefexDynamicColumnInfo(1, RefexDynamic.REFEX_COLUMN_NAME.getUuids()[0], RefexDynamicDataType.UUID, null));
+					columns.add(new RefexDynamicColumnInfo(2, RefexDynamic.REFEX_COLUMN_TYPE.getUuids()[0], RefexDynamicDataType.STRING, null));
+					columns.add(new RefexDynamicColumnInfo(3, RefexDynamic.REFEX_COLUMN_DEFAULT_VALUE.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null));
 					
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"This concept is used as an assemblage for defining new Refex extensions.  "
@@ -228,7 +230,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				else if (RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0].equals(cs.getUuids()[0]))
 				{
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
-							"The definition describes the overall purpose of using this concept as a Refex Assemblage", new RefexDynamicColumnInfo[0]);
+							"The definition describes the overall purpose of using this concept as a Refex Assemblage");
 				}
 				else if (RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0].equals(cs.getUuids()[0]))
 				{
@@ -249,6 +251,33 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				{
 					addDescription(converted, "Stores the (optional) default value of this column within a Dynamic Refex Definition",
 							DescriptionType.SYNONYM, false);
+				}
+				else if (Search.SEARCH_GLOBAL_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
+					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
+					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_GLOBAL_ATTRIBUTES_VIEW_COORDINATE_COLUMN.getUuids()[0], RefexDynamicDataType.BYTEARRAY, null));
+				
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
+							"Search Global Attributes is for attributes effecting all filters on a search concept", columns);
+				}
+				else if (Search.SEARCH_FILTER_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
+					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
+					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_FILTER_ATTRIBUTES_FILTER_ORDER_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null));
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
+							"Search Type Attributes is for attributes effecting all filters of a certain type such as Lucene or RegExp", columns);
+				}
+				else if (Search.SEARCH_LUCENE_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
+					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
+					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_LUCENE_FILTER_PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null));
+
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
+							"Search Lucene Filter is for attributes effecting this Lucene search", columns);
+				}
+				else if (Search.SEARCH_REGEXP_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
+					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
+					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_REGEXP_FILTER_PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null));
+
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
+							"Search RegExp Filter is for attributes effecting this RegExp search", columns);
 				}
 				
 				if (writeAsChangeSetFormat)
@@ -489,6 +518,13 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 	/**
 	 * See {@link RefexDynamicUsageDescription} class for more details on this format.
 	 */
+	private void turnConceptIntoDynamicRefexAssemblageConcept(TtkConceptChronicle concept, boolean annotationStyle, String refexDescription,
+			List<RefexDynamicColumnInfo> columns) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException {
+		turnConceptIntoDynamicRefexAssemblageConcept(concept, annotationStyle, refexDescription, columns.toArray(new RefexDynamicColumnInfo[columns.size()]));
+	}
+	private void turnConceptIntoDynamicRefexAssemblageConcept(TtkConceptChronicle concept, boolean annotationStyle, String refexDescription) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException {
+		turnConceptIntoDynamicRefexAssemblageConcept(concept, annotationStyle, refexDescription, new RefexDynamicColumnInfo[0]);
+	}
 	private void turnConceptIntoDynamicRefexAssemblageConcept(TtkConceptChronicle concept, boolean annotationStyle, String refexDescription,
 			RefexDynamicColumnInfo[] columns) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException
 	{
