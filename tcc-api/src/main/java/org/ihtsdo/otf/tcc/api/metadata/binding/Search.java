@@ -58,6 +58,12 @@ public class Search {
 	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES_VIEW_COORDINATE_COLUMN = new ConceptSpec("vc", 
 			UUID.fromString("5010f18f-c469-5315-8c5e-f7d9b65373c5"),
 			SEARCH_GLOBAL_ATTRIBUTES_COLUMNS);
+	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES_MAX_RESULTS_COLUMN = new ConceptSpec("max", 
+			UUID.fromString("63981b45-bbbe-5247-b571-d7fee02aad79"),
+			SEARCH_GLOBAL_ATTRIBUTES_COLUMNS);
+	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES_DROOLS_EXPR_COLUMN = new ConceptSpec("drools", 
+			UUID.fromString("c0091cf4-f063-5964-85c5-0fdf14b5bb00"),
+			SEARCH_GLOBAL_ATTRIBUTES_COLUMNS);
 	
 	public static ConceptSpec SEARCH_FILTER_ATTRIBUTES = new ConceptSpec("Search Filter Attributes", 
 			UUID.fromString("b3ac9404-883b-5ba4-b65f-b629970ecc17"),

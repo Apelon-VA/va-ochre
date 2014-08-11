@@ -255,7 +255,9 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				else if (Search.SEARCH_GLOBAL_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
 					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_GLOBAL_ATTRIBUTES_VIEW_COORDINATE_COLUMN.getUuids()[0], RefexDynamicDataType.BYTEARRAY, null));
-				
+					columns.add(new RefexDynamicColumnInfo(1, Search.SEARCH_GLOBAL_ATTRIBUTES_MAX_RESULTS_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null));
+					columns.add(new RefexDynamicColumnInfo(2, Search.SEARCH_GLOBAL_ATTRIBUTES_DROOLS_EXPR_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null));
+
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search Global Attributes is for attributes effecting all filters on a search concept", columns);
 				}
