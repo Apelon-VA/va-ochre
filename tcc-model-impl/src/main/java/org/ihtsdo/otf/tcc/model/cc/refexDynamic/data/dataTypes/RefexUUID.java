@@ -44,6 +44,10 @@ public class RefexUUID extends RefexDynamicData implements RefexDynamicUUIDBI {
 	
 	public RefexUUID(UUID uuid, String name) throws PropertyVetoException {
 		super(name);
+		if (uuid == null)
+		{
+			throw new PropertyVetoException("The uuid value cannot be null", null);
+		}
 		ByteBuffer b = ByteBuffer.allocate(16);
 		b.putLong(uuid.getMostSignificantBits());
 		b.putLong(uuid.getLeastSignificantBits());

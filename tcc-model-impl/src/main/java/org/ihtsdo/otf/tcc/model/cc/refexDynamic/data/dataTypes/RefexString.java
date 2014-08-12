@@ -42,6 +42,10 @@ public class RefexString extends RefexDynamicData implements RefexDynamicStringB
 	
 	public RefexString(String string, String name) throws PropertyVetoException {
 		super(name);
+		if (string == null)
+		{
+			throw new PropertyVetoException("The string value cannot be null", null);
+		}
 		data_ = string.getBytes();
 	}
 
