@@ -741,9 +741,9 @@ public class ConceptVersion implements ConceptVersionBI, Comparable<ConceptVersi
    }
 
    @Override
-   public Collection<? extends RelationshipVersionBI> getRelationshipsIncomingActive()
+   public Collection<? extends RelationshipVersionBI<?>> getRelationshipsIncomingActive()
            throws IOException, ContradictionException {
-      Collection<RelationshipVersionBI> returnValues = new ArrayList<>();
+      Collection<RelationshipVersionBI<?>> returnValues = new ArrayList<>();
 
       for (RelationshipChronicleBI rel : getRelationshipsIncoming()) {
          returnValues.addAll(rel.getVersions(vc));
@@ -924,9 +924,9 @@ public class ConceptVersion implements ConceptVersionBI, Comparable<ConceptVersi
    }
 
    @Override
-   public Collection<? extends RelationshipVersionBI> getRelationshipsOutgoingActive()
+   public Collection<? extends RelationshipVersionBI<?>> getRelationshipsOutgoingActive()
            throws IOException, ContradictionException {
-      Collection<RelationshipVersionBI> returnValues = new ArrayList<>();
+      Collection<RelationshipVersionBI<?>> returnValues = new ArrayList<>();
 
       for (RelationshipChronicleBI rel : getRelationshipsOutgoing()) {
          returnValues.addAll(rel.getVersions(vc));
@@ -936,12 +936,12 @@ public class ConceptVersion implements ConceptVersionBI, Comparable<ConceptVersi
    }
 
    @Override
-   public Collection<? extends RelationshipVersionBI> getRelationshipsOutgoingActiveIsa()
+   public Collection<? extends RelationshipVersionBI<?>> getRelationshipsOutgoingActiveIsa()
            throws IOException, ContradictionException {
-      Collection<RelationshipVersionBI> returnValues = new ArrayList<>();
+      Collection<RelationshipVersionBI<?>> returnValues = new ArrayList<>();
 
       for (RelationshipChronicleBI rel : getRelationshipsOutgoing()) {
-         for (RelationshipVersionBI rv : rel.getVersions(vc)) {
+         for (RelationshipVersionBI<?> rv : rel.getVersions(vc)) {
             if (vc.getIsaNid() == rv.getTypeNid()) {
                returnValues.add(rv);
             }

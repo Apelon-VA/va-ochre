@@ -66,7 +66,7 @@ public interface ConceptVersionBI extends ComponentVersionBI, ConceptChronicleBI
 
     Collection<? extends RelGroupVersionBI> getRelationshipGroupsActive() throws IOException, ContradictionException;
 
-    Collection<? extends RelationshipVersionBI> getRelationshipsIncomingActive()
+    Collection<? extends RelationshipVersionBI<?>> getRelationshipsIncomingActive()
             throws IOException, ContradictionException;
 
     Collection<? extends RelationshipVersionBI> getRelationshipsIncomingActiveIsa()
@@ -92,10 +92,10 @@ public interface ConceptVersionBI extends ComponentVersionBI, ConceptChronicleBI
 
     Collection<? extends ConceptVersionBI> getRelationshipsIncomingOriginsIsa() throws IOException;
 
-    Collection<? extends RelationshipVersionBI> getRelationshipsOutgoingActive()
+    Collection<? extends RelationshipVersionBI<?>> getRelationshipsOutgoingActive()
             throws IOException, ContradictionException;
 
-    Collection<? extends RelationshipVersionBI> getRelationshipsOutgoingActiveIsa()
+    Collection<? extends RelationshipVersionBI<?>> getRelationshipsOutgoingActiveIsa()
             throws IOException, ContradictionException;
 
     Collection<? extends ConceptVersionBI> getRelationshipsOutgoingDestinations() throws IOException;
