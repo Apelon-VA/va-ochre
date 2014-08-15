@@ -47,7 +47,8 @@ public class RefexBooleanTest
 
 	private void test(boolean value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexBoolean i = new RefexBoolean(value, "foo");
+		RefexBoolean i = new RefexBoolean(value);
+		i.setNameIfAbsent("foo");
 
 		assertEquals(value, i.getDataBoolean());
 		assertEquals(value, (Boolean) i.getDataObject());

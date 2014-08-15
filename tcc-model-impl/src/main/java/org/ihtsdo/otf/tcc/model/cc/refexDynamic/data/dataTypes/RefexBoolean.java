@@ -35,13 +35,13 @@ public class RefexBoolean extends RefexDynamicData implements RefexDynamicBoolea
 
 	private ObjectProperty<Boolean> property_;
 
-	public RefexBoolean(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexBoolean(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexBoolean(boolean b, String name) throws PropertyVetoException {
-		super(name);
+	public RefexBoolean(boolean b) throws PropertyVetoException {
+		super();
 		data_ = (b ? new byte[] { 1 } : new byte[] { 0 });
 	}
 

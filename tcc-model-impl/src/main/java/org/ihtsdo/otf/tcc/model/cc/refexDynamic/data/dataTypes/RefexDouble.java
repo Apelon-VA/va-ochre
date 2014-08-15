@@ -36,13 +36,13 @@ public class RefexDouble extends RefexDynamicData implements RefexDynamicDoubleB
 
 	private ObjectProperty<Double> property_;
 
-	public RefexDouble(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexDouble(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexDouble(double d, String name) throws PropertyVetoException {
-		super(name);
+	public RefexDouble(double d) throws PropertyVetoException {
+		super();
 		data_ = ByteBuffer.allocate(8).putDouble(d).array();
 	}
 

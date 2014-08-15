@@ -48,11 +48,13 @@ public class RefexUUIDTest
 
 	private void test(UUID value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexUUID uuid = new RefexUUID(value, "foo");
+		RefexUUID uuid = new RefexUUID(value);
+		uuid.setNameIfAbsent("foo");
 
 		assertEquals(value, uuid.getDataUUID());
 		assertEquals(value, (UUID) uuid.getDataObject());
 		assertEquals(value, (UUID) uuid.getDataObjectProperty().get());
 		assertEquals(uuid.getRefexDataType(), RefexDynamicDataType.UUID);
+		assertEquals(uuid.getDataObjectProperty().getName(), "foo");
 	}
 }

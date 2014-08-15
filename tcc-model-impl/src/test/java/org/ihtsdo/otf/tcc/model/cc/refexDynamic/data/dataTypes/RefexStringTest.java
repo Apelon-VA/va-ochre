@@ -47,7 +47,8 @@ public class RefexStringTest
 
 	private void test(String value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexString i = new RefexString(value, "foo");
+		RefexString i = new RefexString(value);
+		i.setNameIfAbsent("foo");
 
 		assertEquals(value, i.getDataString());
 		assertEquals(value, (String) i.getDataObject());

@@ -47,8 +47,9 @@ public class RefexNidTest
 
 	private void test(int value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexNid i = new RefexNid(value, "foo");
-
+		RefexNid i = new RefexNid(value);
+		i.setNameIfAbsent("foo");
+		
 		assertEquals(value, i.getDataNid());
 		assertEquals(value, ((Integer) i.getDataObject()).intValue());
 		assertEquals(value, ((Integer) i.getDataObjectProperty().get()).intValue());

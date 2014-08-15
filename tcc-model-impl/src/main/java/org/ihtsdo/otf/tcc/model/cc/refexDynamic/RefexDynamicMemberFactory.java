@@ -38,6 +38,7 @@ import com.sleepycat.bind.tuple.TupleInput;
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
+@SuppressWarnings("deprecation")
 public class RefexDynamicMemberFactory {
 
 

@@ -35,13 +35,13 @@ public class RefexString extends RefexDynamicData implements RefexDynamicStringB
 
 	private ObjectProperty<String> property_;
 
-	public RefexString(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexString(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexString(String string, String name) throws PropertyVetoException {
-		super(name);
+	public RefexString(String string) throws PropertyVetoException {
+		super();
 		if (string == null)
 		{
 			throw new PropertyVetoException("The string value cannot be null", null);

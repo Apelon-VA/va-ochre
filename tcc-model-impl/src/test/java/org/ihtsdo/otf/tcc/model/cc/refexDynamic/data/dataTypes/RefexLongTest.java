@@ -46,10 +46,12 @@ public class RefexLongTest
 
 	private void test(long value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexLong l = new RefexLong(value, "foo");
-
+		RefexLong l = new RefexLong(value);
+		l.setNameIfAbsent("foo");
+		
 		assertEquals(value, l.getDataLong());
 		assertEquals(value, ((Long) l.getDataObject()).longValue());
 		assertEquals(value, ((Long) l.getDataObjectProperty().get()).longValue());
+		assertEquals(l.getDataObjectProperty().getName(), "foo");
 	}
 }

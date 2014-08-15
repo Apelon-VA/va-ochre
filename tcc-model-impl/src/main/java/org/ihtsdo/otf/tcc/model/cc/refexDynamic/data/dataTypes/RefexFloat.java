@@ -35,13 +35,13 @@ public class RefexFloat extends RefexDynamicData implements RefexDynamicFloatBI 
 
 	private ObjectProperty<Float> property_;
 
-	public RefexFloat(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexFloat(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexFloat(float f, String name) throws PropertyVetoException {
-		super(name);
+	public RefexFloat(float f) throws PropertyVetoException {
+		super();
 		data_ = RefexInteger.intToByteArray(Float.floatToIntBits(f));
 	}
 

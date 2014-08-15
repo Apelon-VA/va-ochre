@@ -35,7 +35,6 @@ import org.ihtsdo.otf.tcc.api.concept.ConceptChronicleBI;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.coordinate.EditCoordinate;
 import org.ihtsdo.otf.tcc.api.coordinate.StandardViewCoordinates;
-import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
 import org.ihtsdo.otf.tcc.api.lang.LanguageCode;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
 import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
@@ -62,6 +61,7 @@ import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexUUID;
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a> 
  */
+@SuppressWarnings("deprecation")
 public class RefexDynamicUsageDescriptionBuilder
 {
 	
@@ -118,7 +118,6 @@ public class RefexDynamicUsageDescriptionBuilder
 		{
 			//Ensure that we process in column order - we don't always keep track of that later - we depend on the data being stored in the right order.
 			TreeSet<RefexDynamicColumnInfo> sortedColumns = new TreeSet<>(Arrays.asList(columns));
-			RefexDynamicUsageDescription descriptorForADescriptor = RefexDynamicUsageDescription.read(RefexDynamic.REFEX_DYNAMIC_DEFINITION.getNid());
 			
 			for (RefexDynamicColumnInfo ci : sortedColumns)
 			{
@@ -126,14 +125,14 @@ public class RefexDynamicUsageDescriptionBuilder
 				
 				RefexDynamicDataBI[] data = new RefexDynamicDataBI[4];
 				
-				data[0] = new RefexInteger(ci.getColumnOrder(), descriptorForADescriptor.getColumnInfo()[0].getColumnName());
-				data[1] = new RefexUUID(ci.getColumnDescriptionConcept(), descriptorForADescriptor.getColumnInfo()[1].getColumnName());
+				data[0] = new RefexInteger(ci.getColumnOrder());
+				data[1] = new RefexUUID(ci.getColumnDescriptionConcept());
 				if (RefexDynamicDataType.UNKNOWN == ci.getColumnDataType())
 				{
 					throw new InvalidCAB("Error in column - if default value is provided, the type cannot be polymorphic");
 				}
-				data[2] = new RefexString(ci.getColumnDataType().name(), descriptorForADescriptor.getColumnInfo()[2].getColumnName());
-				data[3] = createDefaultDataColumn(ci.getDefaultColumnValue(), ci.getColumnDataType(), descriptorForADescriptor.getColumnInfo()[3].getColumnName());
+				data[2] = new RefexString(ci.getColumnDataType().name());
+				data[3] = createDefaultDataColumn(ci.getDefaultColumnValue(), ci.getColumnDataType());
 				rCab.setData(data);
 				//TODO file a another bug, this API is atrocious.  If you put the annotation on the concept, it gets silently ignored.
 				cab.getConceptAttributeAB().addAnnotationBlueprint(rCab);
@@ -152,7 +151,7 @@ public class RefexDynamicUsageDescriptionBuilder
 		return new RefexDynamicUsageDescription(newCon.getConceptNid());
 	}
 	
-	private static RefexDynamicDataBI createDefaultDataColumn(Object defaultValue, RefexDynamicDataType columnType, String columnName) 
+	private static RefexDynamicDataBI createDefaultDataColumn(Object defaultValue, RefexDynamicDataType columnType) 
 			throws PropertyVetoException, InvalidCAB
 	{
 		RefexDynamicDataBI result;
@@ -163,39 +162,39 @@ public class RefexDynamicUsageDescriptionBuilder
 			{
 				if (RefexDynamicDataType.BOOLEAN == columnType)
 				{
-					result = new RefexBoolean((Boolean)defaultValue, columnName);
+					result = new RefexBoolean((Boolean)defaultValue);
 				}
 				else if (RefexDynamicDataType.BYTEARRAY == columnType)
 				{
-					result = new RefexByteArray((byte[])defaultValue, columnName);
+					result = new RefexByteArray((byte[])defaultValue);
 				}
 				else if (RefexDynamicDataType.DOUBLE == columnType)
 				{
-					result = new RefexDouble((Double)defaultValue, columnName);
+					result = new RefexDouble((Double)defaultValue);
 				}
 				else if (RefexDynamicDataType.FLOAT == columnType)
 				{
-					result = new RefexFloat((Float)defaultValue, columnName);
+					result = new RefexFloat((Float)defaultValue);
 				}
 				else if (RefexDynamicDataType.INTEGER == columnType)
 				{
-					result = new RefexInteger((Integer)defaultValue, columnName);
+					result = new RefexInteger((Integer)defaultValue);
 				}
 				else if (RefexDynamicDataType.LONG == columnType)
 				{
-					result = new RefexLong((Long)defaultValue, columnName);
+					result = new RefexLong((Long)defaultValue);
 				}
 				else if (RefexDynamicDataType.NID == columnType)
 				{
-					result = new RefexNid((Integer)defaultValue, columnName);
+					result = new RefexNid((Integer)defaultValue);
 				}
 				else if (RefexDynamicDataType.STRING == columnType)
 				{
-					result = new RefexString((String)defaultValue, columnName);
+					result = new RefexString((String)defaultValue);
 				}
 				else if (RefexDynamicDataType.UUID == columnType)
 				{
-					result = new RefexUUID((UUID)defaultValue, columnName);
+					result = new RefexUUID((UUID)defaultValue);
 				}
 				else if (RefexDynamicDataType.POLYMORPHIC == columnType)
 				{

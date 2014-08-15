@@ -35,13 +35,13 @@ public class RefexInteger extends RefexDynamicData implements RefexDynamicIntege
 
 	private ObjectProperty<Integer> property_;
 
-	public RefexInteger(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexInteger(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexInteger(int integer, String name) throws PropertyVetoException {
-		super(name);
+	public RefexInteger(int integer) throws PropertyVetoException {
+		super();
 		data_ = intToByteArray(integer);
 	}
 

@@ -35,6 +35,7 @@ import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
 import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicBuilderBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicVersionBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
@@ -53,6 +54,7 @@ import org.ihtsdo.otf.tcc.api.uuid.UuidT5Generator;
  * 
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
+@SuppressWarnings("deprecation")
 public class RefexDynamicCAB extends CreateOrAmendBlueprint
 {
 	//TODO [REFEX] QUESTION - Should we require them to specify whether or not a column is optional?  Or treat all columns as optional?
@@ -168,7 +170,6 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	 * @throws IOException signals that an I/O exception has occurred
 	 * @throws InvalidCAB if the any of the values in blueprint to make are invalid
 	 */
-	@SuppressWarnings("deprecation")
 	private String getPrimordialUuidStringForNidProp(ComponentProperty refexProperty) throws IOException, InvalidCAB
 	{
 		Object idObj = properties.get(refexProperty);
@@ -234,7 +235,6 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	 * @throws InvalidCAB if the any of the values in blueprint to make are invalid
 	 * @throws ContradictionException if more than one version is found for a given position or view
 	 */
-	@SuppressWarnings("deprecation")
 	public RefexDynamicCAB(UUID referencedComponentUUID, UUID assemblageUuid) throws IOException,
 			InvalidCAB, ContradictionException
 	{
@@ -254,7 +254,6 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	 * @throws ContradictionException if more than one version is found for a given position or view
 	 * coordinate
 	 */
-	@SuppressWarnings("deprecation")
 	public RefexDynamicCAB(int referencedComponentNid, int assemblageNid) throws IOException,
 			InvalidCAB, ContradictionException
 	{
@@ -305,7 +304,6 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 		sb.append(this.getClass().getSimpleName());
 		sb.append(" COMPONENT_ID: ");
 		sb.append(properties.get(COMPONENT_ID));
-		@SuppressWarnings("deprecation")
 		TerminologyStoreDI s = Ts.get();
 		for (Entry<ComponentProperty, Object> entry : properties.entrySet())
 		{
@@ -587,7 +585,9 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	
 	/**
 	 * Validate the supplied data against the Refex Definition.  Throws in InvalidCAB exception
-	 * if the data is invalid.
+	 * if the data is invalid.  
+	 * As a side effect, this sets the name field inside each of the supplied data elements
+	 * to correspond to the correct value from the assemblage nid.
 	 * @throws ContradictionException 
 	 */
 	private void validateData(RefexDynamicDataBI[] data) throws IOException, InvalidCAB, ContradictionException
@@ -610,7 +610,11 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 		
 		for (int dataColumn = 0; dataColumn < data.length; dataColumn++)
 		{
-			RefexDynamicDataType allowedDT = rdud.getColumnInfo()[dataColumn].getColumnDataType();
+			RefexDynamicColumnInfo rdci = rdud.getColumnInfo()[dataColumn];
+			
+			data[dataColumn].setNameIfAbsent(rdci.getColumnName());
+			
+			RefexDynamicDataType allowedDT = rdci.getColumnDataType();
 			if (data[dataColumn] != null && allowedDT != RefexDynamicDataType.POLYMORPHIC && data[dataColumn].getRefexDataType() != allowedDT)
 			{
 				throw new InvalidCAB("The supplied data for column " + dataColumn + " is of type " + data[dataColumn].getRefexDataType() + 

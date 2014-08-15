@@ -36,14 +36,13 @@ public class RefexLong extends RefexDynamicData implements RefexDynamicLongBI {
 
 	private ObjectProperty<Long> property_;
 
-	//TODO  [REFEX] look at why I have this as a public API - shouldn't be the one users use
-	public RefexLong(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexLong(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexLong(long l, String name) throws PropertyVetoException {
-		super(name);
+	public RefexLong(long l) throws PropertyVetoException {
+		super();
 		data_ = ByteBuffer.allocate(8).putLong(l).array();
 	}
 

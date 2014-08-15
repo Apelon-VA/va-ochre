@@ -37,13 +37,13 @@ public class RefexUUID extends RefexDynamicData implements RefexDynamicUUIDBI {
 
 	private ObjectProperty<UUID> property_;
 
-	public RefexUUID(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexUUID(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexUUID(UUID uuid, String name) throws PropertyVetoException {
-		super(name);
+	public RefexUUID(UUID uuid) throws PropertyVetoException {
+		super();
 		if (uuid == null)
 		{
 			throw new PropertyVetoException("The uuid value cannot be null", null);

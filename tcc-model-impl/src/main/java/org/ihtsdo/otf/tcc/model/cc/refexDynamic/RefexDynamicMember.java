@@ -56,6 +56,7 @@ import org.ihtsdo.otf.tcc.model.cc.component.ConceptComponent;
 import org.ihtsdo.otf.tcc.model.cc.component.RevisionSet;
 import org.ihtsdo.otf.tcc.model.cc.computer.version.VersionComputer;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.TypeToClassUtility;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 
@@ -105,7 +106,7 @@ public class RefexDynamicMember extends ConceptComponent<RefexDynamicRevision, R
                 }
                 else
                 {
-                    data_[i] = RefexDynamicData.typeToClass(refsetMember.getData()[i].getRefexDataType(), refsetMember.getData()[i].getData(), 
+                    data_[i] = TypeToClassUtility.typeToClass(refsetMember.getData()[i].getRefexDataType(), refsetMember.getData()[i].getData(), 
                         assemblageNid, i);
                 }
             }
@@ -679,7 +680,7 @@ public class RefexDynamicMember extends ConceptComponent<RefexDynamicRevision, R
                 byte[] data = new byte[dataLength];
                 input.read(data);
                 
-                data_[i] = RefexDynamicData.typeToClass(dt, data, getAssemblageNid(), i);
+                data_[i] = TypeToClassUtility.typeToClass(dt, data, getAssemblageNid(), i);
             }
         }
     }

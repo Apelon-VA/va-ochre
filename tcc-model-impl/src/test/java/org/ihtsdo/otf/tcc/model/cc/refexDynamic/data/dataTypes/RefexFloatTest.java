@@ -47,11 +47,13 @@ public class RefexFloatTest
 
 	private void test(float value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexFloat l = new RefexFloat(value, "foo");
+		RefexFloat l = new RefexFloat(value);
+		l.setNameIfAbsent("foo");
 
 		assertEquals(value, l.getDataFloat(), 0);
 		assertEquals(value, (Float) l.getDataObject(), 0);
 		assertEquals(value, (Float) l.getDataObjectProperty().get(), 0);
 		assertEquals(l.getRefexDataType(), RefexDynamicDataType.FLOAT);
+		assertEquals(l.getDataObjectProperty().getName(), "foo");
 	}
 }

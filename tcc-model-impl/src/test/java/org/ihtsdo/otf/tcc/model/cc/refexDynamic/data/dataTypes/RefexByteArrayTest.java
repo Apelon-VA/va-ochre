@@ -47,7 +47,8 @@ public class RefexByteArrayTest
 
 	private void test(byte[] value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexByteArray i = new RefexByteArray(value, "foo");
+		RefexByteArray i = new RefexByteArray(value);
+		i.setNameIfAbsent("foo");
 
 		assertEquals(value, i.getDataByteArray());
 		assertEquals(value, (byte[]) i.getDataObject());

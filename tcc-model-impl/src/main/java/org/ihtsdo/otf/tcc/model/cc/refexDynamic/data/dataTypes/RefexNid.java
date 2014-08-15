@@ -35,13 +35,13 @@ public class RefexNid extends RefexDynamicData implements RefexDynamicNidBI {
 	
 	private ObjectProperty<Integer> property_;
 
-	public RefexNid(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexNid(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexNid(int nid, String name) throws PropertyVetoException {
-		super(name);
+	public RefexNid(int nid) throws PropertyVetoException {
+		super();
 		data_ = RefexInteger.intToByteArray(nid);
 	}
 

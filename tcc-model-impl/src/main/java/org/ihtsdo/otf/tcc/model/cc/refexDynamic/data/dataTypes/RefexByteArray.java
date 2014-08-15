@@ -35,13 +35,13 @@ public class RefexByteArray extends RefexDynamicData implements RefexDynamicByte
 
 	private ObjectProperty<byte[]> property_;
 
-	public RefexByteArray(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexByteArray(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexByteArray(byte[] bytes, String name) throws PropertyVetoException {
-		super(name);
+	public RefexByteArray(byte[] bytes) throws PropertyVetoException {
+		super();
 		data_ = bytes;
 	}
 

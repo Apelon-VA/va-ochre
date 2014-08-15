@@ -47,7 +47,8 @@ public class RefexIntegerTest
 
 	private void test(int value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexInteger i = new RefexInteger(value, "foo");
+		RefexInteger i = new RefexInteger(value);
+		i.setNameIfAbsent("foo");
 
 		assertEquals(value, i.getDataInteger());
 		assertEquals(value, ((Integer) i.getDataObject()).intValue());
