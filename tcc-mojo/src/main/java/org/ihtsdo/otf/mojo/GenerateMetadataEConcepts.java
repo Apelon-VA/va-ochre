@@ -30,7 +30,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -47,9 +46,11 @@ import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRf2;
 import org.ihtsdo.otf.tcc.api.metadata.binding.TermAux;
 import org.ihtsdo.otf.tcc.api.refex.RefexType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
 import org.ihtsdo.otf.tcc.api.spec.ConceptSpec;
+import org.ihtsdo.otf.tcc.api.spec.ConceptSpecWithDescriptions;
 import org.ihtsdo.otf.tcc.api.spec.RelSpec;
 import org.ihtsdo.otf.tcc.api.uuid.UuidT5Generator;
 import org.ihtsdo.otf.tcc.dto.TtkConceptChronicle;
@@ -218,65 +219,44 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				if (RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0].equals(cs.getUuids()[0]))
 				{
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0], RefexDynamicDataType.INTEGER, null));
-					columns.add(new RefexDynamicColumnInfo(1, RefexDynamic.REFEX_COLUMN_NAME.getUuids()[0], RefexDynamicDataType.UUID, null));
-					columns.add(new RefexDynamicColumnInfo(2, RefexDynamic.REFEX_COLUMN_TYPE.getUuids()[0], RefexDynamicDataType.STRING, null));
-					columns.add(new RefexDynamicColumnInfo(3, RefexDynamic.REFEX_COLUMN_DEFAULT_VALUE.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null));
+					columns.add(new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0], RefexDynamicDataType.INTEGER, null, true, null, null));
+					columns.add(new RefexDynamicColumnInfo(1, RefexDynamic.REFEX_COLUMN_NAME.getUuids()[0], RefexDynamicDataType.UUID, null, true, null, null));
+					columns.add(new RefexDynamicColumnInfo(2, RefexDynamic.REFEX_COLUMN_TYPE.getUuids()[0], RefexDynamicDataType.STRING, null, true, null, null));
+					columns.add(new RefexDynamicColumnInfo(3, RefexDynamic.REFEX_COLUMN_DEFAULT_VALUE.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(4, RefexDynamic.REFEX_COLUMN_REQUIRED.getUuids()[0], RefexDynamicDataType.BOOLEAN, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(5, RefexDynamic.REFEX_COLUMN_VALIDATOR.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(6, RefexDynamic.REFEX_COLUMN_VALIDATOR_DATA.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null, false, null, null));
 					
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"This concept is used as an assemblage for defining new Refex extensions.  "
 							+ "The attached data columns describe what columns are required to define a new Refex. ", columns);
 				}
-				else if (RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0].equals(cs.getUuids()[0]))
-				{
-					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
-							"The definition describes the overall purpose of using this concept as a Refex Assemblage");
-				}
-				else if (RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0].equals(cs.getUuids()[0]))
-				{
-					addDescription(converted, "Stores the column order of this column within a Dynamic Refex Definition",
-							DescriptionType.SYNONYM, false);
-				}
-				else if (RefexDynamic.REFEX_COLUMN_NAME.getUuids()[0].equals(cs.getUuids()[0]))
-				{
-					addDescription(converted, "Stores the concept reference to the concept that defines the name of this column within a Dynamic Refex Definition",
-							DescriptionType.SYNONYM, false);
-				}
-				else if (RefexDynamic.REFEX_COLUMN_TYPE.getUuids()[0].equals(cs.getUuids()[0]))
-				{
-					addDescription(converted, "Stores the data type of this column within a Dynamic Refex Definition",
-							DescriptionType.SYNONYM, false);
-				}
-				else if (RefexDynamic.REFEX_COLUMN_DEFAULT_VALUE.getUuids()[0].equals(cs.getUuids()[0]))
-				{
-					addDescription(converted, "Stores the (optional) default value of this column within a Dynamic Refex Definition",
-							DescriptionType.SYNONYM, false);
-				}
 				else if (Search.SEARCH_GLOBAL_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_GLOBAL_ATTRIBUTES_VIEW_COORDINATE_COLUMN.getUuids()[0], RefexDynamicDataType.BYTEARRAY, null));
-					columns.add(new RefexDynamicColumnInfo(1, Search.SEARCH_GLOBAL_ATTRIBUTES_MAX_RESULTS_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null));
-					columns.add(new RefexDynamicColumnInfo(2, Search.SEARCH_GLOBAL_ATTRIBUTES_DROOLS_EXPR_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null));
+					//TODO [JOEL] Are these required, or optional?  I made everything optional, for now...
+					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_GLOBAL_ATTRIBUTES_VIEW_COORDINATE_COLUMN.getUuids()[0], RefexDynamicDataType.BYTEARRAY, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(1, Search.SEARCH_GLOBAL_ATTRIBUTES_MAX_RESULTS_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(2, Search.SEARCH_GLOBAL_ATTRIBUTES_DROOLS_EXPR_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search Global Attributes is for attributes effecting all filters on a search concept", columns);
 				}
 				else if (Search.SEARCH_FILTER_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_FILTER_ATTRIBUTES_FILTER_ORDER_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_FILTER_ATTRIBUTES_FILTER_ORDER_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null, false, null, null));
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search Type Attributes is for attributes effecting all filters of a certain type such as Lucene or RegExp", columns);
 				}
 				else if (Search.SEARCH_LUCENE_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_LUCENE_FILTER_PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_LUCENE_FILTER_PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search Lucene Filter is for attributes effecting this Lucene search", columns);
 				}
 				else if (Search.SEARCH_REGEXP_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_REGEXP_FILTER_PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_REGEXP_FILTER_PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search RegExp Filter is for attributes effecting this RegExp search", columns);
@@ -342,7 +322,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 		
 		for (Field f : clazz.getFields())
 		{
-			if (f.getType().equals(ConceptSpec.class))
+			if (f.getType().equals(ConceptSpec.class) || f.getType().equals(ConceptSpecWithDescriptions.class))
 			{
 				results.add((ConceptSpec)f.get(null));
 			}
@@ -373,10 +353,31 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 			cc.getConceptAttributes().getUuids().add(cs.getUuids()[i]);
 		}
 		
-		addDescription(cc, cs.getDescription(), DescriptionType.FSN, true);
-		addDescription(cc, cs.getDescription(), DescriptionType.SYNONYM, true);
-		
-		
+		if (cs instanceof ConceptSpecWithDescriptions)
+		{
+			ConceptSpecWithDescriptions csd = (ConceptSpecWithDescriptions)cs;
+			addDescription(cc, csd.getFsn(), DescriptionType.FSN, true);
+			
+			boolean first = true;
+			
+			for (String s : csd.getSynonyms())
+			{
+				addDescription(cc, s, DescriptionType.SYNONYM, first);
+				first = false;
+			}
+			first = true;
+			for (String s : csd.getDefinitions())
+			{
+				addDescription(cc, s, DescriptionType.DEFINITION, first);
+			}
+			
+		}
+		else
+		{
+			addDescription(cc, cs.getDescription(), DescriptionType.FSN, true);
+			addDescription(cc, cs.getDescription(), DescriptionType.SYNONYM, true);
+		}
+
 		for (RelSpec rs : cs.getRelSpecs())
 		{
 			addRelationship(cc, rs.getDestinationSpec().getUuids()[0], rs.getRelTypeSpec().getUuids()[0], null);
@@ -524,9 +525,10 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 			List<RefexDynamicColumnInfo> columns) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException {
 		turnConceptIntoDynamicRefexAssemblageConcept(concept, annotationStyle, refexDescription, columns.toArray(new RefexDynamicColumnInfo[columns.size()]));
 	}
-	private void turnConceptIntoDynamicRefexAssemblageConcept(TtkConceptChronicle concept, boolean annotationStyle, String refexDescription) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException {
-		turnConceptIntoDynamicRefexAssemblageConcept(concept, annotationStyle, refexDescription, new RefexDynamicColumnInfo[0]);
-	}
+	
+	/**
+	 * See {@link RefexDynamicUsageDescription} class for more details on this format.
+	 */
 	private void turnConceptIntoDynamicRefexAssemblageConcept(TtkConceptChronicle concept, boolean annotationStyle, String refexDescription,
 			RefexDynamicColumnInfo[] columns) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException
 	{
@@ -541,17 +543,20 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 		{
 			for (RefexDynamicColumnInfo col : columns)
 			{
-				TtkRefexDynamicData[] data = new TtkRefexDynamicData[4];
+				TtkRefexDynamicData[] data = new TtkRefexDynamicData[7];
 				data[0] = new TtkRefexInteger(col.getColumnOrder());
 				data[1] = new TtkRefexUUID(col.getColumnDescriptionConcept());
 				data[2] = new TtkRefexString(col.getColumnDataType().name());
-				data[3] = convertDefaultDataColumn(col.getDefaultColumnValue(), col.getColumnDataType());
+				data[3] = convertPolymorphicDataColumn(col.getDefaultColumnValue(), col.getColumnDataType());
+				data[4] = new TtkRefexBoolean(col.isColumnRequired());
+				data[5] = (col.getValidator() == null ? null : new TtkRefexString(col.getValidator().name()));
+				data[6] = (col.getValidatorData() == null ? null : convertPolymorphicDataColumn(col.getValidatorData(), col.getValidatorData().getRefexDataType()));
 				addDynamicAnnotation(concept.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0], data);
 			}
 		}
 	}
 	
-	private static TtkRefexDynamicData convertDefaultDataColumn(Object defaultValue, RefexDynamicDataType columnType) throws PropertyVetoException 
+	private static TtkRefexDynamicData convertPolymorphicDataColumn(RefexDynamicDataBI defaultValue, RefexDynamicDataType columnType) throws PropertyVetoException 
 	{
 		TtkRefexDynamicData result;
 		
@@ -561,39 +566,39 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 			{
 				if (RefexDynamicDataType.BOOLEAN == columnType)
 				{
-					result = new TtkRefexBoolean((Boolean)defaultValue);
+					result = new TtkRefexBoolean((Boolean)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.BYTEARRAY == columnType)
 				{
-					result = new TtkRefexByteArray((byte[])defaultValue);
+					result = new TtkRefexByteArray((byte[])defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.DOUBLE == columnType)
 				{
-					result = new TtkRefexDouble((Double)defaultValue);
+					result = new TtkRefexDouble((Double)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.FLOAT == columnType)
 				{
-					result = new TtkRefexFloat((Float)defaultValue);
+					result = new TtkRefexFloat((Float)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.INTEGER == columnType)
 				{
-					result = new TtkRefexInteger((Integer)defaultValue);
+					result = new TtkRefexInteger((Integer)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.LONG == columnType)
 				{
-					result = new TtkRefexLong((Long)defaultValue);
+					result = new TtkRefexLong((Long)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.NID == columnType)
 				{
-					result = new TtkRefexNid((Integer)defaultValue);
+					result = new TtkRefexNid((Integer)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.STRING == columnType)
 				{
-					result = new TtkRefexString((String)defaultValue);
+					result = new TtkRefexString((String)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.UUID == columnType)
 				{
-					result = new TtkRefexUUID((UUID)defaultValue);
+					result = new TtkRefexUUID((UUID)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.POLYMORPHIC == columnType)
 				{

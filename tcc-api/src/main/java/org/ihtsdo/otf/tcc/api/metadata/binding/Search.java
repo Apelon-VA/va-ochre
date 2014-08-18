@@ -49,6 +49,9 @@ public class Search {
 			UUID.fromString("80d39126-7814-5812-b01f-d6cda1d86496"), 
 			SEARCH_TYPES);
 	
+	//TODO [JOEL] - Please see the new ConceptSpecWithDescriptions class that I added - which will allow you to put the definition here as well for 
+	//your columns.  See RefexDynamic for usage...
+	
 	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES = new ConceptSpec("Search Global Attributes", 
 			UUID.fromString("27316605-16ea-536e-9acd-40f0277e20ad"),
 			SEARCH_TYPES);

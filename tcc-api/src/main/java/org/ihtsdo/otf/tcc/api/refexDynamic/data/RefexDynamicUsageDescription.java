@@ -50,7 +50,8 @@ import org.ihtsdo.otf.tcc.api.store.Ts;
  * The assemblage concept must define the combination of data columns being used within this Refex. 
  * To do this, the assemblage concept must itself contain 0 or more {@link RefexDynamicVersionBI} annotation(s) with
  * an assemblage concept that is {@link RefexDynamic#REFEX_DYNAMIC_DEFINITION} and the attached data is<br>
- * [{@link RefexDynamicIntegerBI}, {@link RefexDynamicUUIDBI}, {@link RefexDynamicStringBI}, {@link RefexDynamicPolymorphicBI}] 
+ * [{@link RefexDynamicIntegerBI}, {@link RefexDynamicUUIDBI}, {@link RefexDynamicStringBI}, {@link RefexDynamicPolymorphicBI},
+ * {@link RefexBooleanBI}, {@link RefexDynamicStringBI}, {@link RefexDynamicPolymorphicBI}] 
  * 
  * <ul>
  * <li>The int value is used to align the column order with the data array here.  The column number should be 0 indexed.
@@ -64,6 +65,11 @@ import org.ihtsdo.otf.tcc.api.store.Ts;
  *       the type of the column.
  * <li>An (optional) polymorphic column (any supported data type, but MUST match the data type specified in column 2) which contains 
  *       the default value (if any) for this column.  
+ * <li>An (optional) boolean column which specifies if this column is required (true) or optional (false or null) for this column.  
+ * <li>An (optional) string column which can be parsed as a member of the {@link RefexDynamicValidatorType} class, which represents
+ *       the validator type assigned to the the column (if any).
+ * <li>An (optional) polymorphic column (any supported data type, but MUST match the requirements of the validator specified in column 6) 
+ *       which contains validator data (if any) for this column.  
  * </ul>
  * <br>
  * Note that while 0 rows of attached data is allowed, this would not allow the attachment of any data on the refex.
@@ -80,6 +86,7 @@ import org.ihtsdo.otf.tcc.api.store.Ts;
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
+@SuppressWarnings("deprecation")
 public class RefexDynamicUsageDescription
 {
 	int refexUsageDescriptorNid_;
@@ -122,7 +129,6 @@ public class RefexDynamicUsageDescription
 		refexUsageDescriptorNid_ = refexUsageDescriptorNid;
 		
 		TreeMap<Integer, RefexDynamicColumnInfo> allowedColumnInfo = new TreeMap<>();
-		@SuppressWarnings("deprecation")
 		ConceptVersionBI assemblageConcept = Ts.get().getConceptVersion(StandardViewCoordinates.getWbAuxiliary(), refexUsageDescriptorNid);
 		stampNid_ = assemblageConcept.getConceptAttributesActive().getStamp();
 		
@@ -167,25 +173,28 @@ public class RefexDynamicUsageDescription
 			if (rd.getAssemblageNid() == RefexDynamic.REFEX_DYNAMIC_DEFINITION.getNid())
 			{
 				RefexDynamicDataBI[] refexDefinitionData = rd.getData();
-				if (refexDefinitionData == null || refexDefinitionData.length < 3 || refexDefinitionData.length > 4)
+				if (refexDefinitionData == null || refexDefinitionData.length < 3 || refexDefinitionData.length > 7)
 				{
 					throw new IOException("The Assemblage concept: " + assemblageConcept + " is not correctly assembled for use as an Assemblage for " 
-							+ "a RefexDynamicData Refex Type.  It must contain a 3 (or 4) column RefexDynamicDataBI attachment.");
+							+ "a RefexDynamicData Refex Type.  It must contain at least 3 columns in the RefexDynamicDataBI attachment, and no more than 7.");
 				}
 				
 				//col 0 is the column number, 
 				//col 1 is the concept with col name 
 				//col 2 is the column data type, stored as a string.
 				//col 3 (if present) is the default column data, stored as a subtype of RefexDynamicDataBI
+				//col 4 (if present) is a boolean field noting whether the column is required (true) or optional (false or null)
+				//col 5 (if present) is the validator {@link RefexDynamicValidatorType}, stored as a string.
+				//col 6 (if present) is the validatorData for the validator in column 5, stored as a subtype of RefexDynamicDataBI
 				try
 				{
 					int column = (Integer)refexDefinitionData[0].getDataObject();
 					UUID descriptionUUID = (UUID)refexDefinitionData[1].getDataObject();
 					RefexDynamicDataType type = RefexDynamicDataType.valueOf((String)refexDefinitionData[2].getDataObject());
-					Object defaultData = null;
+					RefexDynamicDataBI defaultData = null;
 					if (refexDefinitionData.length > 3)
 					{
-						defaultData = (refexDefinitionData[3] == null ? null : refexDefinitionData[3].getDataObject());
+						defaultData = (refexDefinitionData[3] == null ? null : refexDefinitionData[3]);
 					}
 					
 					if (defaultData != null && type.getRefexMemberClass() != refexDefinitionData[3].getRefexDataType().getRefexMemberClass())
@@ -194,7 +203,25 @@ public class RefexDynamicUsageDescription
 							+ "a RefexDynamicData Refex Type.  The type of the column (column 3) must match the type of the defaultData (column 4)");
 					}
 					
-					allowedColumnInfo.put(column, new RefexDynamicColumnInfo(assemblageConcept.getPrimordialUuid(), column, descriptionUUID, type, defaultData));
+					Boolean columnRequired = null;
+					if (refexDefinitionData.length > 4)
+					{
+						columnRequired = (refexDefinitionData[4] == null ? null : (Boolean)refexDefinitionData[4].getDataObject());
+					}
+					
+					RefexDynamicValidatorType validator = null;
+					RefexDynamicDataBI validatorData = null;
+					if (refexDefinitionData.length > 5)
+					{
+						validator = (refexDefinitionData[5] == null ? null : RefexDynamicValidatorType.valueOf((String)refexDefinitionData[5].getDataObject()));
+						if (refexDefinitionData.length > 6)
+						{
+							validatorData = (refexDefinitionData[6] == null ? null : refexDefinitionData[6]);
+						}
+					}
+					
+					allowedColumnInfo.put(column, new RefexDynamicColumnInfo(assemblageConcept.getPrimordialUuid(), column, descriptionUUID, type, 
+							defaultData, columnRequired, validator, validatorData));
 				}
 				catch (Exception e)
 				{

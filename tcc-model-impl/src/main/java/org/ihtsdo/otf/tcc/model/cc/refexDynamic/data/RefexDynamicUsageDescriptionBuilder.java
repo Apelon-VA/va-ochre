@@ -45,14 +45,18 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicBooleanBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicFloatBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicLongBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicStringBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicUUIDBI;
 import org.ihtsdo.otf.tcc.api.store.Ts;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexBoolean;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexByteArray;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDouble;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexFloat;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexInteger;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexLong;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexNid;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexString;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexUUID;
 
@@ -123,7 +127,7 @@ public class RefexDynamicUsageDescriptionBuilder
 			{
 				RefexDynamicCAB rCab = new RefexDynamicCAB(cab.getComponentUuid(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0]);
 				
-				RefexDynamicDataBI[] data = new RefexDynamicDataBI[4];
+				RefexDynamicDataBI[] data = new RefexDynamicDataBI[7];
 				
 				data[0] = new RefexInteger(ci.getColumnOrder());
 				data[1] = new RefexUUID(ci.getColumnDescriptionConcept());
@@ -132,7 +136,10 @@ public class RefexDynamicUsageDescriptionBuilder
 					throw new InvalidCAB("Error in column - if default value is provided, the type cannot be polymorphic");
 				}
 				data[2] = new RefexString(ci.getColumnDataType().name());
-				data[3] = createDefaultDataColumn(ci.getDefaultColumnValue(), ci.getColumnDataType());
+				data[3] = convertPolymorphicDataColumn(ci.getDefaultColumnValue(), ci.getColumnDataType());
+				data[4] = new RefexBoolean(ci.isColumnRequired());
+				data[5] = (ci.getValidator() == null ? null : new RefexString(ci.getValidator().name()));
+				data[6] = (ci.getValidatorData() == null ? null : convertPolymorphicDataColumn(ci.getValidatorData(), ci.getValidatorData().getRefexDataType()));
 				rCab.setData(data);
 				//TODO file a another bug, this API is atrocious.  If you put the annotation on the concept, it gets silently ignored.
 				cab.getConceptAttributeAB().addAnnotationBlueprint(rCab);
@@ -151,7 +158,7 @@ public class RefexDynamicUsageDescriptionBuilder
 		return new RefexDynamicUsageDescription(newCon.getConceptNid());
 	}
 	
-	private static RefexDynamicDataBI createDefaultDataColumn(Object defaultValue, RefexDynamicDataType columnType) 
+	private static RefexDynamicDataBI convertPolymorphicDataColumn(RefexDynamicDataBI defaultValue, RefexDynamicDataType columnType) 
 			throws PropertyVetoException, InvalidCAB
 	{
 		RefexDynamicDataBI result;
@@ -162,39 +169,39 @@ public class RefexDynamicUsageDescriptionBuilder
 			{
 				if (RefexDynamicDataType.BOOLEAN == columnType)
 				{
-					result = new RefexBoolean((Boolean)defaultValue);
+					result = (RefexDynamicBooleanBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.BYTEARRAY == columnType)
 				{
-					result = new RefexByteArray((byte[])defaultValue);
+					result = (RefexDynamicByteArrayBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.DOUBLE == columnType)
 				{
-					result = new RefexDouble((Double)defaultValue);
+					result = (RefexDynamicDoubleBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.FLOAT == columnType)
 				{
-					result = new RefexFloat((Float)defaultValue);
+					result = (RefexDynamicFloatBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.INTEGER == columnType)
 				{
-					result = new RefexInteger((Integer)defaultValue);
+					result = (RefexDynamicIntegerBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.LONG == columnType)
 				{
-					result = new RefexLong((Long)defaultValue);
+					result = (RefexDynamicLongBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.NID == columnType)
 				{
-					result = new RefexNid((Integer)defaultValue);
+					result = (RefexDynamicNidBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.STRING == columnType)
 				{
-					result = new RefexString((String)defaultValue);
+					result = (RefexDynamicStringBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.UUID == columnType)
 				{
-					result = new RefexUUID((UUID)defaultValue);
+					result = (RefexDynamicUUIDBI)defaultValue;
 				}
 				else if (RefexDynamicDataType.POLYMORPHIC == columnType)
 				{
