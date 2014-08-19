@@ -19,6 +19,7 @@
 package org.ihtsdo.otf.tcc.api.refexDynamic.data;
 
 import java.math.BigDecimal;
+import java.util.regex.Pattern;
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicFloatBI;
@@ -43,6 +44,9 @@ import org.ihtsdo.otf.tcc.api.store.Ts;
  * 
  * {@link RefexDynamicValidatorType#INTERVAL} - Should be a {@link RefexDynamicStringBI} with valid interval notation - such as "[4,6)"
  * 
+ * {@link RefexDynamicValidatorType#REGEXP} - Should be a {@link RefexDynamicStringBI} with valid regular expression, per 
+ * http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
+ * 
  * And for the following two:
  * {@link RefexDynamicValidatorType#IS_CHILD_OF}
  * {@link RefexDynamicValidatorType#IS_KIND_OF}
@@ -55,6 +59,7 @@ public enum RefexDynamicValidatorType
 {
 	LESS_THAN, GREATER_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN_OR_EQUAL,  //Standard math stuff 
 	INTERVAL, //math interval notation - such as [5,10)
+	REGEXP,  //http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
 	DROOLS, //TBD 
 	IS_CHILD_OF, //OTF is child of - which only includes immediate (not recursive) children on the 'Is A' relationship. 
 	IS_KIND_OF; //OTF kind of - which is child of - but recursive, and self (heart disease is a kind-of heart disease);
@@ -78,6 +83,21 @@ public enum RefexDynamicValidatorType
 		{
 			//TODO [VALIDATOR] implement Drools
 			throw new RuntimeException("Not implemented");
+		}
+		else if (this == RefexDynamicValidatorType.REGEXP)
+		{
+			try
+			{
+				if (userData == null)
+				{
+					return false;
+				}
+				return Pattern.matches(((RefexDynamicStringBI)validatorDefinitionData).getDataString(), userData.getDataObject().toString());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("The specified validator data object was not a valid regular expression: " + e.getMessage());
+			}
 		}
 		else if (this == RefexDynamicValidatorType.IS_CHILD_OF || this == RefexDynamicValidatorType.IS_KIND_OF)
 		{

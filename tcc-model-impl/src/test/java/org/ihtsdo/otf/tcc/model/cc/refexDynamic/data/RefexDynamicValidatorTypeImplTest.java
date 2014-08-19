@@ -125,4 +125,15 @@ public class RefexDynamicValidatorTypeImplTest
 				new RefexDynamicString(" (-2147483648 , 2147483647) "), null));
 		
 	}
+	
+	@Test
+	public void testRegexp() throws PropertyVetoException, IOException, ContradictionException
+	{
+		Assert.assertTrue(RefexDynamicValidatorType.REGEXP.passesValidator(new RefexDynamicString("testWord"), new RefexDynamicString(".*"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.REGEXP.passesValidator(new RefexDynamicString("testWord"), new RefexDynamicString("[a-zA-Z]*"), null));
+		Assert.assertFalse(RefexDynamicValidatorType.REGEXP.passesValidator(new RefexDynamicString("testWord"), new RefexDynamicString("[a-z]*"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.REGEXP.passesValidator(new RefexDynamicString("426"), new RefexDynamicString("\\d{3}?") , null));
+		Assert.assertFalse(RefexDynamicValidatorType.REGEXP.passesValidator(new RefexDynamicString("4264"), new RefexDynamicString("\\d{3}?") , null));
+
+	}
 }
