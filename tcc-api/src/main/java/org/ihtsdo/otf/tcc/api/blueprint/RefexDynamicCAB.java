@@ -566,7 +566,9 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	 * The data (if any) that is to be stored with this Refex.  The data columns and types _must_ align with the definition 
 	 * within the assemblage concept.  See the class description for more details
 	 * @param data
-	 * @param vc - used during the evaluation of some validators.  
+	 * @param vc - used during the evaluation of some validators.  Can be passed null, if the columns of data you are creating
+	 * are known to not have any validators, or only have validators that don't require a view coordinate (validators that only 
+	 * involve math, or regexp checks, for example)
 	 * @throws IOException 
 	 * @throws InvalidCAB 
 	 * @throws ContradictionException 
