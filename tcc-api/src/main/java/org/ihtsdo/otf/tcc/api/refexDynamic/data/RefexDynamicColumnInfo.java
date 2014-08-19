@@ -72,7 +72,8 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 	private RefexDynamicDataBI validatorData_;
 
 	/**
-	 * calls {@link #RefexDynamicColumnInfo(UUID, int, UUID, RefexDynamicDataType, Object) with a null assemblage concept
+	 * calls {@link #RefexDynamicColumnInfo(UUID, int, UUID, RefexDynamicDataType, RefexDynamicDataBI, Boolean, RefexDynamicValidatorType, RefexDynamicDataBI)
+	 * with a null assemblage concept
 	 */
 	public RefexDynamicColumnInfo(int columnOrder, UUID columnDescriptionConcept, RefexDynamicDataType columnDataType, RefexDynamicDataBI defaultData, Boolean columnRequired,
 			RefexDynamicValidatorType validatorType, RefexDynamicDataBI validatorData)
