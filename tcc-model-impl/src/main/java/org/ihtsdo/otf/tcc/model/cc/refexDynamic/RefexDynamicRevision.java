@@ -166,7 +166,7 @@ public class RefexDynamicRevision extends Revision<RefexDynamicRevision, RefexDy
                 idDirective, 
                 refexDirective);
 
-        rdc.setData(getData());
+        rdc.setData(getData(), vc);
         return rdc;
     }
 

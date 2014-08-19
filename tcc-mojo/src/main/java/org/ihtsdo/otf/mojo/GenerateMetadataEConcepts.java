@@ -231,6 +231,13 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 							"This concept is used as an assemblage for defining new Refex extensions.  "
 							+ "The attached data columns describe what columns are required to define a new Refex. ", columns);
 				}
+				else if (RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0].equals(cs.getUuids()[0]))
+				{
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
+							"This is the extended description type that must be attached to a description within a concept to make the concept valid for use as an "
+									+ "assemblage concept for RefexDynamic refexes.  The description annotated with this type describes the intent of "
+									+ "using the concept containing the description as an assemblage concept.", new RefexDynamicColumnInfo[0]);
+				}
 				else if (Search.SEARCH_GLOBAL_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
 					//TODO [JOEL] Are these required, or optional?  I made everything optional, for now...
@@ -534,7 +541,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 	{
 		concept.setAnnotationStyleRefex(annotationStyle);
 		//Add the special synonym to establish this as an assemblage concept
-		TtkDescriptionChronicle description = addDescription(concept, refexDescription, DescriptionType.SYNONYM, false);
+		TtkDescriptionChronicle description = addDescription(concept, refexDescription, DescriptionType.DEFINITION, true);
 		
 		//Annotate the description as the 'special' type that means this concept is suitable for use as an assemblage concept
 		addDynamicAnnotation(description, RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0], new TtkRefexDynamicData[0]);

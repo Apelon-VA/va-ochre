@@ -260,7 +260,7 @@ public class BdbTermBuilder implements TerminologyBuilderBI {
             P.s.setConceptNidForNid(enclosingConceptNid, blueprint.getComponentNid());
         }
 
-        RefexDynamicMember newRefex = RefexDynamicMemberFactory.create(blueprint, ec);
+        RefexDynamicMember newRefex = RefexDynamicMemberFactory.create(blueprint, ec, vc);
 
         for (RefexCAB annotBp : blueprint.getAnnotationBlueprints()) {
             annotBp.setReferencedComponent(newRefex);

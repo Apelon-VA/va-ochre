@@ -52,9 +52,7 @@ public class RefexDynamic
 	public static ConceptSpecWithDescriptions REFEX_DYNAMIC_DEFINITION_DESCRIPTION = new ConceptSpecWithDescriptions("dynamic refex definition description", 
 			UUID.fromString("21d300f2-b2d8-5586-916b-0e7ac88d5bea"),
 			new String[] {"dynamic refex definition description"},
-			new String[] {"This is the extended description type that must be attached to a description within a concept to make the concept valid for use as an "
-					+"assemblage concept for RefexDynamic refexes.  The description annotated with this type describes the intent of "
-					+ "using the concept containing the description as an assemblage concept."},
+			new String[0],
 			REFEX_DYNAMIC_TYPES);
 	
 	//This is the assemblage type that is usually present on a concept when it is used as an assemblage itself to describe the attached data - the attached
@@ -63,9 +61,7 @@ public class RefexDynamic
 	public static ConceptSpecWithDescriptions REFEX_DYNAMIC_DEFINITION = new ConceptSpecWithDescriptions("dynamic refex definition", 
 			UUID.fromString("a40fb48c-d755-5eaa-a725-4c4ebc9b9e6e"),
 			new String[] {"dynamic refex definition"},
-			new String[] {"This is the assemblage type that is usually present on a concept when it is used as an assemblage itself to describe the attached data "
-					+ " the attached refex using this for an assemblage will describe a data column that is to be attached with the refex.  This assemblage type "
-					+ " wouldn't be used if there was no data to attach."},
+			new String[0],
 			REFEX_DYNAMIC_TYPES);
 	
 	//An organizational concept which serves as a parent concept for any column types that are defined

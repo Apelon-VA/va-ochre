@@ -85,9 +85,17 @@ public class RefexDynamicUsageDescriptionBuilder
 	 * The concept will be created under the concept {@link RefexDynamic#REFEX_DYNAMIC_TYPES} if a parent is not specified
 	 * 
 	 * //TODO [REFEX] figure out language details (how we know what language to put on the name/description
-	 * @param parentConcept - option - if null, uses {@link RefexDynamic#REFEX_DYNAMIC_TYPES}
-	 * @throws InvalidCAB 
-	 * @throws PropertyVetoException 
+	 * @param refexFSN - The FSN for this refex concept that will be created.
+	 * @param refexPreferredTerm - The preferred term for this refex concept that will be created.
+	 * @param refexDescription - A user friendly string the explains the overall intended purpose of this refex (what it means, what it stores)
+	 * @param columns - The column information for this new refex.  May be an empty list or null.
+	 * @param parentConcept  - optional - if null, uses {@link RefexDynamic#REFEX_DYNAMIC_TYPES}
+	 * @param annotationStyle - true for annotation style storage, false for memberset storage
+	 * @return a reference to the newly created refex item
+	 * @throws IOException
+	 * @throws ContradictionException
+	 * @throws InvalidCAB
+	 * @throws PropertyVetoException
 	 */
 	public static RefexDynamicUsageDescription createNewRefexDynamicUsageDescriptionConcept(String refexFSN, String refexPreferredTerm, 
 			String refexDescription, RefexDynamicColumnInfo[] columns, UUID parentConcept, boolean annotationStyle) throws 
@@ -102,14 +110,14 @@ public class RefexDynamicUsageDescriptionBuilder
 		ConceptCB cab = new ConceptCB(refexFSN, refexPreferredTerm, lc, isA, idDir, module, parents);
 		cab.setAnnotationRefexExtensionIdentity(annotationStyle);
 		
-		DescriptionCAB dCab = new DescriptionCAB(cab.getComponentUuid(), Snomed.SYNONYM_DESCRIPTION_TYPE.getUuids()[0], lc, refexDescription, false,
+		DescriptionCAB dCab = new DescriptionCAB(cab.getComponentUuid(), Snomed.DEFINITION_DESCRIPTION_TYPE.getUuids()[0], lc, refexDescription, true,
 				IdDirective.GENERATE_HASH);
 		dCab.getProperties().put(ComponentProperty.MODULE_ID, module);
 		
 		//Mark it as acceptable
 		RefexCAB rCabAcceptable = new RefexCAB(RefexType.CID, dCab.getComponentUuid(), 
 				Snomed.US_LANGUAGE_REFEX.getUuids()[0], IdDirective.GENERATE_HASH, RefexDirective.EXCLUDE);
-		rCabAcceptable.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRf2.ACCEPTABLE_RF2.getUuids()[0]);
+		rCabAcceptable.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRf2.PREFERRED_RF2.getUuids()[0]);
 		rCabAcceptable.getProperties().put(ComponentProperty.MODULE_ID, module);
 		dCab.addAnnotationBlueprint(rCabAcceptable);
 		
@@ -140,13 +148,14 @@ public class RefexDynamicUsageDescriptionBuilder
 				data[4] = new RefexBoolean(ci.isColumnRequired());
 				data[5] = (ci.getValidator() == null ? null : new RefexString(ci.getValidator().name()));
 				data[6] = (ci.getValidatorData() == null ? null : convertPolymorphicDataColumn(ci.getValidatorData(), ci.getValidatorData().getRefexDataType()));
-				rCab.setData(data);
+				rCab.setData(data, null);  //View Coordinate is only used to evaluate validators - but there are no validators assigned to the RefexDefinition refex
+				//so we can get away with passing null
 				//TODO file a another bug, this API is atrocious.  If you put the annotation on the concept, it gets silently ignored.
 				cab.getConceptAttributeAB().addAnnotationBlueprint(rCab);
 			}
 		}
 		
-		//Build this on the lowest level path, otherwise, othercode that references this will fail (as it doesn't know about custom paths)
+		//Build this on the lowest level path, otherwise, other code that references this will fail (as it doesn't know about custom paths)
 		ConceptChronicleBI newCon = Ts.get().getTerminologyBuilder(
 				new EditCoordinate(TermAux.USER.getLenient().getConceptNid(), 
 						TermAux.TERM_AUX_MODULE.getLenient().getNid(), 

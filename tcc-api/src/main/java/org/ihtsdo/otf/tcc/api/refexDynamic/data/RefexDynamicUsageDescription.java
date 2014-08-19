@@ -30,6 +30,7 @@ import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.coordinate.StandardViewCoordinates;
 import org.ihtsdo.otf.tcc.api.description.DescriptionVersionBI;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
+import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
 import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRf2;
 import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicChronicleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicVersionBI;
@@ -74,7 +75,7 @@ import org.ihtsdo.otf.tcc.api.store.Ts;
  * <br>
  * Note that while 0 rows of attached data is allowed, this would not allow the attachment of any data on the refex.
  * <br>
- * The assemblage concept must also contain a description of type {@link SnomedMetadataRf2#SYNONYM_RF2} which 
+ * The assemblage concept must also contain a description of type {@link Snomed#DEFINITION_DESCRIPTION_TYPE} which 
  * itself has a refex extension of type {@link RefexDynamic#REFEX_DYNAMIC_DEFINITION_DESCRIPTION} - the value of 
  * this description should explain the the overall purpose of this Refex.
  * <br>
@@ -136,7 +137,7 @@ public class RefexDynamicUsageDescription
 		
 		for (DescriptionVersionBI<?> d : assemblageConcept.getDescriptionsActive())
 		{
-			if (d.getTypeNid() == SnomedMetadataRf2.SYNONYM_RF2.getNid())
+			if (d.getTypeNid() == Snomed.DEFINITION_DESCRIPTION_TYPE.getNid())
 			{
 				boolean hasCorrectAnnotation = false;
 				for (RefexDynamicChronicleBI<?> descriptionAnnotation : d.getRefexesDynamic())
@@ -164,7 +165,7 @@ public class RefexDynamicUsageDescription
 		if (StringUtils.isEmpty(refexUsageDescription_))
 		{
 			throw new IOException("The Assemblage concept: " + assemblageConcept + " is not correctly assembled for use as an Assemblage for " 
-					+ "a RefexDynamicData Refex Type.  It must contain a description of type Synonym with an annotation of type " + 
+					+ "a RefexDynamicData Refex Type.  It must contain a description of type Description with an annotation of type " + 
 					"RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION");
 		}
 		

@@ -539,11 +539,12 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	/**
 	 * returns true, if the RefexDynamicCAB as currently specified can be turned into a valid {@link RefexDynamicVersionBI}
 	 * otherwise 
+	 * @param vc - used during the evaluation of some validators.  
 	 * throws @InvalidCAB
 	 * @throws IOException 
 	 * @throws ContradictionException 
 	 */
-	public void validate() throws InvalidCAB, IOException, ContradictionException
+	public void validate(ViewCoordinate vc) throws InvalidCAB, IOException, ContradictionException
 	{
 		if (getMemberUUID() == null)
 		{
@@ -558,20 +559,21 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 			throw new InvalidCAB("The Referenced Component ID is required");
 		}
 		
-		validateData((RefexDynamicDataBI[])properties.get(ComponentProperty.DYNAMIC_REFEX_DATA));
+		validateData((RefexDynamicDataBI[])properties.get(ComponentProperty.DYNAMIC_REFEX_DATA), vc);
 	}
 	
 	/**
 	 * The data (if any) that is to be stored with this Refex.  The data columns and types _must_ align with the definition 
 	 * within the assemblage concept.  See the class description for more details
 	 * @param data
+	 * @param vc - used during the evaluation of some validators.  
 	 * @throws IOException 
 	 * @throws InvalidCAB 
 	 * @throws ContradictionException 
 	 */
-	public void setData(RefexDynamicDataBI[] data) throws IOException, InvalidCAB, ContradictionException
+	public void setData(RefexDynamicDataBI[] data, ViewCoordinate vc) throws IOException, InvalidCAB, ContradictionException
 	{
-		validateData(data);
+		validateData(data, vc);
 		properties.put(ComponentProperty.DYNAMIC_REFEX_DATA, data);
 		recomputeUuid();
 	}
@@ -587,9 +589,11 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	 * if the data is invalid.  
 	 * As a side effect, this sets the name field inside each of the supplied data elements
 	 * to correspond to the correct value from the assemblage nid.
+	 * 
+	 * @param vc - required for evaulating certain types of validators.  Unused, if no validators are present on the refex.
 	 * @throws ContradictionException 
 	 */
-	private void validateData(RefexDynamicDataBI[] data) throws IOException, InvalidCAB, ContradictionException
+	private void validateData(RefexDynamicDataBI[] data, ViewCoordinate vc) throws IOException, InvalidCAB, ContradictionException
 	{
 		RefexDynamicUsageDescription rdud = RefexDynamicUsageDescription.read(getRefexAssemblageNid());
 		
@@ -611,13 +615,38 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 		{
 			RefexDynamicColumnInfo rdci = rdud.getColumnInfo()[dataColumn];
 			
-			data[dataColumn].setNameIfAbsent(rdci.getColumnName());
-			
-			RefexDynamicDataType allowedDT = rdci.getColumnDataType();
-			if (data[dataColumn] != null && allowedDT != RefexDynamicDataType.POLYMORPHIC && data[dataColumn].getRefexDataType() != allowedDT)
+			if (data[dataColumn] == null)
 			{
-				throw new InvalidCAB("The supplied data for column " + dataColumn + " is of type " + data[dataColumn].getRefexDataType() + 
-						" but the assemblage concept declares that it must be " + allowedDT);
+				if (rdci.isColumnRequired())
+				{
+					throw new InvalidCAB("No data was supplied for column " + (dataColumn + 1) + " but the column is specified as a required column");
+				}
+			}
+			else
+			{
+				data[dataColumn].setNameIfAbsent(rdci.getColumnName());
+				
+				RefexDynamicDataType allowedDT = rdci.getColumnDataType();
+				if (data[dataColumn] != null && allowedDT != RefexDynamicDataType.POLYMORPHIC && data[dataColumn].getRefexDataType() != allowedDT)
+				{
+					throw new InvalidCAB("The supplied data for column " + dataColumn + " is of type " + data[dataColumn].getRefexDataType() + 
+							" but the assemblage concept declares that it must be " + allowedDT);
+				}
+				
+				if (rdci.getValidator() != null)
+				{
+					try
+					{
+						if (!rdci.getValidator().passesValidator(data[dataColumn], rdci.getValidatorData(), vc));
+						{
+							throw new InvalidCAB("The supplied data for column " + dataColumn + " does not pass the assigned validator for this refex");
+						}
+					}
+					catch (RuntimeException e)
+					{
+						throw new InvalidCAB(e.getMessage());
+					}
+				}
 			}
 		}
 	}

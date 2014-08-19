@@ -300,11 +300,21 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 			columnName_ = (fsn == null ? "ERROR - see log" : fsn);
 		}
 		
+		if (columnDescription_ == null && acceptableDefinition != null)
+		{
+			columnDescription_ = acceptableDefinition;
+		}
+		
+		if (columnDescription_ == null && acceptableSynonym != null)
+		{
+			columnDescription_ = acceptableSynonym;
+		}
+		
 		if (columnDescription_ == null)
 		{
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "No preferred or acceptable definition or acceptable synonym found on '" 
-					+ columnDescriptionConceptUUID_ + "' to use for the column description- using arbitrary synonym, if one was found");
-			columnDescription_ = (acceptableDefinition == null ? (acceptableSynonym == null ? "ERROR - see log" : acceptableSynonym): acceptableDefinition);
+					+ columnDescriptionConceptUUID_ + "' to use for the column description- re-using the the columnName, instead.");
+			columnDescription_ = columnName_;
 		}
 	}
 	
@@ -353,13 +363,13 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 
 		ConceptCB cab = new ConceptCB(columnName, columnName, lc, isA, idDir, module, parents);
 		
-		DescriptionCAB dCab = new DescriptionCAB(cab.getComponentUuid(),  Snomed.SYNONYM_DESCRIPTION_TYPE.getUuids()[0], LanguageCode.EN, 
+		DescriptionCAB dCab = new DescriptionCAB(cab.getComponentUuid(),  Snomed.DEFINITION_DESCRIPTION_TYPE.getUuids()[0], LanguageCode.EN, 
 				columnDescription, false, IdDirective.GENERATE_HASH);
 		dCab.getProperties().put(ComponentProperty.MODULE_ID, module);
 		
 		RefexCAB rCab = new RefexCAB(RefexType.CID, dCab.getComponentUuid(), 
 				Snomed.US_LANGUAGE_REFEX.getUuids()[0], IdDirective.GENERATE_HASH, RefexDirective.EXCLUDE);
-		rCab.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRf2.ACCEPTABLE_RF2.getUuids()[0]);
+		rCab.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRf2.PREFERRED_RF2.getUuids()[0]);
 		rCab.getProperties().put(ComponentProperty.MODULE_ID, module);
 		
 		dCab.addAnnotationBlueprint(rCab);

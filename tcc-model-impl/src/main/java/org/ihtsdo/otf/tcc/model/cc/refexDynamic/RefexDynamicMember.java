@@ -336,7 +336,7 @@ public class RefexDynamicMember extends ConceptComponent<RefexDynamicRevision, R
                 idDirective, 
                 refexDirective);
 
-        rdc.setData(getData());
+        rdc.setData(getData(), vc);
         return rdc;
     }
 

@@ -40,88 +40,88 @@ public class RefexDynamicValidatorTypeImplTest
 	@Test
 	public void testOne() throws PropertyVetoException, IOException, ContradictionException
 	{
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexDouble(5.0), new RefexDouble(3.0), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexDouble(1.0), new RefexDouble(3.0), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexInteger(5), new RefexDouble(3.0), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexInteger(1), new RefexDouble(3.0), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexFloat(5.0f), new RefexFloat(3.0f), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexDouble(1.0), new RefexFloat(3.0f), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexLong(Long.MAX_VALUE), new RefexLong(30), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexLong(1), new RefexLong(3), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexLong(1), new RefexLong(1), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN, new RefexLong(1), new RefexDouble(1), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexDouble(5.0), new RefexDouble(3.0), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexDouble(1.0), new RefexDouble(3.0), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexInteger(5), new RefexDouble(3.0), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexInteger(1), new RefexDouble(3.0), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexFloat(5.0f), new RefexFloat(3.0f), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexDouble(1.0), new RefexFloat(3.0f), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexLong(Long.MAX_VALUE), new RefexLong(30), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexLong(1), new RefexLong(3), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexLong(1), new RefexLong(1), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN.passesValidator(new RefexLong(1), new RefexDouble(1), null));
 	}
 	
 	@Test
 	public void testTwo() throws PropertyVetoException, IOException, ContradictionException
 	{
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexDouble(5.0), new RefexDouble(3.0), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexDouble(1.0), new RefexDouble(3.0), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexInteger(5), new RefexDouble(3.0), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexInteger(1), new RefexDouble(3.0), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexFloat(5.0f), new RefexFloat(3.0f), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexDouble(1.0), new RefexFloat(3.0f), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexLong(Long.MAX_VALUE), new RefexLong(30), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexLong(1), new RefexLong(3), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexLong(1), new RefexLong(1), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN, new RefexLong(1), new RefexDouble(1), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexDouble(5.0), new RefexDouble(3.0), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexDouble(1.0), new RefexDouble(3.0), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexInteger(5), new RefexDouble(3.0), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexInteger(1), new RefexDouble(3.0), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexFloat(5.0f), new RefexFloat(3.0f), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexDouble(1.0), new RefexFloat(3.0f), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexLong(Long.MAX_VALUE), new RefexLong(30), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexLong(1), new RefexLong(3), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexLong(1), new RefexLong(1), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN.passesValidator(new RefexLong(1), new RefexDouble(1), null));
 	}
 	
 	@Test
 	public void testThree() throws PropertyVetoException, IOException, ContradictionException
 	{
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexDouble(5.0), new RefexDouble(3.0), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexDouble(1.0), new RefexDouble(3.0), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexInteger(5), new RefexDouble(3.0), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexInteger(1), new RefexDouble(3.0), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexFloat(5.0f), new RefexFloat(3.0f), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexDouble(1.0), new RefexFloat(3.0f), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexLong(Long.MAX_VALUE), new RefexLong(30), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexLong(1), new RefexLong(3), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexLong(1), new RefexLong(1), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL, new RefexLong(1), new RefexDouble(1), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexDouble(5.0), new RefexDouble(3.0), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexDouble(1.0), new RefexDouble(3.0), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexInteger(5), new RefexDouble(3.0), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexInteger(1), new RefexDouble(3.0), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexFloat(5.0f), new RefexFloat(3.0f), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexDouble(1.0), new RefexFloat(3.0f), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexLong(Long.MAX_VALUE), new RefexLong(30), null));
+		Assert.assertFalse(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexLong(1), new RefexLong(3), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexLong(1), new RefexLong(1), null));
+		Assert.assertTrue(RefexDynamicValidatorType.GREATER_THAN_OR_EQUAL.passesValidator(new RefexLong(1), new RefexDouble(1), null));
 		
 	}
 	
 	@Test
 	public void testFour() throws PropertyVetoException, IOException, ContradictionException
 	{
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexDouble(5.0), new RefexDouble(3.0), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexDouble(1.0), new RefexDouble(3.0), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexInteger(5), new RefexDouble(3.0), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexInteger(1), new RefexDouble(3.0), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexFloat(5.0f), new RefexFloat(3.0f), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexDouble(1.0), new RefexFloat(3.0f), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexLong(Long.MAX_VALUE), new RefexLong(30), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexLong(1), new RefexLong(3), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexLong(1), new RefexLong(1), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL, new RefexLong(1), new RefexDouble(1), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexDouble(5.0), new RefexDouble(3.0), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexDouble(1.0), new RefexDouble(3.0), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexInteger(5), new RefexDouble(3.0), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexInteger(1), new RefexDouble(3.0), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexFloat(5.0f), new RefexFloat(3.0f), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexDouble(1.0), new RefexFloat(3.0f), null));
+		Assert.assertFalse(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexLong(Long.MAX_VALUE), new RefexLong(30), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexLong(1), new RefexLong(3), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexLong(1), new RefexLong(1), null));
+		Assert.assertTrue(RefexDynamicValidatorType.LESS_THAN_OR_EQUAL.passesValidator(new RefexLong(1), new RefexDouble(1), null));
 	}
 	
 	@Test
 	public void testInterval() throws PropertyVetoException, IOException, ContradictionException
 	{
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexDouble(5.0), new RefexString("[4, 7]"), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexDouble(5.0), new RefexString("[4.0, 7.7]"), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexFloat(5.0f), new RefexString("[4, 7]"), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexFloat(5.0f), new RefexString("[4.0, 7.7]"), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexLong(5l), new RefexString("[4, 7]"), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexLong(5l), new RefexString("[4.0, 7.7]"), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexInteger(5), new RefexString("[4, 7]"), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexInteger(5), new RefexString("[4.0, 7.7]"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexDouble(5.0), new RefexString("[4, 7]"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexDouble(5.0), new RefexString("[4.0, 7.7]"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexFloat(5.0f), new RefexString("[4, 7]"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexFloat(5.0f), new RefexString("[4.0, 7.7]"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexLong(5l), new RefexString("[4, 7]"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexLong(5l), new RefexString("[4.0, 7.7]"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexInteger(5), new RefexString("[4, 7]"), null));
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexInteger(5), new RefexString("[4.0, 7.7]"), null));
 		
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexInteger(Integer.MAX_VALUE), 
+		Assert.assertFalse(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexInteger(Integer.MAX_VALUE), 
 				new RefexString("[4.0, 7.7]"), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexInteger(Integer.MAX_VALUE), 
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexInteger(Integer.MAX_VALUE), 
 				new RefexString("[4.0,2147483647]"), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexInteger(Integer.MAX_VALUE), 
+		Assert.assertFalse(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexInteger(Integer.MAX_VALUE), 
 				new RefexString(" [4.0 , 2147483647) "), null));
 		
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexDouble(Double.MIN_VALUE), 
+		Assert.assertFalse(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexDouble(Double.MIN_VALUE), 
 				new RefexString(" [4.0 , 2147483647) "), null));
-		Assert.assertTrue(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexInteger(Integer.MIN_VALUE), 
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexInteger(Integer.MIN_VALUE), 
 				new RefexString(" [-2147483648 , 2147483647) "), null));
-		Assert.assertFalse(RefexDynamicValidatorTypeImpl.passesValidator(RefexDynamicValidatorType.INTERVAL, new RefexInteger(Integer.MIN_VALUE), 
+		Assert.assertFalse(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexInteger(Integer.MIN_VALUE), 
 				new RefexString(" (-2147483648 , 2147483647) "), null));
 		
 	}
