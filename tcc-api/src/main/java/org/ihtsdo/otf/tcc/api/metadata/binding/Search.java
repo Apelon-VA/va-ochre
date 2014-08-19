@@ -74,6 +74,9 @@ public class Search {
 	public static ConceptSpec SEARCH_FILTER_ATTRIBUTES_FILTER_ORDER_COLUMN = new ConceptSpec("order", 
 			UUID.fromString("795bade0-9ffb-54ef-8385-8570b4f708cf"),
 			SEARCH_TYPES);
+	public static ConceptSpec SEARCH_FILTER_ATTRIBUTES_INVERT_COLUMN = new ConceptSpec("invert", 
+			UUID.fromString("59e916fc-4632-5574-97c2-6e63b74a2ca3"),
+			SEARCH_TYPES);
 	
 	public static ConceptSpec SEARCH_LUCENE_FILTER = new ConceptSpec("Search Lucene Filter", 
 			UUID.fromString("4ece37d7-1ae0-5c5e-b475-f8e3bdce4d86"),
@@ -94,6 +97,16 @@ public class Search {
 	public static ConceptSpec SEARCH_REGEXP_FILTER_PARAMETER_COLUMN = new ConceptSpec("param",
 			UUID.fromString("e8e707f1-bea2-534b-bbb4-78212fb22dc9"),
 			SEARCH_REGEXP_FILTER_COLUMNS);
+
+	public static ConceptSpec SEARCH_ISDESCENDANTOF_FILTER = new ConceptSpec("Search IsDescendantOf Filter", 
+			UUID.fromString("58bea66c-65fb-5c52-bf71-d742aebe3822"),
+			SEARCH_TYPES);
+	public static ConceptSpec SEARCH_ISDESCENDANTOF_FILTER_COLUMNS = new ConceptSpec("Search IsDescendantOf Filter Columns", 
+			UUID.fromString("fc23bcaa-8f0f-53dd-bd15-ba2a87009113"),
+			SEARCH_TYPES);
+	public static ConceptSpec SEARCH_ISDESCENDANTOF_FILTER_ASCENDANT_COLUMN = new ConceptSpec("ascendant",
+			UUID.fromString("fdcac37e-e22f-5f51-b7a6-f8de283c6cf0"),
+			SEARCH_ISDESCENDANTOF_FILTER_COLUMNS);
 	/**
 	 * 
 	 */
