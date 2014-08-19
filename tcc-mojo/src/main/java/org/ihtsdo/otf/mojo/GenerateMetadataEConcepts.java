@@ -241,38 +241,38 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				else if (Search.SEARCH_GLOBAL_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
 					//TODO [JOEL] Are these required, or optional?  I made everything optional, for now...
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_GLOBAL_ATTRIBUTES_VIEW_COORDINATE_COLUMN.getUuids()[0], RefexDynamicDataType.BYTEARRAY, null, false, null, null));
-					columns.add(new RefexDynamicColumnInfo(1, Search.SEARCH_GLOBAL_ATTRIBUTES_MAX_RESULTS_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null, false, null, null));
-					columns.add(new RefexDynamicColumnInfo(2, Search.SEARCH_GLOBAL_ATTRIBUTES_DROOLS_EXPR_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.VIEW_COORDINATE_COLUMN.getUuids()[0], RefexDynamicDataType.BYTEARRAY, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(1, Search.MAX_RESULTS_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(2, Search.DROOLS_EXPR_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search Global Attributes is for attributes effecting all filters on a search concept", columns);
 				}
 				else if (Search.SEARCH_FILTER_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_FILTER_ATTRIBUTES_FILTER_ORDER_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null, false, null, null));
-					columns.add(new RefexDynamicColumnInfo(1, Search.SEARCH_FILTER_ATTRIBUTES_INVERT_COLUMN.getUuids()[0], RefexDynamicDataType.BOOLEAN, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.ORDER_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null, true, null, null));
+					columns.add(new RefexDynamicColumnInfo(1, Search.FILTER_INVERT_COLUMN.getUuids()[0], RefexDynamicDataType.BOOLEAN, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search Type Attributes is for attributes effecting all filters of a certain type such as Lucene or RegExp", columns);
 				}
 				else if (Search.SEARCH_LUCENE_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_LUCENE_FILTER_PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search Lucene Filter is for attributes effecting this Lucene search", columns);
 				}
 				else if (Search.SEARCH_REGEXP_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_REGEXP_FILTER_PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.PARAMETER_COLUMN.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search RegExp Filter is for attributes effecting this RegExp search", columns);
 				}
 				else if (Search.SEARCH_ISDESCENDANTOF_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.SEARCH_ISDESCENDANTOF_FILTER_ASCENDANT_COLUMN.getUuids()[0], RefexDynamicDataType.UUID, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.ASCENDANT_COLUMN.getUuids()[0], RefexDynamicDataType.UUID, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search IsDescendantOf Filter is for attributes effecting this IsDescendantOf search", columns);

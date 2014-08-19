@@ -27,6 +27,7 @@ package org.ihtsdo.otf.tcc.api.metadata.binding;
 import java.util.UUID;
 
 import org.ihtsdo.otf.tcc.api.spec.ConceptSpec;
+import org.ihtsdo.otf.tcc.api.spec.ConceptSpecWithDescriptions;
 
 /**
  * Search
@@ -49,64 +50,67 @@ public class Search {
 			UUID.fromString("80d39126-7814-5812-b01f-d6cda1d86496"), 
 			SEARCH_TYPES);
 	
-	//TODO [JOEL] - Please see the new ConceptSpecWithDescriptions class that I added - which will allow you to put the definition here as well for 
-	//your columns.  See RefexDynamic for usage...
-	
 	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES = new ConceptSpec("Search Global Attributes", 
 			UUID.fromString("27316605-16ea-536e-9acd-40f0277e20ad"),
 			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES_COLUMNS = new ConceptSpec("Search Global Attributes Columns", 
-			UUID.fromString("6774d7b9-42af-5fbc-9e1d-565fc2f3ed57"),
-			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES_VIEW_COORDINATE_COLUMN = new ConceptSpec("vc", 
+	public static ConceptSpec VIEW_COORDINATE_COLUMN = new ConceptSpecWithDescriptions(
+			"view coordinate", 
 			UUID.fromString("5010f18f-c469-5315-8c5e-f7d9b65373c5"),
-			SEARCH_GLOBAL_ATTRIBUTES_COLUMNS);
-	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES_MAX_RESULTS_COLUMN = new ConceptSpec("max", 
+			new String[] { "view coordinate" }, 
+			new String[] { "view coordinate column" },
+			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
+	public static ConceptSpec MAX_RESULTS_COLUMN = new ConceptSpecWithDescriptions(
+			"max results", 
 			UUID.fromString("63981b45-bbbe-5247-b571-d7fee02aad79"),
-			SEARCH_GLOBAL_ATTRIBUTES_COLUMNS);
-	public static ConceptSpec SEARCH_GLOBAL_ATTRIBUTES_DROOLS_EXPR_COLUMN = new ConceptSpec("drools", 
+			new String[] { "max results" }, 
+			new String[] { "maximum displayable results column" },
+			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
+	public static ConceptSpec DROOLS_EXPR_COLUMN = new ConceptSpecWithDescriptions(
+			"drools", 
 			UUID.fromString("c0091cf4-f063-5964-85c5-0fdf14b5bb00"),
-			SEARCH_GLOBAL_ATTRIBUTES_COLUMNS);
+			new String[] { "drools" }, 
+			new String[] { "drools expression column" },
+			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
 	
 	public static ConceptSpec SEARCH_FILTER_ATTRIBUTES = new ConceptSpec("Search Filter Attributes", 
 			UUID.fromString("b3ac9404-883b-5ba4-b65f-b629970ecc17"),
 			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_FILTER_ATTRIBUTES_FILTER_ORDER_COLUMN = new ConceptSpec("order", 
+	public static ConceptSpec ORDER_COLUMN = new ConceptSpecWithDescriptions(
+			"order", 
 			UUID.fromString("795bade0-9ffb-54ef-8385-8570b4f708cf"),
-			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_FILTER_ATTRIBUTES_INVERT_COLUMN = new ConceptSpec("invert", 
+			new String[] { "order" }, 
+			new String[] { "order column" },
+			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
+	public static ConceptSpec FILTER_INVERT_COLUMN = new ConceptSpecWithDescriptions(
+			"invert", 
 			UUID.fromString("59e916fc-4632-5574-97c2-6e63b74a2ca3"),
-			SEARCH_TYPES);
+			new String[] { "invert" }, 
+			new String[] { "invert filter/match results column" },
+			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
 	
 	public static ConceptSpec SEARCH_LUCENE_FILTER = new ConceptSpec("Search Lucene Filter", 
 			UUID.fromString("4ece37d7-1ae0-5c5e-b475-f8e3bdce4d86"),
 			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_LUCENE_FILTER_COLUMNS = new ConceptSpec("Search Lucene Filter Columns", 
-			UUID.fromString("6774d7b9-42af-5fbc-9e1d-565fc2f3ed57"),
-			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_LUCENE_FILTER_PARAMETER_COLUMN = new ConceptSpec("param",
+	public static ConceptSpec PARAMETER_COLUMN = new ConceptSpecWithDescriptions("param",
 			UUID.fromString("e28f2c45-1c0b-569a-a329-304ea04ade17"),
-			SEARCH_LUCENE_FILTER_COLUMNS);
+			new String[] { "param" }, 
+			new String[] { "parameter column" },
+			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
 	
 	public static ConceptSpec SEARCH_REGEXP_FILTER = new ConceptSpec("Search RegExp Filter", 
 			UUID.fromString("39c21ff8-cd48-5ac8-8110-40b7d8b30e61"),
 			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_REGEXP_FILTER_COLUMNS = new ConceptSpec("Search RegExp Filter Columns", 
-			UUID.fromString("982c6007-42f6-5034-92c1-6d298b00ad7e"),
-			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_REGEXP_FILTER_PARAMETER_COLUMN = new ConceptSpec("param",
-			UUID.fromString("e8e707f1-bea2-534b-bbb4-78212fb22dc9"),
-			SEARCH_REGEXP_FILTER_COLUMNS);
 
 	public static ConceptSpec SEARCH_ISDESCENDANTOF_FILTER = new ConceptSpec("Search IsDescendantOf Filter", 
 			UUID.fromString("58bea66c-65fb-5c52-bf71-d742aebe3822"),
 			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_ISDESCENDANTOF_FILTER_COLUMNS = new ConceptSpec("Search IsDescendantOf Filter Columns", 
-			UUID.fromString("fc23bcaa-8f0f-53dd-bd15-ba2a87009113"),
-			SEARCH_TYPES);
-	public static ConceptSpec SEARCH_ISDESCENDANTOF_FILTER_ASCENDANT_COLUMN = new ConceptSpec("ascendant",
+	public static ConceptSpec ASCENDANT_COLUMN = new ConceptSpecWithDescriptions(
+			"ascendant",
 			UUID.fromString("fdcac37e-e22f-5f51-b7a6-f8de283c6cf0"),
-			SEARCH_ISDESCENDANTOF_FILTER_COLUMNS);
+			new String[] { "ascendant" }, 
+			new String[] { "ascendant concept column" },
+			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
+	
 	/**
 	 * 
 	 */
