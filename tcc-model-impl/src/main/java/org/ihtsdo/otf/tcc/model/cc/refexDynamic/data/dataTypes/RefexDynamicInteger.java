@@ -18,51 +18,39 @@ package org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.UUID;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
-import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicUUIDBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 
 /**
  * 
- * {@link RefexUUID}
+ * {@link RefexDynamicInteger}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexUUID extends RefexDynamicData implements RefexDynamicUUIDBI {
+public class RefexDynamicInteger extends RefexDynamicData implements RefexDynamicIntegerBI {
 
-	private ObjectProperty<UUID> property_;
+	private ObjectProperty<Integer> property_;
 
-	protected RefexUUID(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexDynamicInteger(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexUUID(UUID uuid) throws PropertyVetoException {
+	public RefexDynamicInteger(int integer) throws PropertyVetoException {
 		super();
-		if (uuid == null)
-		{
-			throw new PropertyVetoException("The uuid value cannot be null", null);
-		}
-		ByteBuffer b = ByteBuffer.allocate(16);
-		b.putLong(uuid.getMostSignificantBits());
-		b.putLong(uuid.getLeastSignificantBits());
-		data_ = b.array();
+		data_ = intToByteArray(integer);
 	}
 
 	/**
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicUUIDBI#getDataUUID()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI#getDataInteger()
 	 */
 	@Override
-	public UUID getDataUUID() {
-		ByteBuffer b = ByteBuffer.wrap(data_);
-		long most = b.getLong();
-		long least = b.getLong();
-		return new UUID(most, least);
+	public int getDataInteger() {
+		return getIntFromByteArray(data_);
 	}
 
 	/**
@@ -70,7 +58,7 @@ public class RefexUUID extends RefexDynamicData implements RefexDynamicUUIDBI {
 	 */
 	@Override
 	public Object getDataObject() {
-		return getDataUUID();
+		return getDataInteger();
 	}
 
 	/**
@@ -80,19 +68,32 @@ public class RefexUUID extends RefexDynamicData implements RefexDynamicUUIDBI {
 	 */
 	@Override
 	public ReadOnlyObjectProperty<?> getDataObjectProperty() throws IOException, ContradictionException {
-		return getDataUUIDProperty();
+		return getDataIntegerProperty();
 	}
 
 	/**
 	 * @throws ContradictionException 
 	 * @throws IOException 
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicUUIDBI#getDataUUIDProperty()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI#getDataIntegerProperty()
 	 */
 	@Override
-	public ReadOnlyObjectProperty<UUID> getDataUUIDProperty() throws IOException, ContradictionException {
+	public ReadOnlyObjectProperty<Integer> getDataIntegerProperty() throws IOException, ContradictionException {
 		if (property_ == null) {
-			property_ = new SimpleObjectProperty<>(null, getName(), getDataUUID());
+			property_ = new SimpleObjectProperty<>(null, getName(), getDataInteger());
 		}
 		return property_;
+	}
+
+	protected static byte[] intToByteArray(int integer) {
+		byte[] bytes = new byte[4];
+		bytes[0] = (byte) (integer >> 24);
+		bytes[1] = (byte) (integer >> 16);
+		bytes[2] = (byte) (integer >> 8);
+		bytes[3] = (byte) (integer >> 0);
+		return bytes;
+	}
+
+	protected static int getIntFromByteArray(byte[] bytes) {
+		return ((bytes[0] << 24) | ((bytes[1] & 0xFF) << 16) | ((bytes[2] & 0xFF) << 8) | ((bytes[3] & 0xFF) << 0));
 	}
 }

@@ -23,37 +23,37 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDouble;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicFloat;
 import org.junit.Test;
 
 /**
- * {@link RefexDoubleTest}
+ * {@link RefexDynamicFloatTest}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexDoubleTest
+public class RefexDynamicFloatTest
 {
 	@Test
 	public void testSerialization() throws PropertyVetoException, IOException, ContradictionException
 	{
 
-		double[] testValues = new double[] { Double.MIN_VALUE, Double.MAX_VALUE, 0, 4, 6, 4.56, 4.292732, 984, -234, -29837, 4532, 3289402830942309d, -9128934721874891d };
+		float[] testValues = new float[] { Float.MIN_VALUE, Float.MAX_VALUE, 0, 4, 6, 4.56f, 4.292732f, 984, -234, -29837, 4532, 3289402830942309f, -9128934721874891f };
 
-		for (double l : testValues)
+		for (float l : testValues)
 		{
 			test(l);
 		}
 	}
 
-	private void test(double value) throws PropertyVetoException, IOException, ContradictionException
+	private void test(float value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexDouble l = new RefexDouble(value);
+		RefexDynamicFloat l = new RefexDynamicFloat(value);
 		l.setNameIfAbsent("foo");
 
-		assertEquals(value, l.getDataDouble(), 0);
-		assertEquals(value, (Double) l.getDataObject(), 0);
-		assertEquals(value, (Double) l.getDataObjectProperty().get(), 0);
-		assertEquals(l.getRefexDataType(), RefexDynamicDataType.DOUBLE);
+		assertEquals(value, l.getDataFloat(), 0);
+		assertEquals(value, (Float) l.getDataObject(), 0);
+		assertEquals(value, (Float) l.getDataObjectProperty().get(), 0);
+		assertEquals(l.getRefexDataType(), RefexDynamicDataType.FLOAT);
 		assertEquals(l.getDataObjectProperty().getName(), "foo");
 	}
 }

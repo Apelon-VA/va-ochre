@@ -22,35 +22,39 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
-import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicStringBI;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 
 /**
  * 
- * {@link RefexByteArray}
+ * {@link RefexDynamicString}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexByteArray extends RefexDynamicData implements RefexDynamicByteArrayBI {
+public class RefexDynamicString extends RefexDynamicData implements RefexDynamicStringBI {
 
-	private ObjectProperty<byte[]> property_;
+	private ObjectProperty<String> property_;
 
-	protected RefexByteArray(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexDynamicString(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexByteArray(byte[] bytes) throws PropertyVetoException {
+	public RefexDynamicString(String string) throws PropertyVetoException {
 		super();
-		data_ = bytes;
+		if (string == null)
+		{
+			throw new PropertyVetoException("The string value cannot be null", null);
+		}
+		data_ = string.getBytes();
 	}
 
 	/**
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI#getDataByteArray()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicStringBI#getDataString()
 	 */
 	@Override
-	public byte[] getDataByteArray() {
-		return data_;
+	public String getDataString() {
+		return new String(data_);
 	}
 
 	/**
@@ -58,7 +62,7 @@ public class RefexByteArray extends RefexDynamicData implements RefexDynamicByte
 	 */
 	@Override
 	public Object getDataObject() {
-		return getDataByteArray();
+		return getDataString();
 	}
 
 	/**
@@ -68,19 +72,20 @@ public class RefexByteArray extends RefexDynamicData implements RefexDynamicByte
 	 */
 	@Override
 	public ReadOnlyObjectProperty<?> getDataObjectProperty() throws IOException, ContradictionException {
-		return getDataByteArrayProperty();
+		return getDataStringProperty();
 	}
 
 	/**
 	 * @throws ContradictionException 
 	 * @throws IOException 
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI#getDataByteArrayProperty()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicStringBI#getDataStringProperty()
 	 */
 	@Override
-	public ReadOnlyObjectProperty<byte[]> getDataByteArrayProperty() throws IOException, ContradictionException {
+	public ReadOnlyObjectProperty<String> getDataStringProperty() throws IOException, ContradictionException {
 		if (property_ == null) {
-			property_ = new SimpleObjectProperty<byte[]>(null, getName(), data_);
+			property_ = new SimpleObjectProperty<>(null, getName(), getDataString());
 		}
 		return property_;
 	}
+
 }

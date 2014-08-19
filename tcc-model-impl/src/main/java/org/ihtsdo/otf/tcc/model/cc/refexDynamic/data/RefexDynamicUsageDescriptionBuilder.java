@@ -55,10 +55,10 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicStringBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicUUIDBI;
 import org.ihtsdo.otf.tcc.api.store.Ts;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexBoolean;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexInteger;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexString;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexUUID;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicBoolean;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicInteger;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicString;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicUUID;
 
 /**
  * {@link RefexDynamicUsageDescriptionBuilder}
@@ -137,16 +137,16 @@ public class RefexDynamicUsageDescriptionBuilder
 				
 				RefexDynamicDataBI[] data = new RefexDynamicDataBI[7];
 				
-				data[0] = new RefexInteger(ci.getColumnOrder());
-				data[1] = new RefexUUID(ci.getColumnDescriptionConcept());
+				data[0] = new RefexDynamicInteger(ci.getColumnOrder());
+				data[1] = new RefexDynamicUUID(ci.getColumnDescriptionConcept());
 				if (RefexDynamicDataType.UNKNOWN == ci.getColumnDataType())
 				{
 					throw new InvalidCAB("Error in column - if default value is provided, the type cannot be polymorphic");
 				}
-				data[2] = new RefexString(ci.getColumnDataType().name());
+				data[2] = new RefexDynamicString(ci.getColumnDataType().name());
 				data[3] = convertPolymorphicDataColumn(ci.getDefaultColumnValue(), ci.getColumnDataType());
-				data[4] = new RefexBoolean(ci.isColumnRequired());
-				data[5] = (ci.getValidator() == null ? null : new RefexString(ci.getValidator().name()));
+				data[4] = new RefexDynamicBoolean(ci.isColumnRequired());
+				data[5] = (ci.getValidator() == null ? null : new RefexDynamicString(ci.getValidator().name()));
 				data[6] = (ci.getValidatorData() == null ? null : convertPolymorphicDataColumn(ci.getValidatorData(), ci.getValidatorData().getRefexDataType()));
 				rCab.setData(data, null);  //View Coordinate is only used to evaluate validators - but there are no validators assigned to the RefexDefinition refex
 				//so we can get away with passing null

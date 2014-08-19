@@ -22,40 +22,40 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 
 /**
- * {@link TypeToClassUtility}
+ * {@link RefexDynamicTypeToClassUtility}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a> 
  */
-public class TypeToClassUtility
+public class RefexDynamicTypeToClassUtility
 {
 	public static RefexDynamicData typeToClass(RefexDynamicDataType type, byte[] data, int assemblageNid, int columnNumber) 
 	{
 		if (RefexDynamicDataType.NID == type) {
-			return new RefexNid(data, assemblageNid, columnNumber);
+			return new RefexDynamicNid(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.STRING == type) {
-			return new RefexString(data, assemblageNid, columnNumber);
+			return new RefexDynamicString(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.INTEGER == type) {
-			return new RefexInteger(data, assemblageNid, columnNumber);
+			return new RefexDynamicInteger(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.BOOLEAN == type) {
-			return new RefexBoolean(data, assemblageNid, columnNumber);
+			return new RefexDynamicBoolean(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.LONG == type) {
-			return new RefexLong(data, assemblageNid, columnNumber);
+			return new RefexDynamicLong(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.BYTEARRAY == type) {
-			return new RefexByteArray(data, assemblageNid, columnNumber);
+			return new RefexDynamicByteArray(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.FLOAT == type) {
-			return new RefexFloat(data, assemblageNid, columnNumber);
+			return new RefexDynamicFloat(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.DOUBLE == type) {
-			return new RefexDouble(data, assemblageNid, columnNumber);
+			return new RefexDynamicDouble(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.UUID == type) {
-			return new RefexUUID(data, assemblageNid, columnNumber);
+			return new RefexDynamicUUID(data, assemblageNid, columnNumber);
 		}
 		if (RefexDynamicDataType.POLYMORPHIC == type || RefexDynamicDataType.UNKNOWN == type) {
 			throw new RuntimeException("No implementation exists for type unknown");

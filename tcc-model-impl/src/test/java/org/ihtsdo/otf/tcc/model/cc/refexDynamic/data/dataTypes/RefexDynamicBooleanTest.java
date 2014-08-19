@@ -23,37 +23,37 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexNid;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicBoolean;
 import org.junit.Test;
 
 /**
- * {@link RefexNidTest}
+ * {@link RefexDynamicBooleanTest}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexNidTest
+public class RefexDynamicBooleanTest
 {
 	@Test
 	public void testSerialization() throws PropertyVetoException, IOException, ContradictionException
 	{
 
-		int[] testValues = new int[] { Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 4, 6, 984, -234, -29837, 4532 };
+		boolean[] testValues = new boolean[] { true, false };
 
-		for (int i : testValues)
+		for (boolean i : testValues)
 		{
 			test(i);
 		}
 	}
 
-	private void test(int value) throws PropertyVetoException, IOException, ContradictionException
+	private void test(boolean value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexNid i = new RefexNid(value);
+		RefexDynamicBoolean i = new RefexDynamicBoolean(value);
 		i.setNameIfAbsent("foo");
-		
-		assertEquals(value, i.getDataNid());
-		assertEquals(value, ((Integer) i.getDataObject()).intValue());
-		assertEquals(value, ((Integer) i.getDataObjectProperty().get()).intValue());
-		assertEquals(i.getRefexDataType(), RefexDynamicDataType.NID);
+
+		assertEquals(value, i.getDataBoolean());
+		assertEquals(value, (Boolean) i.getDataObject());
+		assertEquals(value, (Boolean) i.getDataObjectProperty().get());
+		assertEquals(i.getRefexDataType(), RefexDynamicDataType.BOOLEAN);
 		assertEquals(i.getDataObjectProperty().getName(), "foo");
 	}
 }

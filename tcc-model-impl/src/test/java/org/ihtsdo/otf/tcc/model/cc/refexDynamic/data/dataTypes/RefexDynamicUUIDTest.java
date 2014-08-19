@@ -21,39 +21,40 @@ package org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes;
 import static org.junit.Assert.assertEquals;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.util.UUID;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexBoolean;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicUUID;
 import org.junit.Test;
 
 /**
- * {@link RefexBooleanTest}
+ * {@link RefexDynamicUUIDTest}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexBooleanTest
+public class RefexDynamicUUIDTest
 {
 	@Test
 	public void testSerialization() throws PropertyVetoException, IOException, ContradictionException
 	{
 
-		boolean[] testValues = new boolean[] { true, false };
+		UUID[] testValues = new UUID[] { UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()};
 
-		for (boolean i : testValues)
+		for (UUID uuid : testValues)
 		{
-			test(i);
+			test(uuid);
 		}
 	}
 
-	private void test(boolean value) throws PropertyVetoException, IOException, ContradictionException
+	private void test(UUID value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexBoolean i = new RefexBoolean(value);
-		i.setNameIfAbsent("foo");
+		RefexDynamicUUID uuid = new RefexDynamicUUID(value);
+		uuid.setNameIfAbsent("foo");
 
-		assertEquals(value, i.getDataBoolean());
-		assertEquals(value, (Boolean) i.getDataObject());
-		assertEquals(value, (Boolean) i.getDataObjectProperty().get());
-		assertEquals(i.getRefexDataType(), RefexDynamicDataType.BOOLEAN);
-		assertEquals(i.getDataObjectProperty().getName(), "foo");
+		assertEquals(value, uuid.getDataUUID());
+		assertEquals(value, (UUID) uuid.getDataObject());
+		assertEquals(value, (UUID) uuid.getDataObjectProperty().get());
+		assertEquals(uuid.getRefexDataType(), RefexDynamicDataType.UUID);
+		assertEquals(uuid.getDataObjectProperty().getName(), "foo");
 	}
 }

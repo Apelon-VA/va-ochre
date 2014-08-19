@@ -22,58 +22,35 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
-import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicBooleanBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 
 /**
  * 
- * {@link RefexBoolean}
+ * {@link RefexDynamicNid}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexBoolean extends RefexDynamicData implements RefexDynamicBooleanBI {
+public class RefexDynamicNid extends RefexDynamicData implements RefexDynamicNidBI {
+	
+	private ObjectProperty<Integer> property_;
 
-	private ObjectProperty<Boolean> property_;
-
-	protected RefexBoolean(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexDynamicNid(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexBoolean(boolean b) throws PropertyVetoException {
+	public RefexDynamicNid(int nid) throws PropertyVetoException {
 		super();
-		data_ = (b ? new byte[] { 1 } : new byte[] { 0 });
+		data_ = RefexDynamicInteger.intToByteArray(nid);
 	}
 
 	/**
-	 * @throws ContradictionException 
-	 * @throws IOException 
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicBooleanBI#getDataBooleanProperty()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI#getDataNid()
 	 */
 	@Override
-	public ReadOnlyObjectProperty<Boolean> getDataBooleanProperty() throws IOException, ContradictionException {
-		if (property_ == null) {
-			property_ = new SimpleObjectProperty<Boolean>(null, getName(), getDataBoolean());
-		}
-		return property_;
-	}
-
-	/**
-	 * @throws ContradictionException 
-	 * @throws IOException 
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI#getDataObject()
-	 */
-	@Override
-	public ReadOnlyObjectProperty<?> getDataObjectProperty() throws IOException, ContradictionException {
-		return getDataBooleanProperty();
-	}
-
-	/**
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicBooleanBI#getDataBoolean()
-	 */
-	@Override
-	public boolean getDataBoolean() {
-		return data_[0] == 1 ? true : false;
+	public int getDataNid() {
+		return RefexDynamicInteger.getIntFromByteArray(data_);
 	}
 
 	/**
@@ -81,6 +58,29 @@ public class RefexBoolean extends RefexDynamicData implements RefexDynamicBoolea
 	 */
 	@Override
 	public Object getDataObject() {
-		return getDataBoolean();
+		return getDataNid();
+	}
+
+	/**
+	 * @throws ContradictionException 
+	 * @throws IOException 
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI#getDataObjectProperty()
+	 */
+	@Override
+	public ReadOnlyObjectProperty<?> getDataObjectProperty() throws IOException, ContradictionException {
+		return getDataNidProperty();
+	}
+
+	/**
+	 * @throws ContradictionException 
+	 * @throws IOException 
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI#getDataNidProperty()
+	 */
+	@Override
+	public ReadOnlyObjectProperty<Integer> getDataNidProperty() throws IOException, ContradictionException {
+		if (property_ == null) {
+			property_ = new SimpleObjectProperty<>(null, getName(), getDataNid());
+		}
+		return property_;
 	}
 }

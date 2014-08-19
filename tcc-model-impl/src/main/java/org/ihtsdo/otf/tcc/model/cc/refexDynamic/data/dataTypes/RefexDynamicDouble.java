@@ -18,39 +18,40 @@ package org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
-import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 
 /**
  * 
- * {@link RefexInteger}
+ * {@link RefexDynamicDouble}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexInteger extends RefexDynamicData implements RefexDynamicIntegerBI {
+public class RefexDynamicDouble extends RefexDynamicData implements RefexDynamicDoubleBI {
 
-	private ObjectProperty<Integer> property_;
+	private ObjectProperty<Double> property_;
 
-	protected RefexInteger(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexDynamicDouble(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexInteger(int integer) throws PropertyVetoException {
+	public RefexDynamicDouble(double d) throws PropertyVetoException {
 		super();
-		data_ = intToByteArray(integer);
+		data_ = ByteBuffer.allocate(8).putDouble(d).array();
 	}
 
 	/**
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI#getDataInteger()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI#getDataDouble()
 	 */
 	@Override
-	public int getDataInteger() {
-		return getIntFromByteArray(data_);
+	public double getDataDouble() {
+		return ByteBuffer.wrap(data_).getDouble();
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class RefexInteger extends RefexDynamicData implements RefexDynamicIntege
 	 */
 	@Override
 	public Object getDataObject() {
-		return getDataInteger();
+		return getDataDouble();
 	}
 
 	/**
@@ -68,32 +69,19 @@ public class RefexInteger extends RefexDynamicData implements RefexDynamicIntege
 	 */
 	@Override
 	public ReadOnlyObjectProperty<?> getDataObjectProperty() throws IOException, ContradictionException {
-		return getDataIntegerProperty();
+		return getDataDoubleProperty();
 	}
 
 	/**
 	 * @throws ContradictionException 
 	 * @throws IOException 
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI#getDataIntegerProperty()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI#getDataDoubleProperty()
 	 */
 	@Override
-	public ReadOnlyObjectProperty<Integer> getDataIntegerProperty() throws IOException, ContradictionException {
+	public ReadOnlyObjectProperty<Double> getDataDoubleProperty() throws IOException, ContradictionException {
 		if (property_ == null) {
-			property_ = new SimpleObjectProperty<>(null, getName(), getDataInteger());
+			property_ = new SimpleObjectProperty<>(null, getName(), getDataDouble());
 		}
 		return property_;
-	}
-
-	protected static byte[] intToByteArray(int integer) {
-		byte[] bytes = new byte[4];
-		bytes[0] = (byte) (integer >> 24);
-		bytes[1] = (byte) (integer >> 16);
-		bytes[2] = (byte) (integer >> 8);
-		bytes[3] = (byte) (integer >> 0);
-		return bytes;
-	}
-
-	protected static int getIntFromByteArray(byte[] bytes) {
-		return ((bytes[0] << 24) | ((bytes[1] & 0xFF) << 16) | ((bytes[2] & 0xFF) << 8) | ((bytes[3] & 0xFF) << 0));
 	}
 }

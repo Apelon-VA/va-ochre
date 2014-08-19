@@ -62,15 +62,15 @@ import org.ihtsdo.otf.tcc.dto.component.refex.TtkRefexAbstractMemberChronicle;
 import org.ihtsdo.otf.tcc.dto.component.refex.type_uuid.TtkRefexUuidMemberChronicle;
 import org.ihtsdo.otf.tcc.dto.component.refexDynamic.TtkRefexDynamicMemberChronicle;
 import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.TtkRefexDynamicData;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexBoolean;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexByteArray;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDouble;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexFloat;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexInteger;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexLong;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexNid;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexString;
-import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexUUID;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicBoolean;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicByteArray;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicDouble;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicFloat;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicInteger;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicLong;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicNid;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicString;
+import org.ihtsdo.otf.tcc.dto.component.refexDynamic.data.dataTypes.TtkRefexDynamicUUID;
 import org.ihtsdo.otf.tcc.dto.component.relationship.TtkRelationshipChronicle;
 
 /**
@@ -551,12 +551,12 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 			for (RefexDynamicColumnInfo col : columns)
 			{
 				TtkRefexDynamicData[] data = new TtkRefexDynamicData[7];
-				data[0] = new TtkRefexInteger(col.getColumnOrder());
-				data[1] = new TtkRefexUUID(col.getColumnDescriptionConcept());
-				data[2] = new TtkRefexString(col.getColumnDataType().name());
+				data[0] = new TtkRefexDynamicInteger(col.getColumnOrder());
+				data[1] = new TtkRefexDynamicUUID(col.getColumnDescriptionConcept());
+				data[2] = new TtkRefexDynamicString(col.getColumnDataType().name());
 				data[3] = convertPolymorphicDataColumn(col.getDefaultColumnValue(), col.getColumnDataType());
-				data[4] = new TtkRefexBoolean(col.isColumnRequired());
-				data[5] = (col.getValidator() == null ? null : new TtkRefexString(col.getValidator().name()));
+				data[4] = new TtkRefexDynamicBoolean(col.isColumnRequired());
+				data[5] = (col.getValidator() == null ? null : new TtkRefexDynamicString(col.getValidator().name()));
 				data[6] = (col.getValidatorData() == null ? null : convertPolymorphicDataColumn(col.getValidatorData(), col.getValidatorData().getRefexDataType()));
 				addDynamicAnnotation(concept.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0], data);
 			}
@@ -573,39 +573,39 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 			{
 				if (RefexDynamicDataType.BOOLEAN == columnType)
 				{
-					result = new TtkRefexBoolean((Boolean)defaultValue.getDataObject());
+					result = new TtkRefexDynamicBoolean((Boolean)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.BYTEARRAY == columnType)
 				{
-					result = new TtkRefexByteArray((byte[])defaultValue.getDataObject());
+					result = new TtkRefexDynamicByteArray((byte[])defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.DOUBLE == columnType)
 				{
-					result = new TtkRefexDouble((Double)defaultValue.getDataObject());
+					result = new TtkRefexDynamicDouble((Double)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.FLOAT == columnType)
 				{
-					result = new TtkRefexFloat((Float)defaultValue.getDataObject());
+					result = new TtkRefexDynamicFloat((Float)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.INTEGER == columnType)
 				{
-					result = new TtkRefexInteger((Integer)defaultValue.getDataObject());
+					result = new TtkRefexDynamicInteger((Integer)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.LONG == columnType)
 				{
-					result = new TtkRefexLong((Long)defaultValue.getDataObject());
+					result = new TtkRefexDynamicLong((Long)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.NID == columnType)
 				{
-					result = new TtkRefexNid((Integer)defaultValue.getDataObject());
+					result = new TtkRefexDynamicNid((Integer)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.STRING == columnType)
 				{
-					result = new TtkRefexString((String)defaultValue.getDataObject());
+					result = new TtkRefexDynamicString((String)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.UUID == columnType)
 				{
-					result = new TtkRefexUUID((UUID)defaultValue.getDataObject());
+					result = new TtkRefexDynamicUUID((UUID)defaultValue.getDataObject());
 				}
 				else if (RefexDynamicDataType.POLYMORPHIC == columnType)
 				{

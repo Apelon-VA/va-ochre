@@ -22,36 +22,38 @@ import static org.junit.Assert.assertEquals;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexLong;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicString;
 import org.junit.Test;
 
 /**
- * {@link RefexLongTest}
+ * {@link RefexDynamicStringTest}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexLongTest
+public class RefexDynamicStringTest
 {
 	@Test
 	public void testSerialization() throws PropertyVetoException, IOException, ContradictionException
 	{
 
-		long[] testValues = new long[] { Long.MIN_VALUE, Long.MAX_VALUE, 0, 4, 6, 984, -234, -29837, 4532, 3289402830942309l, -9128934721874891l };
+		String[] testValues = new String[] { "", "sdfds", "ksldjflksdjfklsdjlfjsdlkfjdsljflksdjfklsd" };
 
-		for (long l : testValues)
+		for (String i : testValues)
 		{
-			test(l);
+			test(i);
 		}
 	}
 
-	private void test(long value) throws PropertyVetoException, IOException, ContradictionException
+	private void test(String value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexLong l = new RefexLong(value);
-		l.setNameIfAbsent("foo");
-		
-		assertEquals(value, l.getDataLong());
-		assertEquals(value, ((Long) l.getDataObject()).longValue());
-		assertEquals(value, ((Long) l.getDataObjectProperty().get()).longValue());
-		assertEquals(l.getDataObjectProperty().getName(), "foo");
+		RefexDynamicString i = new RefexDynamicString(value);
+		i.setNameIfAbsent("foo");
+
+		assertEquals(value, i.getDataString());
+		assertEquals(value, (String) i.getDataObject());
+		assertEquals(value, (String) i.getDataObjectProperty().get());
+		assertEquals(i.getRefexDataType(), RefexDynamicDataType.STRING);
+		assertEquals(i.getDataObjectProperty().getName(), "foo");
 	}
 }

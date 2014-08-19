@@ -18,40 +18,39 @@ package org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
-import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicLongBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 
 /**
  * 
- * {@link RefexLong}
+ * {@link RefexDynamicByteArray}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexLong extends RefexDynamicData implements RefexDynamicLongBI {
+public class RefexDynamicByteArray extends RefexDynamicData implements RefexDynamicByteArrayBI {
 
-	private ObjectProperty<Long> property_;
+	private ObjectProperty<byte[]> property_;
 
-	protected RefexLong(byte[] data, int assemblageNid, int columnNumber)
+	protected RefexDynamicByteArray(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexLong(long l) throws PropertyVetoException {
+	public RefexDynamicByteArray(byte[] bytes) throws PropertyVetoException {
 		super();
-		data_ = ByteBuffer.allocate(8).putLong(l).array();
+		data_ = bytes;
 	}
 
 	/**
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicLongBI#getDataLong()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI#getDataByteArray()
 	 */
 	@Override
-	public long getDataLong() {
-		return ByteBuffer.wrap(data_).getLong();
+	public byte[] getDataByteArray() {
+		return data_;
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class RefexLong extends RefexDynamicData implements RefexDynamicLongBI {
 	 */
 	@Override
 	public Object getDataObject() {
-		return getDataLong();
+		return getDataByteArray();
 	}
 
 	/**
@@ -69,18 +68,18 @@ public class RefexLong extends RefexDynamicData implements RefexDynamicLongBI {
 	 */
 	@Override
 	public ReadOnlyObjectProperty<?> getDataObjectProperty() throws IOException, ContradictionException {
-		return getDataLongProperty();
+		return getDataByteArrayProperty();
 	}
 
 	/**
 	 * @throws ContradictionException 
 	 * @throws IOException 
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicLongBI#getDataLongProperty()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI#getDataByteArrayProperty()
 	 */
 	@Override
-	public ReadOnlyObjectProperty<Long> getDataLongProperty() throws IOException, ContradictionException {
+	public ReadOnlyObjectProperty<byte[]> getDataByteArrayProperty() throws IOException, ContradictionException {
 		if (property_ == null) {
-			property_ = new SimpleObjectProperty<>(null, getName(), getDataLong());
+			property_ = new SimpleObjectProperty<byte[]>(null, getName(), data_);
 		}
 		return property_;
 	}

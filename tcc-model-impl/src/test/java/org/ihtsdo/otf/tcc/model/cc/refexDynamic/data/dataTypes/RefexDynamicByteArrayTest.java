@@ -21,40 +21,39 @@ package org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes;
 import static org.junit.Assert.assertEquals;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.util.UUID;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexUUID;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicByteArray;
 import org.junit.Test;
 
 /**
- * {@link RefexUUIDTest}
+ * {@link RefexDynamicByteArrayTest}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexUUIDTest
+public class RefexDynamicByteArrayTest
 {
 	@Test
 	public void testSerialization() throws PropertyVetoException, IOException, ContradictionException
 	{
 
-		UUID[] testValues = new UUID[] { UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()};
+		byte[][] testValues = new byte[][] { "".getBytes(), "sdfds".getBytes(), "ksldjflksdjfklsdjlfjsdlkfjdsljflksdjfklsd".getBytes() };
 
-		for (UUID uuid : testValues)
+		for (byte[] i : testValues)
 		{
-			test(uuid);
+			test(i);
 		}
 	}
 
-	private void test(UUID value) throws PropertyVetoException, IOException, ContradictionException
+	private void test(byte[] value) throws PropertyVetoException, IOException, ContradictionException
 	{
-		RefexUUID uuid = new RefexUUID(value);
-		uuid.setNameIfAbsent("foo");
+		RefexDynamicByteArray i = new RefexDynamicByteArray(value);
+		i.setNameIfAbsent("foo");
 
-		assertEquals(value, uuid.getDataUUID());
-		assertEquals(value, (UUID) uuid.getDataObject());
-		assertEquals(value, (UUID) uuid.getDataObjectProperty().get());
-		assertEquals(uuid.getRefexDataType(), RefexDynamicDataType.UUID);
-		assertEquals(uuid.getDataObjectProperty().getName(), "foo");
+		assertEquals(value, i.getDataByteArray());
+		assertEquals(value, (byte[]) i.getDataObject());
+		assertEquals(value, (byte[]) i.getDataObjectProperty().get());
+		assertEquals(i.getRefexDataType(), RefexDynamicDataType.BYTEARRAY);
+		assertEquals(i.getDataObjectProperty().getName(), "foo");
 	}
 }

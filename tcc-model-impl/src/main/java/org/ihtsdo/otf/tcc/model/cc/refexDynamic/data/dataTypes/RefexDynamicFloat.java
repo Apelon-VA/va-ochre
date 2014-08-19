@@ -22,35 +22,35 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
-import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicFloatBI;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 
 /**
  * 
- * {@link RefexNid}
+ * {@link RefexDynamicFloat}
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
-public class RefexNid extends RefexDynamicData implements RefexDynamicNidBI {
-	
-	private ObjectProperty<Integer> property_;
+public class RefexDynamicFloat extends RefexDynamicData implements RefexDynamicFloatBI {
 
-	protected RefexNid(byte[] data, int assemblageNid, int columnNumber)
+	private ObjectProperty<Float> property_;
+
+	protected RefexDynamicFloat(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexNid(int nid) throws PropertyVetoException {
+	public RefexDynamicFloat(float f) throws PropertyVetoException {
 		super();
-		data_ = RefexInteger.intToByteArray(nid);
+		data_ = RefexDynamicInteger.intToByteArray(Float.floatToIntBits(f));
 	}
 
 	/**
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI#getDataNid()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicFloatBI#getDataFloat()
 	 */
 	@Override
-	public int getDataNid() {
-		return RefexInteger.getIntFromByteArray(data_);
+	public float getDataFloat() {
+		return Float.intBitsToFloat(RefexDynamicInteger.getIntFromByteArray(data_));
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class RefexNid extends RefexDynamicData implements RefexDynamicNidBI {
 	 */
 	@Override
 	public Object getDataObject() {
-		return getDataNid();
+		return getDataFloat();
 	}
 
 	/**
@@ -68,18 +68,18 @@ public class RefexNid extends RefexDynamicData implements RefexDynamicNidBI {
 	 */
 	@Override
 	public ReadOnlyObjectProperty<?> getDataObjectProperty() throws IOException, ContradictionException {
-		return getDataNidProperty();
+		return getDataFloatProperty();
 	}
 
 	/**
 	 * @throws ContradictionException 
 	 * @throws IOException 
-	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI#getDataNidProperty()
+	 * @see org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicFloatBI#getDataFloatProperty()
 	 */
 	@Override
-	public ReadOnlyObjectProperty<Integer> getDataNidProperty() throws IOException, ContradictionException {
+	public ReadOnlyObjectProperty<Float> getDataFloatProperty() throws IOException, ContradictionException {
 		if (property_ == null) {
-			property_ = new SimpleObjectProperty<>(null, getName(), getDataNid());
+			property_ = new SimpleObjectProperty<>(null, getName(), getDataFloat());
 		}
 		return property_;
 	}

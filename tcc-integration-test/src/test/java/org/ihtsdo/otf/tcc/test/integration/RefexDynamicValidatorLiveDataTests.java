@@ -30,8 +30,8 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicValidatorType;
 import org.ihtsdo.otf.tcc.api.store.Ts;
 import org.ihtsdo.otf.tcc.junit.BdbTestRunner;
 import org.ihtsdo.otf.tcc.junit.BdbTestRunnerConfig;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexNid;
-import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexUUID;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicNid;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicUUID;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -86,17 +86,17 @@ public class RefexDynamicValidatorLiveDataTests
 		ConceptVersionBI accelerationVersion = Ts.get().getConceptVersion(StandardViewCoordinates.getSnomedInferredLatest(),
 				UUID.fromString("6ef49616-e2c7-3557-b7f1-456a2c5a5e54"));
 
-		assertFalse(RefexDynamicValidatorType.IS_CHILD_OF.passesValidator(new RefexNid(motionVersion.getNid()), new RefexNid(
+		assertFalse(RefexDynamicValidatorType.IS_CHILD_OF.passesValidator(new RefexDynamicNid(motionVersion.getNid()), new RefexDynamicNid(
 				accelerationVersion.getNid()), StandardViewCoordinates.getSnomedInferredLatest()));
 		
-		assertFalse(RefexDynamicValidatorType.IS_CHILD_OF.passesValidator(new RefexNid(centrifugalForceVersion.getNid()), new RefexNid(
+		assertFalse(RefexDynamicValidatorType.IS_CHILD_OF.passesValidator(new RefexDynamicNid(centrifugalForceVersion.getNid()), new RefexDynamicNid(
 				motionVersion.getNid()), StandardViewCoordinates.getSnomedInferredLatest()));
 		
-		assertTrue(RefexDynamicValidatorType.IS_CHILD_OF.passesValidator(new RefexNid(accelerationVersion.getNid()), new RefexNid(
+		assertTrue(RefexDynamicValidatorType.IS_CHILD_OF.passesValidator(new RefexDynamicNid(accelerationVersion.getNid()), new RefexDynamicNid(
 				motionVersion.getNid()), StandardViewCoordinates.getSnomedInferredLatest()));
 		
-		assertTrue(RefexDynamicValidatorType.IS_CHILD_OF.passesValidator(new RefexUUID(accelerationVersion.getUUIDs().get(0)),
-				new RefexUUID(motionVersion.getUUIDs().get(0)), StandardViewCoordinates.getSnomedInferredLatest()));
+		assertTrue(RefexDynamicValidatorType.IS_CHILD_OF.passesValidator(new RefexDynamicUUID(accelerationVersion.getUUIDs().get(0)),
+				new RefexDynamicUUID(motionVersion.getUUIDs().get(0)), StandardViewCoordinates.getSnomedInferredLatest()));
 	}
 	
 	@Test
@@ -111,16 +111,16 @@ public class RefexDynamicValidatorLiveDataTests
 		ConceptVersionBI accelerationVersion = Ts.get().getConceptVersion(StandardViewCoordinates.getSnomedInferredLatest(),
 				UUID.fromString("6ef49616-e2c7-3557-b7f1-456a2c5a5e54"));
 
-		assertFalse(RefexDynamicValidatorType.IS_KIND_OF.passesValidator(new RefexNid(motionVersion.getNid()), new RefexNid(
+		assertFalse(RefexDynamicValidatorType.IS_KIND_OF.passesValidator(new RefexDynamicNid(motionVersion.getNid()), new RefexDynamicNid(
 				accelerationVersion.getNid()), StandardViewCoordinates.getSnomedInferredLatest()));
 		
-		assertTrue(RefexDynamicValidatorType.IS_KIND_OF.passesValidator(new RefexNid(centrifugalForceVersion.getNid()), new RefexNid(
+		assertTrue(RefexDynamicValidatorType.IS_KIND_OF.passesValidator(new RefexDynamicNid(centrifugalForceVersion.getNid()), new RefexDynamicNid(
 				motionVersion.getNid()), StandardViewCoordinates.getSnomedInferredLatest()));
 		
-		assertTrue(RefexDynamicValidatorType.IS_KIND_OF.passesValidator(new RefexNid(accelerationVersion.getNid()), new RefexNid(
+		assertTrue(RefexDynamicValidatorType.IS_KIND_OF.passesValidator(new RefexDynamicNid(accelerationVersion.getNid()), new RefexDynamicNid(
 				motionVersion.getNid()), StandardViewCoordinates.getSnomedInferredLatest()));
 		
-		assertTrue(RefexDynamicValidatorType.IS_KIND_OF.passesValidator(new RefexUUID(accelerationVersion.getUUIDs().get(0)),
-				new RefexUUID(motionVersion.getUUIDs().get(0)), StandardViewCoordinates.getSnomedInferredLatest()));
+		assertTrue(RefexDynamicValidatorType.IS_KIND_OF.passesValidator(new RefexDynamicUUID(accelerationVersion.getUUIDs().get(0)),
+				new RefexDynamicUUID(motionVersion.getUUIDs().get(0)), StandardViewCoordinates.getSnomedInferredLatest()));
 	}
 }
