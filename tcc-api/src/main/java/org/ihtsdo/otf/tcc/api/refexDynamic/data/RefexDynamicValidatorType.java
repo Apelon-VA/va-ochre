@@ -57,13 +57,24 @@ import org.ihtsdo.otf.tcc.api.store.Ts;
 @SuppressWarnings("deprecation")
 public enum RefexDynamicValidatorType
 {
-	LESS_THAN, GREATER_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN_OR_EQUAL,  //Standard math stuff 
-	INTERVAL, //math interval notation - such as [5,10)
-	REGEXP,  //http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
-	DROOLS, //TBD 
-	IS_CHILD_OF, //OTF is child of - which only includes immediate (not recursive) children on the 'Is A' relationship. 
-	IS_KIND_OF; //OTF kind of - which is child of - but recursive, and self (heart disease is a kind-of heart disease);
+	LESS_THAN("<"), GREATER_THAN(">"), LESS_THAN_OR_EQUAL("<="), GREATER_THAN_OR_EQUAL(">="),  //Standard math stuff 
+	INTERVAL("Interval"), //math interval notation - such as [5,10)
+	REGEXP("Regular Expression"),  //http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
+	DROOLS("Drools"), //TBD 
+	IS_CHILD_OF("Is Child Of"), //OTF is child of - which only includes immediate (not recursive) children on the 'Is A' relationship. 
+	IS_KIND_OF("Is Kind Of"); //OTF kind of - which is child of - but recursive, and self (heart disease is a kind-of heart disease);
 	
+	private String displayName_;
+	
+	private RefexDynamicValidatorType(String displayName)
+	{
+		displayName_ = displayName;
+	}
+	
+	public String getDisplayName()
+	{
+		return displayName_;
+	}
 	
 	//TODO Dan notes - once again, implementation has no business being in the API... but because the entire Blueprint stack was implemented in the wrong place...
 	//I have to implement this here so it can be used in blueprint.
@@ -79,6 +90,10 @@ public enum RefexDynamicValidatorType
 	 */
 	public boolean passesValidator(RefexDynamicDataBI userData, RefexDynamicDataBI validatorDefinitionData, ViewCoordinate vc)
 	{
+		if (validatorDefinitionData == null)
+		{
+			throw new RuntimeException("The validator definition data is required");
+		}
 		if (this == RefexDynamicValidatorType.DROOLS)
 		{
 			//TODO [VALIDATOR] implement Drools

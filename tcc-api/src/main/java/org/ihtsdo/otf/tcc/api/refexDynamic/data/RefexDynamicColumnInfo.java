@@ -72,6 +72,13 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 	private RefexDynamicDataBI validatorData_;
 
 	/**
+	 * Useful for building up a new one step by step
+	 */
+	public RefexDynamicColumnInfo()
+	{
+	}
+	
+	/**
 	 * calls {@link #RefexDynamicColumnInfo(UUID, int, UUID, RefexDynamicDataType, RefexDynamicDataBI, Boolean, RefexDynamicValidatorType, RefexDynamicDataBI)
 	 * with a null assemblage concept
 	 */
@@ -110,6 +117,73 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 		defaultData_ = defaultData;
 		columnRequired_ = (columnRequired == null ? false : columnRequired);
 		validatorType_ = validatorType;
+		validatorData_ = validatorData;
+	}
+	
+	/**
+	 * @param assemblageConcept - the assemblage concept that this was read from (or null, if not yet part of an assemblage)
+	 */
+	public void setAssemblageConcept(UUID assemblageConcept)
+	{
+		assemblageConcept_ = assemblageConcept;
+	}
+	
+	/**
+	 * @param columnOrder - the column order as defined in the assemblage concept
+	 */
+	public void setColumnOrder(int columnOrder)
+	{
+		columnOrder_ = columnOrder;
+	}
+	
+	/**
+	 @param columnDescriptionConcept - The concept where columnName and columnDescription should be read from
+	 */
+	public void setColumnDescriptionConcept(UUID columnDescriptionConcept)
+	{
+		columnDescriptionConceptUUID_ = columnDescriptionConcept;
+		columnName_ = null;
+		columnDescription_ = null;
+	}
+	
+	/**
+	 * @param columnDataType - the data type as defined in the assemblage concept
+	 */
+	public void setColumnDataType(RefexDynamicDataType columnDataType)
+	{
+		columnDataType_ = columnDataType;
+	}
+	
+	/**
+	 * @param defaultData - The type of this Object must align with the data type specified in columnDataType.  For example, 
+	 * if columnDataType is set to {@link RefexDynamicDataType#FLOAT} then this field must be a {@link RefexDynamicFloatBI}.
+	 */
+	public void setColumnDefaultData(RefexDynamicDataBI defaultData)
+	{
+		defaultData_ = defaultData;
+	}
+	
+	/**
+	 * @param columnRequired - Is this column required when creating an instance of the refex?  True for yes, false or null for no.
+	 */
+	public void setColumnRequired(boolean columnRequired)
+	{
+		columnRequired_ = columnRequired;
+	}
+	
+	/**
+	 * @param validatorType - The Validator to use when creating an instance of this Refex.  Null for no validator
+	 */
+	public void setValidatorType(RefexDynamicValidatorType validatorType)
+	{
+		validatorType_ = validatorType;
+	}
+	
+	/**
+	 * @param validatorType - The Validator to use when creating an instance of this Refex.  Null for no validator
+	 */
+	public void setValidatorData(RefexDynamicDataBI validatorData)
+	{
 		validatorData_ = validatorData;
 	}
 	
@@ -198,7 +272,8 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 	}
 	
 	/**
-	 * @return The data to be used in conjunction with the validator (if any) to validate the user data
+	 * @param validatorData - The data required to execute the validatorType specified.  The format and type of this will depend on the 
+	 * validatorType field.  See {@link RefexDynamicValidatorType} for details on the valid data for this field.  Should be null when validatorType is null. 
 	 */
 	public RefexDynamicDataBI getValidatorData()
 	{
@@ -290,9 +365,9 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 				}
 			}
 		}
-		catch (IOException | ContradictionException e)
+		catch (Exception e)
 		{
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Failure reading RefexDynamicColumnInfo", e);
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Failure reading RefexDynamicColumnInfo '" + columnDescriptionConceptUUID_ + "'", e);
 		}
 		if (columnName_ == null)
 		{
