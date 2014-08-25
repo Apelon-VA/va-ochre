@@ -62,7 +62,9 @@ public enum RefexDynamicValidatorType
 	REGEXP("Regular Expression"),  //http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
 	DROOLS("Drools"), //TBD 
 	IS_CHILD_OF("Is Child Of"), //OTF is child of - which only includes immediate (not recursive) children on the 'Is A' relationship. 
-	IS_KIND_OF("Is Kind Of"); //OTF kind of - which is child of - but recursive, and self (heart disease is a kind-of heart disease);
+	IS_KIND_OF("Is Kind Of"), //OTF kind of - which is child of - but recursive, and self (heart disease is a kind-of heart disease);
+	UNKNOWN("Unknown");  //Not a real validator, only exists to allow GUI convenience, or potentially store other validator data that we don't support in OTF
+	//but we may need to store / retreive
 	
 	private String displayName_;
 	
@@ -204,7 +206,7 @@ public enum RefexDynamicValidatorType
 				else if (pos > 0)
 				{
 					left = parseUnknown(numeric.substring(0, pos));
-					if (numeric.length() > pos)
+					if (numeric.length() > (pos + 1))
 					{
 						right = parseUnknown(numeric.substring(pos + 1));
 					}
@@ -212,6 +214,15 @@ public enum RefexDynamicValidatorType
 				else
 				{
 					throw new RuntimeException("Invalid INTERVAL definition in the validator definition data");
+				}
+				
+				//make sure interval is properly specified
+				if (left != null && right != null)
+				{
+					if (compare(left, right) > 0)
+					{
+						throw new RuntimeException("Invalid INTERVAL definition the left value should be <= the right value");
+					}
 				}
 
 				if (left != null)

@@ -124,6 +124,27 @@ public class RefexDynamicValidatorTypeImplTest
 		Assert.assertFalse(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexDynamicInteger(Integer.MIN_VALUE), 
 				new RefexDynamicString(" (-2147483648 , 2147483647) "), null));
 		
+		
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexDynamicInteger(5), 
+				new RefexDynamicString(" (4 ,  ) "), null));
+		
+		Assert.assertTrue(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexDynamicInteger(5), 
+				new RefexDynamicString(" (4 ,]"), null));
+		
+		Assert.assertFalse(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexDynamicInteger(3), 
+				new RefexDynamicString(" (4 ,  ) "), null));
+		
+		try
+		{
+			Assert.assertFalse(RefexDynamicValidatorType.INTERVAL.passesValidator(new RefexDynamicInteger(3), 
+					new RefexDynamicString(" (6 ,4) "), null));
+			Assert.fail("Should have been an exception");
+		}
+		catch (Exception e)
+		{
+			//expected
+		}
+		
 	}
 	
 	@Test
