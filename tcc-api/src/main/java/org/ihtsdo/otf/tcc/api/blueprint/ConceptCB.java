@@ -285,13 +285,17 @@ public final class ConceptCB extends CreateOrAmendBlueprint {
 
     }
 
+    private UUID computeComponentUuid() {
+        return computeComponentUuid(idDirective, fsns, prefNames, getComponentUuid());
+    }
+    
     /**
      * Computes the uuid for the concept represented by this concept blueprint based on the fully specified
      * names and preferred terms.
      *
      * @throws RuntimeException indicates a runtime exception has occurred
      */
-    private UUID computeComponentUuid() throws RuntimeException {
+    public static UUID computeComponentUuid(IdDirective idDirective, List<String> fsns, List<String> prefNames, UUID defaultValue) throws RuntimeException {
         switch (idDirective) {
             case GENERATE_HASH:
             case GENERATE_REFEX_CONTENT_HASH:
@@ -316,8 +320,7 @@ public final class ConceptCB extends CreateOrAmendBlueprint {
             case PRESERVE_CONCEPT_REST_HASH:
             case PRESERVE:
             default:
-            return getComponentUuid();
-
+            return defaultValue;
         }
     }
 
