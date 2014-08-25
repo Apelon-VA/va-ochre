@@ -264,6 +264,37 @@ public enum RefexDynamicValidatorType
 			}
 		}
 	}
+	
+	/**
+	 * A convenience wrapper of {@link #passesValidator(RefexDynamicDataBI, RefexDynamicDataBI, ViewCoordinate)} that just returns a string - never
+	 * throws an error
+	 * 
+	 * These are all defined from the perspective of the userData - so for passesValidator to return true -
+	 * userData must be LESS_THAN validatorDefinitionData, for example.
+	 * 
+	 * @param userData
+	 * @param validatorDefinitionData
+	 * @param vc - The View Coordinate - not needed for some types of validations. Null allowed when unneeded (for math based tests, for example)
+	 * @return - empty string if valid, an error message otherwise.
+	 */
+	public String passesValidatorStringReturn(RefexDynamicDataBI userData, RefexDynamicDataBI validatorDefinitionData, ViewCoordinate vc)
+	{
+		try
+		{
+			if (passesValidator(userData, validatorDefinitionData, vc))
+			{
+				return "";
+			}
+			else
+			{
+				return "The value does not pass the validator";
+			}
+		}
+		catch (Exception e)
+		{
+			return e.getMessage();
+		}
+	}
 
 	private static Number parseUnknown(String value)
 	{
@@ -321,7 +352,7 @@ public enum RefexDynamicValidatorType
 		}
 		else
 		{
-			throw new RuntimeException("Unexpected data type passed in to readNumber (" + value + ")");
+			throw new RuntimeException("The value passed in to the validator is not a number");
 		}
 	}
 
