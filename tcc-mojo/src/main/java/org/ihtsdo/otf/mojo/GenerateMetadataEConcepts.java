@@ -250,7 +250,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				}
 				else if (Search.SEARCH_FILTER_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.ORDER_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null, true, null, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.ORDER_COLUMN.getUuids()[0], RefexDynamicDataType.INTEGER, null, false, null, null));
 					columns.add(new RefexDynamicColumnInfo(1, Search.FILTER_INVERT_COLUMN.getUuids()[0], RefexDynamicDataType.BOOLEAN, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
