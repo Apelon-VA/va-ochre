@@ -639,7 +639,7 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 				{
 					try
 					{
-						if (!rdci.getValidator().passesValidator(data[dataColumn], rdci.getValidatorData(), vc));
+						if (!rdci.getValidator().passesValidator(data[dataColumn], rdci.getValidatorData(), vc))
 						{
 							throw new InvalidCAB("The supplied data for column " + dataColumn + " does not pass the assigned validator for this refex");
 						}
