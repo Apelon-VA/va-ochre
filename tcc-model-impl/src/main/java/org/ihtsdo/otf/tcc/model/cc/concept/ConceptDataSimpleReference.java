@@ -17,6 +17,7 @@ import org.ihtsdo.otf.tcc.model.cc.refex.RefexMember;
 import org.ihtsdo.otf.tcc.model.cc.component.RefexMemberBinder;
 import org.ihtsdo.otf.tcc.model.cc.refex.RefexRevision;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.RefexDynamicMember;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.RefexDynamicRevision;
 import org.ihtsdo.otf.tcc.model.cc.relationship.Relationship;
 import org.ihtsdo.otf.tcc.model.cc.component.RelationshipBinder;
 import org.ihtsdo.otf.tcc.api.chronicle.ComponentChronicleBI;
@@ -1473,5 +1474,24 @@ public class ConceptDataSimpleReference extends ConceptDataManager {
             }
          }
       }
+      
+      if (cc.annotationsDynamic!= null) {
+          for (RefexDynamicMember rm : cc.annotationsDynamic) {
+
+             if (rm.getTime() == Long.MAX_VALUE) {
+                rm.setTime(time);
+                sapNids.add(rm.getStamp());
+             }
+
+             if (rm.revisions != null) {
+                for (RefexDynamicRevision rr : rm.revisions) {
+                   if (rr.getTime() == Long.MAX_VALUE) {
+                      rr.setTime(time);
+                      sapNids.add(rr.getStamp());
+                   }
+                }
+             }
+          }
+       }
    }
 }
