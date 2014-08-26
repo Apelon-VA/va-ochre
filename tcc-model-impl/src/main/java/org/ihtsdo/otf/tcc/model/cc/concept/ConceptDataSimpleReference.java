@@ -1184,7 +1184,7 @@ public class ConceptDataSimpleReference extends ConceptDataManager {
             if (refsetDynamicMembers.get() == null) {
                 refsetDynamicMembers.compareAndSet(null,
                                            new AddMemberDynamicSet(getList(new RefexDynamicMemberBinder(enclosingConcept),
-                                              OFFSETS.REFSET_MEMBERS, enclosingConcept)));
+                                              OFFSETS.REFSET_DYNAMIC_MEMBERS, enclosingConcept)));
             }
          } finally {
              refsetMembersDynamicLock.unlock();
