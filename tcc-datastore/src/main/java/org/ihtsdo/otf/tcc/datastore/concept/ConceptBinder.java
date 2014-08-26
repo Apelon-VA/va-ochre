@@ -95,7 +95,7 @@ public class ConceptBinder extends TupleBinding<ConceptChronicle> {
             if (concept.isAnnotationStyleRefex()) {
                 finalOutput.writeByte(1); // ANNOTATION_STYLE_REFSET
             } else {
-                finalOutput.writeByte(0); // ANNOTATION_STYLE_REFSET
+                finalOutput.writeByte(0); // MEMBER_STYLE_REFSET
             }
             int nextDataLocation = OFFSETS.getHeaderSize();
             finalOutput.writeInt(nextDataLocation); // ATTRIBUTES
