@@ -724,6 +724,12 @@ public class ConceptDataSimpleReference extends ConceptDataManager {
       if (component != null) {
           return component;
       }
+      
+      component = getAnnotationDynamic(nid);
+      
+      if (component != null) {
+          return component;
+      }
 
       for (RelGroupChronicleBI group : enclosingConcept.getAllRelGroups()) {
          if (group.getNid() == nid) {
@@ -1293,6 +1299,18 @@ public class ConceptDataSimpleReference extends ConceptDataManager {
 
       return false;
    }
+   
+   private boolean hasUncommittedAnnotationDynamic(ConceptComponent<?, ?> cc) {
+      if ((cc != null) && (cc.annotationsDynamic != null)) {
+         for (RefexDynamicMember rmc : cc.annotationsDynamic) {
+            if (rmc.isUncommitted()) {
+               return true;
+            }
+         }
+      }
+
+      return false;
+   }
 
    @Override
    public boolean hasUncommittedComponents() {
@@ -1368,6 +1386,10 @@ public class ConceptDataSimpleReference extends ConceptDataManager {
          if (hasUncommittedAnnotation(cc)) {
             return true;
          }
+         
+         if (hasUncommittedAnnotationDynamic(cc)) {
+             return true;
+          }
       }
 
       return false;

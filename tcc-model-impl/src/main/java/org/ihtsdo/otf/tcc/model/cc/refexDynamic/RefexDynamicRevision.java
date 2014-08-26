@@ -41,6 +41,7 @@ import org.ihtsdo.otf.tcc.dto.component.TtkRevision;
 import org.ihtsdo.otf.tcc.model.cc.P;
 import org.ihtsdo.otf.tcc.model.cc.component.Revision;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
+import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes.RefexDynamicTypeToClassUtility;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 
@@ -71,6 +72,7 @@ public class RefexDynamicRevision extends Revision<RefexDynamicRevision, RefexDy
 
     public RefexDynamicRevision(TupleInput input, RefexDynamicMember primordialComponent) {
         super(input, primordialComponent);
+        readMemberFields(input);
     }
 
     public RefexDynamicRevision(Status status, long time, int authorNid, int moduleNid, int pathNid, RefexDynamicMember primordialComponent) {
@@ -221,6 +223,30 @@ public class RefexDynamicRevision extends Revision<RefexDynamicRevision, RefexDy
                 output.writeInt(column.getRefexDataType().getTypeToken());
                 output.writeInt(column.getData().length);
                 output.write(column.getData());
+            }
+        }
+    }
+
+    protected void readMemberFields(TupleInput input) {
+
+        //read the following format - 
+        //dataFieldCount [dataFieldType dataFieldSize dataFieldBytes] [dataFieldType dataFieldSize dataFieldBytes] ...
+        int colCount = input.readInt();
+        data_ = new RefexDynamicDataBI[colCount];
+        for (int i = 0; i < colCount; i++)
+        {
+            RefexDynamicDataType dt = RefexDynamicDataType.getFromToken(input.readInt());
+            if (dt == RefexDynamicDataType.UNKNOWN)
+            {
+                data_[i] = null;
+            }
+            else
+            {
+                int dataLength = input.readInt();
+                byte[] data = new byte[dataLength];
+                input.read(data);
+                
+                data_[i] = RefexDynamicTypeToClassUtility.typeToClass(dt, data, getAssemblageNid(), i);
             }
         }
     }
