@@ -229,7 +229,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 					
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"This concept is used as an assemblage for defining new Refex extensions.  "
-							+ "The attached data columns describe what columns are required to define a new Refex. ", columns);
+							+ "The attached data columns describe what columns are required to define a new Refex.", columns);
 				}
 				else if (RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0].equals(cs.getUuids()[0]))
 				{
@@ -238,6 +238,17 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 									+ "assemblage concept for RefexDynamic refexes.  The description annotated with this type describes the intent of "
 									+ "using the concept containing the description as an assemblage concept.", new RefexDynamicColumnInfo[0]);
 				}
+				
+				if (RefexDynamic.REFEX_DYNAMIC_INDEX_CONFIGURATION.getUuids()[0].equals(cs.getUuids()[0]))
+				{
+					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
+					columns.add(new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_COLUMNS_TO_INDEX.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null));
+					
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, false, 
+							"A Dynamic Refex which contains the indexer configuration for Dynamic Refexes within ISAAC.  "
+							+ "The referenced component ID will be the assemblage being configured for indexing.", columns);
+				}
+				
 				else if (Search.SEARCH_GLOBAL_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
 					//TODO [JOEL] Are these required, or optional?  I made everything optional, for now...

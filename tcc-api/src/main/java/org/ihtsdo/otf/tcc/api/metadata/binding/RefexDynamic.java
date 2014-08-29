@@ -64,6 +64,15 @@ public class RefexDynamic
 			new String[0],
 			REFEX_DYNAMIC_TYPES);
 	
+	//This is the assemblage type that is used to record the current configuration of the Indexer for Dynamic Refexes.
+	//this is ALSO the concept that stores (as a member list) dynamic refex instances (of assemblage type itself) which define which other 
+	//dynamic refexes should be indexed within the system. 
+	public static ConceptSpecWithDescriptions REFEX_DYNAMIC_INDEX_CONFIGURATION = new ConceptSpecWithDescriptions("dynamic refex index configuration", 
+			UUID.fromString("980e092e-6df4-593f-a756-3d31b4f21a6c"),
+			new String[] {"dynamic refex index configuration"},
+			new String[0],
+			REFEX_DYNAMIC_TYPES);
+	
 	//An organizational concept which serves as a parent concept for any column types that are defined
 	//within the system.
 	public static ConceptSpec REFEX_DYNAMIC_COLUMNS = new ConceptSpec("dynamic refex columns", 
@@ -105,6 +114,13 @@ public class RefexDynamic
 			UUID.fromString("50ea8378-8355-5a5d-bae2-ce7c10e92636"),
 			new String[] {"column validator data"},
 			new String[] {"Stores the (optional) validator data which will be used by the validator to check the user input of this column within a Dynamic Refex Definition"},
+			REFEX_DYNAMIC_COLUMNS);
+	
+	//used for index config
+	public static ConceptSpecWithDescriptions REFEX_COLUMN_COLUMNS_TO_INDEX = new ConceptSpecWithDescriptions("columns to index", 
+			UUID.fromString("cede7677-3759-5dce-b28b-20a40fddf5d6"),
+			new String[] {"columns to index"},
+			new String[] {"Contains a String which has a comma seperated list of the column positions within the referenced refex assemblage which should have their values indexed."},
 			REFEX_DYNAMIC_COLUMNS);
 	
 	//An organizational concept which serves as a parent concept for the allowed types of data columns
