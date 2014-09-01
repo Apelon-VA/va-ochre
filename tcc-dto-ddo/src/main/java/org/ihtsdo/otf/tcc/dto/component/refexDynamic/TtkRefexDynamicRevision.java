@@ -133,19 +133,26 @@ public class TtkRefexDynamicRevision extends TtkRevision
 	{
 		super.writeExternal(output);
 		//dataFieldCount [dataFieldType dataFieldSize dataFieldBytes] [dataFieldType dataFieldSize dataFieldBytes] ...
-		output.writeInt(getData().length);
-		for (TtkRefexDynamicData column : getData())
+		if (getData() != null)
 		{
-			if (column == null)
+			output.writeInt(getData().length);
+			for (TtkRefexDynamicData column : getData())
 			{
-				output.writeInt(RefexDynamicDataType.UNKNOWN.getTypeToken());
+				if (column == null)
+				{
+					output.writeInt(RefexDynamicDataType.UNKNOWN.getTypeToken());
+				}
+				else
+				{
+					output.writeInt(column.getRefexDataType().getTypeToken());
+					output.writeInt(column.getData().length);
+					output.write(column.getData());
+				}
 			}
-			else
-			{
-				output.writeInt(column.getRefexDataType().getTypeToken());
-				output.writeInt(column.getData().length);
-				output.write(column.getData());
-			}
+		}
+		else
+		{
+			output.writeInt(0);
 		}
 	}
 

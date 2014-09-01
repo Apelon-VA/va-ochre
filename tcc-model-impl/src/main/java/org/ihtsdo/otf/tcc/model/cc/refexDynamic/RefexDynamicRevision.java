@@ -211,19 +211,26 @@ public class RefexDynamicRevision extends Revision<RefexDynamicRevision, RefexDy
     protected void writeFieldsToBdb(TupleOutput output) {
         //Write with the following format - 
         //dataFieldCount [dataFieldType dataFieldSize dataFieldBytes] [dataFieldType dataFieldSize dataFieldBytes] ...
-        output.writeInt(getData().length);
-        for (RefexDynamicDataBI column : getData())
+        if (getData() != null)
         {
-            if (column == null)
+            output.writeInt(getData().length);
+            for (RefexDynamicDataBI column : getData())
             {
-                output.writeInt(RefexDynamicDataType.UNKNOWN.getTypeToken());
+                if (column == null)
+                {
+                    output.writeInt(RefexDynamicDataType.UNKNOWN.getTypeToken());
+                }
+                else
+                {
+                    output.writeInt(column.getRefexDataType().getTypeToken());
+                    output.writeInt(column.getData().length);
+                    output.write(column.getData());
+                }
             }
-            else
-            {
-                output.writeInt(column.getRefexDataType().getTypeToken());
-                output.writeInt(column.getData().length);
-                output.write(column.getData());
-            }
+        }
+        else
+        {
+            output.writeInt(0);
         }
     }
 

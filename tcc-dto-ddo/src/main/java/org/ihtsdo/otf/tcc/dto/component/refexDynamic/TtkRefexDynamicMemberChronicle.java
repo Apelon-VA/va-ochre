@@ -181,19 +181,26 @@ public class TtkRefexDynamicMemberChronicle extends TtkComponentChronicle<TtkRef
 		out.writeLong(componentUuid.getLeastSignificantBits());
 
 		//dataFieldCount [dataFieldType dataFieldSize dataFieldBytes] [dataFieldType dataFieldSize dataFieldBytes] ...
-		out.writeInt(getData().length);
-		for (TtkRefexDynamicData column : getData())
+		if (getData() != null)
 		{
-			if (column == null)
+			out.writeInt(getData().length);
+			for (TtkRefexDynamicData column : getData())
 			{
-				out.writeInt(RefexDynamicDataType.UNKNOWN.getTypeToken());
+				if (column == null)
+				{
+					out.writeInt(RefexDynamicDataType.UNKNOWN.getTypeToken());
+				}
+				else
+				{
+					out.writeInt(column.getRefexDataType().getTypeToken());
+					out.writeInt(column.getData().length);
+					out.write(column.getData());
+				}
 			}
-			else
-			{
-				out.writeInt(column.getRefexDataType().getTypeToken());
-				out.writeInt(column.getData().length);
-				out.write(column.getData());
-			}
+		}
+		else
+		{
+			out.writeInt(0);
 		}
 
 		if (revisions == null)
