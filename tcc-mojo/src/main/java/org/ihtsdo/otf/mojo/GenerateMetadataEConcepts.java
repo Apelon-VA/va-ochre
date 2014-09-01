@@ -247,6 +247,17 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, false, 
 							"A Dynamic Refex which contains the indexer configuration for Dynamic Refexes within ISAAC.  "
 							+ "The referenced component ID will be the assemblage being configured for indexing.", columns);
+					
+					//This concept also serves the special purpose of holding the Dynamic Refex Indexer configuration.
+					//Here, we preconfigure any of the Dynamic Refexes that we are specifying, so that they get indexed during the DB build.
+					
+					List<UUID> refexesToIndex = new ArrayList<>();
+					List<Integer[]> columnsToIndex = new ArrayList<>();
+					
+					refexesToIndex.add(RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0]);
+					columnsToIndex.add(new Integer[] {});
+					
+					configureDynamicRefexIndexes(converted, refexesToIndex, columnsToIndex);
 				}
 				
 				else if (Search.SEARCH_GLOBAL_ATTRIBUTES.getUuids()[0].equals(cs.getUuids()[0])) {
@@ -309,13 +320,26 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 	private TtkRefexDynamicMemberChronicle addDynamicAnnotation(TtkComponentChronicle<?> component, UUID assemblageID, TtkRefexDynamicData[] data) 
 			throws NoSuchAlgorithmException, UnsupportedEncodingException
 	{
-		TtkRefexDynamicMemberChronicle annotation = new TtkRefexDynamicMemberChronicle();
-		annotation.setComponentUuid(component.getPrimordialComponentUuid());
-		annotation.setRefexAssemblageUuid(assemblageID);
-		annotation.setData(data);
+		TtkRefexDynamicMemberChronicle refexDynamic = new TtkRefexDynamicMemberChronicle();
+		refexDynamic.setComponentUuid(component.getPrimordialComponentUuid());
+		refexDynamic.setRefexAssemblageUuid(assemblageID);
+		refexDynamic.setData(data);
+		setUUIDForRefex(refexDynamic, data);
+		setRevisionAttributes(refexDynamic, null, null);
+
+		if (component.getAnnotationsDynamic() == null)
+		{
+			component.setAnnotationsDynamic(new ArrayList<TtkRefexDynamicMemberChronicle>());
+		}
+		component.getAnnotationsDynamic().add(refexDynamic);
+		return refexDynamic;
+	}
+	
+	private void setUUIDForRefex(TtkRefexDynamicMemberChronicle refexDynamic, TtkRefexDynamicData[] data) throws NoSuchAlgorithmException, UnsupportedEncodingException
+	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(annotation.getRefexAssemblageUuid().toString()); 
-		sb.append(annotation.getComponentUuid().toString());
+		sb.append(refexDynamic.getRefexAssemblageUuid().toString()); 
+		sb.append(refexDynamic.getComponentUuid().toString());
 		if (data != null)
 		{
 			for (TtkRefexDynamicData d : data)
@@ -331,14 +355,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				}
 			}
 		}
-		annotation.setPrimordialComponentUuid(UuidT5Generator.get(RefexDynamicCAB.refexDynamicNamespace, sb.toString()));
-		setRevisionAttributes(annotation, null, null);
-		if (component.getAnnotationsDynamic() == null)
-		{
-			component.setAnnotationsDynamic(new ArrayList<TtkRefexDynamicMemberChronicle>());
-		}
-		component.getAnnotationsDynamic().add(annotation);
-		return annotation;
+		refexDynamic.setPrimordialComponentUuid(UuidT5Generator.get(RefexDynamicCAB.refexDynamicNamespace, sb.toString()));
 	}
 	
 	private List<ConceptSpec> getSpecsFromClass(String className) throws IllegalArgumentException, IllegalAccessException, ClassNotFoundException
@@ -542,6 +559,42 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 		catch (NoSuchAlgorithmException | UnsupportedEncodingException e)
 		{
 			throw new RuntimeException("Shouldn't be possible");
+		}
+	}
+	
+	private void configureDynamicRefexIndexes(TtkConceptChronicle storageConcept, List<UUID> refexesToIndex, List<Integer[]> columnConfiguration) 
+			throws NoSuchAlgorithmException, UnsupportedEncodingException, PropertyVetoException
+	{
+		//In TTK land, this is done by adding a new dynamic refex to the member list refex that keeps track of index rules.
+		if (storageConcept.getRefsetMembersDynamic() == null)
+		{
+			storageConcept.setRefsetMembers(new ArrayList<TtkRefexAbstractMemberChronicle<?>>());
+		}
+		
+		for (int i = 0; i < refexesToIndex.size(); i++)
+		{
+			TtkRefexDynamicMemberChronicle refexDynamic = new TtkRefexDynamicMemberChronicle();
+			refexDynamic.setComponentUuid(storageConcept.getPrimordialUuid());
+			refexDynamic.setRefexAssemblageUuid(refexesToIndex.get(i));
+			
+			TtkRefexDynamicData[] data = null;
+			if (columnConfiguration.get(i) != null && columnConfiguration.get(i).length > 0)
+			{
+				data = new TtkRefexDynamicData[1];
+				StringBuilder buf = new StringBuilder();
+				for (int dataItem : columnConfiguration.get(i))
+				{
+					buf.append(dataItem);
+					buf.append(",");
+				}
+				buf.setLength(buf.length() - 1);
+
+				data[0] = new TtkRefexDynamicString(buf.toString());
+				refexDynamic.setData(data);
+			}
+			setUUIDForRefex(refexDynamic, data);
+			setRevisionAttributes(refexDynamic, null, null);
+			storageConcept.getRefsetMembersDynamic().add(refexDynamic);
 		}
 	}
 	
