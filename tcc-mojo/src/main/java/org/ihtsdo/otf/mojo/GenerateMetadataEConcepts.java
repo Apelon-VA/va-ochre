@@ -254,7 +254,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 					List<UUID> refexesToIndex = new ArrayList<>();
 					List<Integer[]> columnsToIndex = new ArrayList<>();
 					
-					refexesToIndex.add(RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0]);
+					refexesToIndex.add(RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0]);
 					columnsToIndex.add(new Integer[] {});
 					
 					configureDynamicRefexIndexes(converted, refexesToIndex, columnsToIndex);
@@ -574,8 +574,8 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 		for (int i = 0; i < refexesToIndex.size(); i++)
 		{
 			TtkRefexDynamicMemberChronicle refexDynamic = new TtkRefexDynamicMemberChronicle();
-			refexDynamic.setComponentUuid(storageConcept.getPrimordialUuid());
-			refexDynamic.setRefexAssemblageUuid(refexesToIndex.get(i));
+			refexDynamic.setComponentUuid(refexesToIndex.get(i));
+			refexDynamic.setRefexAssemblageUuid(storageConcept.getPrimordialUuid());  //This is a member refex - so assemblageID == storageConceptID
 			
 			TtkRefexDynamicData[] data = null;
 			if (columnConfiguration.get(i) != null && columnConfiguration.get(i).length > 0)
