@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.ihtsdo.otf.tcc.api.refex.RefexChronicleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicChronicleBI;
+import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
 import org.ihtsdo.otf.tcc.model.cc.concept.ConceptChronicle;
 import org.ihtsdo.otf.tcc.model.cc.refex.RefexMember;
 import org.ihtsdo.otf.tcc.model.cc.refex.RefexMemberFactory;
@@ -34,6 +35,7 @@ import org.ihtsdo.otf.tcc.model.cc.refex.RefexRevision;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.RefexDynamicMember;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.RefexDynamicMemberFactory;
 import org.ihtsdo.otf.tcc.model.cc.refexDynamic.RefexDynamicRevision;
+import org.ihtsdo.otf.tcc.model.index.service.IndexerBI;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 
@@ -44,6 +46,12 @@ import com.sleepycat.bind.tuple.TupleOutput;
 public class AnnotationWriter {
    public static AtomicInteger encountered = new AtomicInteger();
    public static AtomicInteger written     = new AtomicInteger();
+   
+   protected static List<IndexerBI> indexers;
+
+   static {
+       indexers = Hk2Looker.get().getAllServices(IndexerBI.class);
+   }
 
    //~--- constructors --------------------------------------------------------
 
@@ -176,6 +184,13 @@ public class AnnotationWriter {
 
       for (RefexChronicleBI<?> refsetChronicle : list) {
          RefexMember<?, ?> refsetMember = (RefexMember<?, ?>) refsetChronicle;
+         
+         if (!refsetMember.isIndexed()) {
+             for (IndexerBI i : indexers) {
+                 i.index(refsetMember);
+             }
+             refsetMember.setIndexed();
+         }
 
          encountered.incrementAndGet();
          assert refsetMember.getStamp() != Integer.MAX_VALUE;
@@ -216,6 +231,13 @@ public class AnnotationWriter {
 
       for (RefexDynamicChronicleBI<?> refsetChronicle : list) {
          RefexDynamicMember refsetMember = (RefexDynamicMember) refsetChronicle;
+         
+         if (!refsetMember.isIndexed()) {
+             for (IndexerBI i : indexers) {
+                 i.index(refsetMember);
+             }
+             refsetMember.setIndexed();
+         }
 
          encountered.incrementAndGet();
          assert refsetMember.getStamp() != Integer.MAX_VALUE;
