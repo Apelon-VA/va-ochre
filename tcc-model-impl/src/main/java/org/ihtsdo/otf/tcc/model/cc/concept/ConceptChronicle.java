@@ -648,6 +648,12 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
                 processComponentChronicles(cc, processor);
             }
         }
+        
+        if (getRefsetDynamicMembers() != null) {
+            for (ComponentChronicleBI cc : getRefsetDynamicMembers()) {
+                processComponentChronicles(cc, processor);
+            }
+        }
     }
     
     private void processComponentChronicles(ComponentChronicleBI cc, 
@@ -655,6 +661,9 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
       processor.process(cc);
       for (RefexChronicleBI refex: cc.getAnnotations()) {
           processComponentChronicles(refex, processor);
+      }
+      for (RefexDynamicChronicleBI<?> refexD: cc.getRefexDynamicAnnotations()) {
+          processComponentChronicles(refexD, processor);
       }
     }
 
