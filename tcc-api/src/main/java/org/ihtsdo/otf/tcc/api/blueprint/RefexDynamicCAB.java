@@ -606,7 +606,8 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 			return;
 		}
 		
-		if (data.length != rdud.getColumnInfo().length)
+		//specifically allow < - we don't need the columns, if they were defined as optional.
+		if (data.length > rdud.getColumnInfo().length)
 		{
 			throw new InvalidCAB("The Assemblage concept: " + getRefexAssemblageNid() + " specifies " + rdud.getColumnInfo().length + 
 					" columns of data, while the provided data contains " + data.length + " columns.  The data size array must match (but null values are allowed"
@@ -649,6 +650,15 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 						throw new InvalidCAB(e.getMessage());
 					}
 				}
+			}
+		}
+		
+		//If they provided less columns, make sure the remaining columns are all optional
+		for (int i = data.length; i < rdud.getColumnInfo().length; i++)
+		{
+			if (rdud.getColumnInfo()[i].isColumnRequired())
+			{
+				throw new InvalidCAB("No data was supplied for column " + (i + 1) + " but the column is specified as a required column");
 			}
 		}
 	}
