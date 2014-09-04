@@ -224,7 +224,7 @@ public class RefexDynamicMember extends ConceptComponent<RefexDynamicRevision, R
     public String toString() {
         StringBuffer buf = new StringBuffer();
 
-        buf.append(" refset:");
+        buf.append(" refex:");
         addNidToBuffer(buf, assemblageNid);
         buf.append(" rcNid:");
         addNidToBuffer(buf, referencedComponentNid);
