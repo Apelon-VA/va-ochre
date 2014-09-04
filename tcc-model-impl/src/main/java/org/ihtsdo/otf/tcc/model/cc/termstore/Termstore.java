@@ -964,9 +964,28 @@ public abstract class Termstore implements PersistentStoreI {
         NativeIdSetBI nids;
         List<IndexerBI> indexers;
 
-        public IndexGenerator() throws IOException {
+        public IndexGenerator(Class<?> ... indexersToReindex) throws IOException {
             this.nids = P.s.getAllConceptNids();
-            indexers = Hk2Looker.get().getAllServices(IndexerBI.class);
+            if (indexersToReindex == null || indexersToReindex.length == 0)
+            {
+                indexers = Hk2Looker.get().getAllServices(IndexerBI.class);
+            }
+            else
+            {
+                indexers = new ArrayList<>();
+                for (Class<?> clazz : indexersToReindex)
+                {
+                    if (!IndexerBI.class.isAssignableFrom(clazz))
+                    {
+                        throw new IOException("Invalid Class passed in to the index generator.  Classes must implement IndexerBI ");
+                    }
+                    IndexerBI temp = (IndexerBI)Hk2Looker.get().getService(clazz);
+                    if (temp != null)
+                    {
+                        indexers.add(temp);
+                    }
+                }
+            }
             for (IndexerBI i : indexers) {
                 i.clearIndex();
             }
@@ -1012,10 +1031,13 @@ public abstract class Termstore implements PersistentStoreI {
         }
     }
 
+    /**
+     * @see org.ihtsdo.otf.tcc.api.store.TerminologyDI#index(java.lang.Class[])
+     */
     @Override
-    public void index() throws IOException {
+    public void index(Class<?>[] indexesToRebuild) throws IOException {
         try {
-            IndexGenerator ig = new IndexGenerator();
+            IndexGenerator ig = new IndexGenerator(indexesToRebuild);
             P.s.iterateConceptDataInParallel(ig);
             ig.commit();
         } catch (Exception ex) {

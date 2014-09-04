@@ -1059,9 +1059,12 @@ public class TerminologySnapshot implements TerminologySnapshotDI, FxTerminology
         return store.getAllComponentNids();
     }
 
+    /**
+     * @see org.ihtsdo.otf.tcc.api.store.TerminologyDI#index(java.lang.Class[])
+     */
     @Override
-    public void index() throws IOException {
-        store.index();
+    public void index(Class<?> ... indexesToRebuild) throws IOException {
+        store.index(indexesToRebuild);
     }
 
     @Override

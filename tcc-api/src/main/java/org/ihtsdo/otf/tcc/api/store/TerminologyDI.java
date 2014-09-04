@@ -83,10 +83,14 @@ public interface TerminologyDI {
      * <code>clearIndex()</code> then iterate over all chronicles in the database
      * and pass those chronicles to <code>index(ComponentChronicleBI chronicle)</code>
      * and when complete, to call <code>commitWriter()</code>. <code>IndexerBI</code> services
-     * will be discovered using the HK2 dependency injection framework. 
+     * will be discovered using the HK2 dependency injection framework.
+     * @param indexesToRebuild - if null or empty - all indexes found via HK2 will be cleared and
+     * reindexed.  Otherwise, only clear and reindex the instances of IndexerBI which match the specified
+     * class list.  Classes passed in should be an extension of IndexerBI (but I don't have the type here to 
+     * be able to enforce that)
      * @throws IOException 
      */
-    void index() throws IOException;
+    void index(Class<?> ... indexesToRebuild) throws IOException;
 
     void iterateConceptDataInParallel(ProcessUnfetchedConceptDataBI processor) throws Exception;
 
