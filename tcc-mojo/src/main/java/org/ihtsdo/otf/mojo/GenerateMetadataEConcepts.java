@@ -294,10 +294,17 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				}
 				else if (Search.SEARCH_ISDESCENDANTOF_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
 					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
-					columns.add(new RefexDynamicColumnInfo(0, Search.ASCENDANT_COLUMN.getUuids()[0], RefexDynamicDataType.UUID, null, false, null, null));
+					columns.add(new RefexDynamicColumnInfo(0, Search.ANCESTOR_COLUMN.getUuids()[0], RefexDynamicDataType.UUID, null, false, null, null));
 
 					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
 							"Search IsDescendantOf Filter is for attributes effecting this IsDescendantOf search", columns);
+				}
+				else if (Search.SEARCH_ISA_FILTER.getUuids()[0].equals(cs.getUuids()[0])) {
+					List<RefexDynamicColumnInfo> columns = new ArrayList<>();
+					columns.add(new RefexDynamicColumnInfo(0, Search.MATCH_COLUMN.getUuids()[0], RefexDynamicDataType.UUID, null, false, null, null));
+
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, true, 
+							"Search IsA Filter is for attributes effecting this IsA search", columns);
 				}
 				
 				if (writeAsChangeSetFormat)

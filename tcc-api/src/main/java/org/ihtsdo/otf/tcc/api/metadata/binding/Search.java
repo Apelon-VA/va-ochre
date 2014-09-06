@@ -104,13 +104,22 @@ public class Search {
 	public static ConceptSpec SEARCH_ISDESCENDANTOF_FILTER = new ConceptSpec("Search IsDescendantOf Filter", 
 			UUID.fromString("58bea66c-65fb-5c52-bf71-d742aebe3822"),
 			SEARCH_TYPES);
-	public static ConceptSpec ASCENDANT_COLUMN = new ConceptSpecWithDescriptions(
-			"ascendant",
+	public static ConceptSpec ANCESTOR_COLUMN = new ConceptSpecWithDescriptions(
+			"ancestor",
 			UUID.fromString("fdcac37e-e22f-5f51-b7a6-f8de283c6cf0"),
-			new String[] { "ascendant" }, 
-			new String[] { "ascendant concept column" },
+			new String[] { "ancestor" }, 
+			new String[] { "ancestor concept column" },
 			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
-	
+
+	public static ConceptSpec SEARCH_ISA_FILTER = new ConceptSpec("Search IsA Filter", 
+			UUID.fromString("77823bc2-5924-544e-9496-bb54cad41d63"),
+			SEARCH_TYPES);
+	public static ConceptSpec MATCH_COLUMN = new ConceptSpecWithDescriptions(
+			"match",
+			UUID.fromString("53b89cac-54c4-5cf8-bf87-baee591729f5"),
+			new String[] { "match" }, 
+			new String[] { "matching concept column" },
+			RefexDynamic.REFEX_DYNAMIC_COLUMNS);
 	/**
 	 * 
 	 */
