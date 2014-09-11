@@ -163,7 +163,7 @@ public class RefexDynamicRevision extends Revision<RefexDynamicRevision, RefexDy
         RefexDynamicCAB rdc = new RefexDynamicCAB(
                 P.s.getUuidPrimordialForNid(getReferencedComponentNid()),
                 getAssemblageNid(),
-                getVersion(vc), 
+                this, 
                 vc, 
                 idDirective, 
                 refexDirective);
