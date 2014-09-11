@@ -216,7 +216,7 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	public RefexDynamicCAB(UUID referencedComponentUuid, int assemblageNid, RefexDynamicVersionBI<?> refexVersion, ViewCoordinate viewCoordinate,
 			IdDirective idDirective, RefexDirective refexDirective) throws IOException, InvalidCAB, ContradictionException
 	{
-		super(refexVersion.getPrimordialUuid(), refexVersion, viewCoordinate, idDirective, refexDirective);
+		super((refexVersion == null ? null : refexVersion.getPrimordialUuid()), refexVersion, viewCoordinate, idDirective, refexDirective);
 		setReferencedComponentUuid(referencedComponentUuid);
 		setAssemblageNid(assemblageNid);
 		setStatus(Status.ACTIVE);
