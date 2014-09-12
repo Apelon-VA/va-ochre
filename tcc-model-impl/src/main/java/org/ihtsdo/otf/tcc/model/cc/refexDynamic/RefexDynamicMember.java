@@ -461,10 +461,14 @@ public class RefexDynamicMember extends ConceptComponent<RefexDynamicRevision, R
         //~--- methods ----------------------------------------------------------
         public RefexDynamicRevision makeAnalog() {
             throw new UnsupportedOperationException("Must use Blueprints");
+            //TODO - so it turns out that this is still used by the mergeConcept process when merging TK concepts... 
+            //We don't need that at the moment, leaving unimplemented in hopes that the rest of the API gets fixed to actually use blueprints...
         }
 
         @Override
         public RefexDynamicRevision makeAnalog(Status status, long time, int authorNid, int moduleNid, int pathNid) {
+            //TODO - so it turns out that this is still used by the mergeConcept process when merging TK concepts... 
+            //We don't need that at the moment, leaving unimplemented in hopes that the rest of the API gets fixed to actually use blueprints...
             throw new UnsupportedOperationException("Must use Blueprints");
         }
 
