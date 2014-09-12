@@ -20,7 +20,4 @@ public class Taxonomies {
 
 	public static ConceptSpec SNOMED_ROLE_ROOT = new ConceptSpec("Concept model attribute (attribute)", 
 				UUID.fromString("6155818b-09ed-388e-82ce-caa143423e99"));
-	
-	public static ConceptSpec ISAAC_ROOT = new ConceptSpec("ISAAC Root", 
-				UUID.fromString("c767a452-41e3-5835-90b7-439f5b738035"));
 }
