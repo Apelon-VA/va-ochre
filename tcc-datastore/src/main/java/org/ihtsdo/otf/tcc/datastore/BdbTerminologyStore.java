@@ -278,13 +278,14 @@ public class BdbTerminologyStore extends Termstore {
             int converterSize = runtimeConverterSize;
             AtomicInteger conceptsRead = new AtomicInteger();
             AtomicInteger conceptsProcessed = new AtomicInteger();
+            AtomicInteger conceptsFailed = new AtomicInteger();
 
             for (File conceptsFile : econFiles) {
                 System.out.println("Starting load from: " + conceptsFile.getAbsolutePath());
                 converters.clear();
 
                 for (int i = 0; i < converterSize; i++) {
-                    converters.add(new ConceptConverter(converters, conceptsProcessed));
+                    converters.add(new ConceptConverter(converters, conceptsProcessed, conceptsFailed));
                 }
 
                 FileInputStream fis = new FileInputStream(conceptsFile);
@@ -332,10 +333,14 @@ public class BdbTerminologyStore extends Termstore {
                     }
                 }
 
-                while (conceptsProcessed.get() < conceptsRead.get()) {
+                while ((conceptsProcessed.get() + conceptsFailed.get()) < conceptsRead.get()) {
                     Thread.sleep(1000);
                 }
 
+                if (conceptsFailed.get() > 0) {
+                    System.out.println("!!!!There were errors loading " + conceptsFailed.get() + " concepts - DB is not valid!!!!");
+                }
+                
                 System.out.println("\nFinished load of " + conceptsRead + " concepts from: "
                         + conceptsFile.getAbsolutePath());
             }
@@ -889,12 +894,14 @@ public class BdbTerminologyStore extends Termstore {
         Throwable exception = null;
         ConceptChronicle newConcept = null;
         AtomicInteger conceptsProcessed;
+        AtomicInteger conceptsFailed;
         LinkedBlockingQueue<ConceptConverter> converters;
         MemoryCacheBdb nidCnidMap;
 
-        public ConceptConverter(LinkedBlockingQueue<ConceptConverter> converters, AtomicInteger conceptsRead) {
+        public ConceptConverter(LinkedBlockingQueue<ConceptConverter> converters, AtomicInteger conceptsRead, AtomicInteger conceptsFailed) {
             this.converters = converters;
             this.conceptsProcessed = conceptsRead;
+            this.conceptsFailed = conceptsFailed;
         }
 
         @Override
@@ -922,6 +929,7 @@ public class BdbTerminologyStore extends Termstore {
                 conceptsProcessed.incrementAndGet();
             } catch (Throwable e) {
                 exception = e;
+                conceptsFailed.incrementAndGet();
             }
 
             converters.add(this);
