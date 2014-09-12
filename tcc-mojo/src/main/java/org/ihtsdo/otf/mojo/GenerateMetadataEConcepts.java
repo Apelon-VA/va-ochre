@@ -371,10 +371,11 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 		
 		Class<?> clazz = getClass().getClassLoader().loadClass(className);
 		
-		for (Field f : clazz.getFields())
+		for (Field f : clazz.getDeclaredFields())
 		{
 			if (f.getType().equals(ConceptSpec.class) || f.getType().equals(ConceptSpecWithDescriptions.class))
 			{
+				f.setAccessible(true);
 				results.add((ConceptSpec)f.get(null));
 			}
 		}
