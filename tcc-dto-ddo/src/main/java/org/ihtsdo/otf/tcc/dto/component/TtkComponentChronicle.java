@@ -494,16 +494,19 @@ nextId:
          
          buff.append("annotations dynamic:\n");
 
-         for (TtkRefexDynamicMemberChronicle m : this.annotationsDynamic) {
-            buff.append(TtkConceptChronicle.PADDING);
-            buff.append(TtkConceptChronicle.PADDING);
+         if (this.annotationsDynamic != null)
+         {
+             for (TtkRefexDynamicMemberChronicle m : this.annotationsDynamic) {
+                buff.append(TtkConceptChronicle.PADDING);
+                buff.append(TtkConceptChronicle.PADDING);
 
-            for (int i = 0; i < depth; i++) {
-               buff.append(TtkConceptChronicle.PADDING);
-            }
+               for (int i = 0; i < depth; i++) {
+                   buff.append(TtkConceptChronicle.PADDING);
+                }
 
-            buff.append(m);
-            buff.append("\n");
+                buff.append(m);
+                buff.append("\n");
+             }
          }
       }
 
