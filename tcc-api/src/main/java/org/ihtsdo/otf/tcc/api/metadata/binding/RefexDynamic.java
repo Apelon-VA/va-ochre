@@ -16,9 +16,12 @@
 package org.ihtsdo.otf.tcc.api.metadata.binding;
 
 import java.util.UUID;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
 import org.ihtsdo.otf.tcc.api.spec.ConceptSpec;
 import org.ihtsdo.otf.tcc.api.spec.ConceptSpecWithDescriptions;
+import org.ihtsdo.otf.tcc.api.spec.DynamicRefexConceptSpec;
 
 /**
  * 
@@ -49,28 +52,49 @@ public class RefexDynamic
 	//This is the extended description type that must be attached to a description within a concept to make the concept valid for use as an 
 	//assemblage concept for RefexDynamic refexes.  The description annotated with this type describes the intent of 
 	//using the concept containing the description as an assemblage concept.
-	public static ConceptSpecWithDescriptions REFEX_DYNAMIC_DEFINITION_DESCRIPTION = new ConceptSpecWithDescriptions("dynamic refex definition description", 
+	public static DynamicRefexConceptSpec REFEX_DYNAMIC_DEFINITION_DESCRIPTION = new DynamicRefexConceptSpec("dynamic refex definition description", 
 			UUID.fromString("21d300f2-b2d8-5586-916b-0e7ac88d5bea"),
 			new String[] {"dynamic refex definition description"},
 			new String[0],
+			true, 
+			"This is the extended description type that must be attached to a description within a concept to make the concept valid for use as an "
+				+ "assemblage concept for RefexDynamic refexes.  The description annotated with this type describes the intent of "
+				+ "using the concept containing the description as an assemblage concept.", 
+			new RefexDynamicColumnInfo[0],
 			REFEX_DYNAMIC_TYPES);
 	
 	//This is the assemblage type that is usually present on a concept when it is used as an assemblage itself to describe the attached data - the attached
 	//refex using this for an assemblage will describe a data column that is to be attached with the refex.  This assemblage type wouldn't be used if there was 
 	//no data to attach.
-	public static ConceptSpecWithDescriptions REFEX_DYNAMIC_DEFINITION = new ConceptSpecWithDescriptions("dynamic refex definition", 
+	public static DynamicRefexConceptSpec REFEX_DYNAMIC_DEFINITION = new DynamicRefexConceptSpec("dynamic refex definition", 
 			UUID.fromString("a40fb48c-d755-5eaa-a725-4c4ebc9b9e6e"),
 			new String[] {"dynamic refex definition"},
 			new String[0],
+			true, 
+			"This concept is used as an assemblage for defining new Refex extensions.  "
+				+ "The attached data columns describe what columns are required to define a new Refex.",
+			new RefexDynamicColumnInfo[] {
+				new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_ORDER.getUuids()[0], RefexDynamicDataType.INTEGER, null, true, null, null),
+				new RefexDynamicColumnInfo(1, RefexDynamic.REFEX_COLUMN_NAME.getUuids()[0], RefexDynamicDataType.UUID, null, true, null, null),
+				new RefexDynamicColumnInfo(2, RefexDynamic.REFEX_COLUMN_TYPE.getUuids()[0], RefexDynamicDataType.STRING, null, true, null, null),
+				new RefexDynamicColumnInfo(3, RefexDynamic.REFEX_COLUMN_DEFAULT_VALUE.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null, false, null, null),
+				new RefexDynamicColumnInfo(4, RefexDynamic.REFEX_COLUMN_REQUIRED.getUuids()[0], RefexDynamicDataType.BOOLEAN, null, false, null, null),
+				new RefexDynamicColumnInfo(5, RefexDynamic.REFEX_COLUMN_VALIDATOR.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null),
+				new RefexDynamicColumnInfo(6, RefexDynamic.REFEX_COLUMN_VALIDATOR_DATA.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null, false, null, null)},
 			REFEX_DYNAMIC_TYPES);
 	
 	//This is the assemblage type that is used to record the current configuration of the Indexer for Dynamic Refexes.
 	//this is ALSO the concept that stores (as a member list) dynamic refex instances (of assemblage type itself) which define which other 
 	//dynamic refexes should be indexed within the system. 
-	public static ConceptSpecWithDescriptions REFEX_DYNAMIC_INDEX_CONFIGURATION = new ConceptSpecWithDescriptions("dynamic refex index configuration", 
+	public static DynamicRefexConceptSpec REFEX_DYNAMIC_INDEX_CONFIGURATION = new DynamicRefexConceptSpec("dynamic refex index configuration", 
 			UUID.fromString("980e092e-6df4-593f-a756-3d31b4f21a6c"),
 			new String[] {"dynamic refex index configuration"},
 			new String[0],
+			false, 
+			"A Dynamic Refex which contains the indexer configuration for Dynamic Refexes within ISAAC.  "
+				+ "The referenced component ID will be the assemblage being configured for indexing.", 
+			new RefexDynamicColumnInfo[] {
+				new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_COLUMNS_TO_INDEX.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null)},
 			REFEX_DYNAMIC_TYPES);
 	
 	//An organizational concept which serves as a parent concept for any column types that are defined
