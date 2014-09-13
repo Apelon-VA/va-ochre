@@ -35,21 +35,20 @@ import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
  */
 public enum RefexDynamicDataType {
 	
-	NID(101, RefexDynamicNidBI.class, RefexDynamic.REFEX_DT_NID.getUuids()[0], "Component Nid"),
-	STRING(102, RefexDynamicStringBI.class, RefexDynamic.REFEX_DT_STRING.getUuids()[0], "String"),
-	INTEGER(103, RefexDynamicIntegerBI.class, RefexDynamic.REFEX_DT_INTEGER.getUuids()[0], "Integer"),
-	BOOLEAN(104, RefexDynamicBooleanBI.class, RefexDynamic.REFEX_DT_BOOLEAN.getUuids()[0], "Boolean"),
-	LONG(105, RefexDynamicLongBI.class, RefexDynamic.REFEX_DT_LONG.getUuids()[0], "Long"),
-	BYTEARRAY(106, RefexDynamicByteArrayBI.class, RefexDynamic.REFEX_DT_BYTE_ARRAY.getUuids()[0], "Arbitrary Data"),
-	FLOAT(107, RefexDynamicFloatBI.class, RefexDynamic.REFEX_DT_FLOAT.getUuids()[0], "Float"),
-	DOUBLE(108, RefexDynamicDoubleBI.class, RefexDynamic.REFEX_DT_DOUBLE.getUuids()[0], "Double"),
-	UUID(109, RefexDynamicUUIDBI.class, RefexDynamic.REFEX_DT_UUID.getUuids()[0], "UUID"),
-	POLYMORPHIC(110, RefexDynamicPolymorphicBI.class, RefexDynamic.REFEX_DT_POLYMORPHIC.getUuids()[0], "Unspecified"),
-	UNKNOWN(Byte.MAX_VALUE, null, RefexDynamic.UNKNOWN_CONCEPT.getUuids()[0], "Unknown");
+	NID(101, RefexDynamicNidBI.class, "Component Nid"),
+	STRING(102, RefexDynamicStringBI.class, "String"),
+	INTEGER(103, RefexDynamicIntegerBI.class, "Integer"),
+	BOOLEAN(104, RefexDynamicBooleanBI.class, "Boolean"),
+	LONG(105, RefexDynamicLongBI.class, "Long"),
+	BYTEARRAY(106, RefexDynamicByteArrayBI.class, "Arbitrary Data"),
+	FLOAT(107, RefexDynamicFloatBI.class, "Float"),
+	DOUBLE(108, RefexDynamicDoubleBI.class, "Double"),
+	UUID(109, RefexDynamicUUIDBI.class, "UUID"),
+	POLYMORPHIC(110, RefexDynamicPolymorphicBI.class, "Unspecified"),
+	UNKNOWN(Byte.MAX_VALUE, null, "Unknown");
 
 	private int externalizedToken_;
 	private Class<? extends RefexDynamicDataBI> dataClass_;
-	private UUID typeConcept_;
 	private String displayName_;
 
 	public static RefexDynamicDataType getFromToken(int type) throws UnsupportedOperationException {
@@ -79,11 +78,10 @@ public enum RefexDynamicDataType {
 		}
 	}
 	
-	private RefexDynamicDataType(int externalizedToken, Class<? extends RefexDynamicDataBI> dataClass, UUID typeConcept, String displayName)
+	private RefexDynamicDataType(int externalizedToken, Class<? extends RefexDynamicDataBI> dataClass, String displayName)
 	{
 		externalizedToken_ = externalizedToken;
 		dataClass_ = dataClass;
-		typeConcept_ = typeConcept;
 		displayName_ = displayName;
 	}
 
@@ -99,7 +97,28 @@ public enum RefexDynamicDataType {
 	
 	public UUID getDataTypeConcept()
 	{
-		return typeConcept_;
+		/*
+		 * Implementation note - these used to be defined in the constructor, and stored in a local variable - but
+		 * that lead to a circular loop between the references of static elements in this class and RefexDynamic, 
+		 * specifically in the constructors - which would through maven / surefire for a loop - resulting in a 
+		 * class not found exception... which was a PITA to track down.  So, don't do that....
+		 */
+		switch (this)
+		{
+			case BOOLEAN: return RefexDynamic.REFEX_DT_BOOLEAN.getUuids()[0];
+			case BYTEARRAY: return RefexDynamic.REFEX_DT_BYTE_ARRAY.getUuids()[0];
+			case DOUBLE: return RefexDynamic.REFEX_DT_DOUBLE.getUuids()[0];
+			case FLOAT: return RefexDynamic.REFEX_DT_FLOAT.getUuids()[0];
+			case INTEGER: return RefexDynamic.REFEX_DT_INTEGER.getUuids()[0];
+			case LONG: return RefexDynamic.REFEX_DT_LONG.getUuids()[0];
+			case NID: return RefexDynamic.REFEX_DT_NID.getUuids()[0];
+			case POLYMORPHIC: return RefexDynamic.REFEX_DT_POLYMORPHIC.getUuids()[0];
+			case STRING: return RefexDynamic.REFEX_DT_STRING.getUuids()[0];
+			case UNKNOWN: return RefexDynamic.UNKNOWN_CONCEPT.getUuids()[0];
+			case UUID: return RefexDynamic.REFEX_DT_UUID.getUuids()[0];
+
+			default: throw new RuntimeException("Implementation error");
+		}
 	}
 	
 	public String getDisplayName()
