@@ -304,7 +304,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 		
 		for (Field f : clazz.getDeclaredFields())
 		{
-			if (f.getType().equals(ConceptSpec.class) || f.getType().equals(ConceptSpecWithDescriptions.class))
+			if (f.getType().equals(ConceptSpec.class) || f.getType().equals(ConceptSpecWithDescriptions.class) || f.getType().equals(DynamicRefexConceptSpec.class))
 			{
 				f.setAccessible(true);
 				results.add((ConceptSpec)f.get(null));
