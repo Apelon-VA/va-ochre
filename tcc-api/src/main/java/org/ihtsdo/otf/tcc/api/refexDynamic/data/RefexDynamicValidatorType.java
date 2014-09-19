@@ -29,6 +29,7 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicStringBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicUUIDBI;
 import org.ihtsdo.otf.tcc.api.store.Ts;
+import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
 
 
 /**
@@ -98,8 +99,28 @@ public enum RefexDynamicValidatorType
 		}
 		if (this == RefexDynamicValidatorType.DROOLS)
 		{
-			//TODO [VALIDATOR] implement Drools
-			throw new RuntimeException("Not implemented");
+			//For drools - the validatorDefinitionData will be a string that tells us what implementation of the {@link ExternalValidatorBI} to 
+			//request from HK2.  If it is missing, will ask for an arbitrary validator.
+			
+			ExternalValidatorBI validator = null;
+			String valName = null;
+			if (validatorDefinitionData != null)
+			{
+				valName = ((RefexDynamicStringBI)validatorDefinitionData).getDataString();
+			}
+			if (valName != null && valName.length() > 0)
+			{
+				validator = Hk2Looker.get().getService(ExternalValidatorBI.class, valName);
+			}
+			else
+			{
+				validator = Hk2Looker.get().getService(ExternalValidatorBI.class);
+			}
+			if (validator == null)
+			{
+				throw new RuntimeException("Could not locate an implementation of ExternalValidatorBI with the requested name of " + valName);
+			}
+			return validator.validate(userData, vc);
 		}
 		else if (this == RefexDynamicValidatorType.REGEXP)
 		{
