@@ -19,6 +19,7 @@
 package org.ihtsdo.otf.tcc.api.refexDynamic.data;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
@@ -35,7 +36,7 @@ import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
 /**
  * {@link RefexDynamicValidatorType}
  * 
- * The acceptable validatorData object type(s) for the following fields:
+ * The acceptable validatorDefinitionData object type(s) for the following fields:
  * {@link RefexDynamicValidatorType#LESS_THAN}
  * {@link RefexDynamicValidatorType#GREATER_THAN}
  * {@link RefexDynamicValidatorType#LESS_THAN_OR_EQUAL}
@@ -51,7 +52,22 @@ import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
  * And for the following two:
  * {@link RefexDynamicValidatorType#IS_CHILD_OF}
  * {@link RefexDynamicValidatorType#IS_KIND_OF}
- * The validatorData should be either an {@link RefexDynamicNidBI} or a {@link RefexDynamicUUIDBI}.
+ * The validatorDefinitionData should be either an {@link RefexDynamicNidBI} or a {@link RefexDynamicUUIDBI}.
+ * 
+ * For {@link RefexDynamicValidatorType#EXTERNAL} the validatorDefinitionData should be a {@link RefexDynamicStringBI} 
+ * which contains the name of an HK2 named service which implements  {@link ExternalValidatorBI} - the name that you provide 
+ * should be the value of the '@Name' annotation within the class which implements the ExternalValidatorBI class.  This code 
+ * will request that implementation (by name) and pass the validation call to it.
+ * 
+ * Optionally, the validatorDefinitionData can contain a "|" character - only the characters leading up to the first instance of a "|" 
+ * will be considered as the '@Name' to be used for the HK2 lookup.  Anything after the "|" separator is ignored, and may be used
+ * by the external validator implementation to store other data.  For example, if the validatorDefinitionData {@link RefexDynamicStringBI}
+ * contains "mySuperRefexValidator|somespecialmappingdata|some other mapping data" then the following HK2 call will be made to locate 
+ * the validator implementation (and validate):
+ * <pre>
+ *   ExternalValidatorBI validator = Hk2Looker.get().getService(ExternalValidatorBI.class, "mySuperRefexValidator");
+ *   return validator.validate(userData, validatorDefinitionData, viewCoordinate);
+ * </pre>
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a>
  */
@@ -61,13 +77,14 @@ public enum RefexDynamicValidatorType
 	LESS_THAN("<"), GREATER_THAN(">"), LESS_THAN_OR_EQUAL("<="), GREATER_THAN_OR_EQUAL(">="),  //Standard math stuff 
 	INTERVAL("Interval"), //math interval notation - such as [5,10)
 	REGEXP("Regular Expression"),  //http://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
-	DROOLS("Drools"), //TBD 
+	EXTERNAL("External"), //see class docs above - implemented by an ExternalValidatorBI
 	IS_CHILD_OF("Is Child Of"), //OTF is child of - which only includes immediate (not recursive) children on the 'Is A' relationship. 
 	IS_KIND_OF("Is Kind Of"), //OTF kind of - which is child of - but recursive, and self (heart disease is a kind-of heart disease);
 	UNKNOWN("Unknown");  //Not a real validator, only exists to allow GUI convenience, or potentially store other validator data that we don't support in OTF
 	//but we may need to store / retreive
 	
 	private String displayName_;
+	private static Logger logger = Logger.getLogger(RefexDynamicValidatorType.class.getName());
 	
 	private RefexDynamicValidatorType(String displayName)
 	{
@@ -88,39 +105,44 @@ public enum RefexDynamicValidatorType
 	 * 
 	 * @param userData
 	 * @param validatorDefinitionData
-	 * @param vc - The View Coordinate - not needed for some types of validations. Null allowed when unneeded (for math based tests, for example)
+	 * @param viewCoordinate - The View Coordinate - not needed for some types of validations. Null allowed when unneeded (for math based tests, for example)
 	 * @return
 	 */
-	public boolean passesValidator(RefexDynamicDataBI userData, RefexDynamicDataBI validatorDefinitionData, ViewCoordinate vc)
+	public boolean passesValidator(RefexDynamicDataBI userData, RefexDynamicDataBI validatorDefinitionData, ViewCoordinate viewCoordinate)
 	{
 		if (validatorDefinitionData == null)
 		{
 			throw new RuntimeException("The validator definition data is required");
 		}
-		if (this == RefexDynamicValidatorType.DROOLS)
+		if (this == RefexDynamicValidatorType.EXTERNAL)
 		{
-			//For drools - the validatorDefinitionData will be a string that tells us what implementation of the {@link ExternalValidatorBI} to 
-			//request from HK2.  If it is missing, will ask for an arbitrary validator.
-			
 			ExternalValidatorBI validator = null;
 			String valName = null;
+			RefexDynamicStringBI stringValidatorDefData = null;
 			if (validatorDefinitionData != null)
 			{
-				valName = ((RefexDynamicStringBI)validatorDefinitionData).getDataString();
+				stringValidatorDefData = (RefexDynamicStringBI)validatorDefinitionData;
+				valName = stringValidatorDefData.getDataString();
 			}
 			if (valName != null && valName.length() > 0)
 			{
+				int index = valName.indexOf('|');
+				if (index > 0)
+				{
+					valName = valName.substring(0, index);
+				}
+				logger.fine("Looking for an ExternalValidatorBI with the name of '" + valName + "'");
 				validator = Hk2Looker.get().getService(ExternalValidatorBI.class, valName);
 			}
 			else
 			{
-				validator = Hk2Looker.get().getService(ExternalValidatorBI.class);
+				logger.severe("An external validator type was specified, but no ExternalValidatorBI 'name' was provided.  API misuse!");
 			}
 			if (validator == null)
 			{
-				throw new RuntimeException("Could not locate an implementation of ExternalValidatorBI with the requested name of " + valName);
+				throw new RuntimeException("Could not locate an implementation of ExternalValidatorBI with the requested name of '" + valName + "'");
 			}
-			return validator.validate(userData, vc);
+			return validator.validate(userData, stringValidatorDefData, viewCoordinate);
 		}
 		else if (this == RefexDynamicValidatorType.REGEXP)
 		{
@@ -170,7 +192,7 @@ public enum RefexDynamicValidatorType
 					throw new RuntimeException("Validator DefinitionData is invalid for a IS_CHILD_OF or IS_KIND_OF comparison");
 				}
 
-				return (this == RefexDynamicValidatorType.IS_CHILD_OF ? Ts.get().isChildOf(childNid, parentNid, vc) : Ts.get().isKindOf(childNid, parentNid, vc));
+				return (this == RefexDynamicValidatorType.IS_CHILD_OF ? Ts.get().isChildOf(childNid, parentNid, viewCoordinate) : Ts.get().isKindOf(childNid, parentNid, viewCoordinate));
 			}
 			catch (Exception e)
 			{
