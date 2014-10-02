@@ -45,7 +45,14 @@ public class TtkRefexDynamicMemberChronicle extends TtkComponentChronicle<TtkRef
 		this.data_ = new TtkRefexDynamicData[another.getData().length];
 		for (int i = 0; i < data_.length; i++)
 		{
-			data_[i] = TtkRefexDynamicData.typeToClass(another.getData()[i].getRefexDataType(), another.getData()[i].getData());
+			if (another.getData()[i] == null)
+			{
+				data_[i] = null;
+			}
+			else
+			{
+				data_[i] = TtkRefexDynamicData.typeToClass(another.getData()[i].getRefexDataType(), another.getData()[i].getData());
+			}
 		}
 
 		Collection<? extends RefexDynamicVersionBI<?>> refexes = another.getVersions();
@@ -75,10 +82,18 @@ public class TtkRefexDynamicMemberChronicle extends TtkComponentChronicle<TtkRef
 		Iterator<? extends RefexDynamicVersionBI<?>> itr = refexes.iterator();
 		RefexDynamicVersionBI<?> rv = itr.next();
 
+		//TODO [REFEX] seems to be duplicating work done in the other constructor called above... look at this closer.
 		this.data_ = new TtkRefexDynamicData[rv.getData().length];
 		for (int i = 0; i < data_.length; i++)
 		{
-			data_[i] = TtkRefexDynamicData.typeToClass(rv.getData()[i].getRefexDataType(), rv.getData()[i].getData());
+			if (rv.getData()[i] == null)
+			{
+				data_[i] = null;
+			}
+			else
+			{
+				data_[i] = TtkRefexDynamicData.typeToClass(rv.getData()[i].getRefexDataType(), rv.getData()[i].getData());
+			}
 		}
 
 		if (partCount > 1)
