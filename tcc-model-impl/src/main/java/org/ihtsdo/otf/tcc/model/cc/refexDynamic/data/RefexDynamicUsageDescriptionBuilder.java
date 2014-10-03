@@ -114,12 +114,12 @@ public class RefexDynamicUsageDescriptionBuilder
 				IdDirective.GENERATE_HASH);
 		dCab.getProperties().put(ComponentProperty.MODULE_ID, module);
 		
-		//Mark it as acceptable
-		RefexCAB rCabAcceptable = new RefexCAB(RefexType.CID, dCab.getComponentUuid(), 
+		//Mark it as preferred
+		RefexCAB rCabPreferred = new RefexCAB(RefexType.CID, dCab.getComponentUuid(), 
 				Snomed.US_LANGUAGE_REFEX.getUuids()[0], IdDirective.GENERATE_HASH, RefexDirective.EXCLUDE);
-		rCabAcceptable.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRf2.PREFERRED_RF2.getUuids()[0]);
-		rCabAcceptable.getProperties().put(ComponentProperty.MODULE_ID, module);
-		dCab.addAnnotationBlueprint(rCabAcceptable);
+		rCabPreferred.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRf2.PREFERRED_RF2.getUuids()[0]);
+		rCabPreferred.getProperties().put(ComponentProperty.MODULE_ID, module);
+		dCab.addAnnotationBlueprint(rCabPreferred);
 		
 		RefexDynamicCAB descriptionMarker = new RefexDynamicCAB(dCab.getComponentUuid(), RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION.getUuids()[0]);
 		dCab.addAnnotationBlueprint(descriptionMarker);
