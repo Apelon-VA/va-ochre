@@ -391,7 +391,16 @@ public class BdbCommitManager {
 
     public static boolean forget(ConceptAttributeVersionBI attr) throws IOException {
         ConceptChronicle c = Bdb.getConcept(attr.getConceptNid());
-        ConceptAttributes a = ((ConceptAttributes.Version)attr).getPrimordialVersion();
+        // TODO: Workaround based on 2 uses for this method with each handling different Object
+        // 1) To forget changes to the ConceptAttribute component called by: forget(ConceptAttrbituesVersionBI)
+        // 2) To forget changes to entire concept called by: forget(ConceptVersionBI);
+
+        ConceptAttributes a; 
+        try {
+            a = (ConceptAttributes)attr;
+        } catch (ClassCastException e) {
+        	a = ((ConceptAttributes.Version)attr).getPrimordialVersion();
+        }
 
         if ((a.getTime() != Long.MAX_VALUE) && (a.getTime() != Long.MIN_VALUE)) {
 
