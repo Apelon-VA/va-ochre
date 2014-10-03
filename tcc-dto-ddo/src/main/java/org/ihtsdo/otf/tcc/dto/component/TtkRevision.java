@@ -8,6 +8,7 @@ import org.ihtsdo.otf.tcc.api.chronicle.ComponentVersionBI;
 import org.ihtsdo.otf.tcc.api.concept.ConceptChronicleBI;
 import org.ihtsdo.otf.tcc.api.coordinate.ExternalStampBI;
 import org.ihtsdo.otf.tcc.api.id.IdBI;
+import org.ihtsdo.otf.tcc.api.metadata.binding.TermAux;
 import org.ihtsdo.otf.tcc.dto.component.transformer.ComponentFields;
 import org.ihtsdo.otf.tcc.dto.component.transformer.ComponentTransformerBI;
 
@@ -88,7 +89,7 @@ public abstract class TtkRevision implements ExternalStampBI {
 
     @SuppressWarnings("unused")
 	private static final long serialVersionUID      = 1;
-    public static UUID        unspecifiedUserUuid   = UUID.fromString("f7495b58-6630-3499-a44e-2052b5fcf06c");
+    public static UUID        unspecifiedUserUuid   = TermAux.USER.getUuids()[0];
     public static UUID        unspecifiedModuleUuid = UUID.fromString("40d1c869-b509-32f8-b735-836eac577a67");
     @XmlAttribute
     public long               time                  = Long.MIN_VALUE;
