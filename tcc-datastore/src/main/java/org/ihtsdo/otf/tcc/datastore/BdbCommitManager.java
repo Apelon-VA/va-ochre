@@ -1,32 +1,41 @@
 package org.ihtsdo.otf.tcc.datastore;
 
 //~--- non-JDK imports --------------------------------------------------------
-import org.ihtsdo.otf.tcc.api.nid.NidSetBI;
-import org.ihtsdo.otf.tcc.api.chronicle.ComponentBI;
-import org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI;
-import org.ihtsdo.otf.tcc.api.nid.NativeIdSetItrBI;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import org.ihtsdo.otf.tcc.api.nid.ConcurrentBitSet;
-import org.ihtsdo.otf.tcc.api.nid.NativeIdSetBI;
-import org.ihtsdo.otf.tcc.datastore.id.MemoryCacheBdb;
-import org.ihtsdo.otf.tcc.datastore.temp.AceLog;
+
+import org.ihtsdo.otf.tcc.api.chronicle.ComponentBI;
 import org.ihtsdo.otf.tcc.api.conattr.ConceptAttributeVersionBI;
 import org.ihtsdo.otf.tcc.api.concept.ConceptChronicleBI;
 import org.ihtsdo.otf.tcc.api.cs.ChangeSetPolicy;
 import org.ihtsdo.otf.tcc.api.cs.ChangeSetWriterThreading;
 import org.ihtsdo.otf.tcc.api.description.DescriptionVersionBI;
+import org.ihtsdo.otf.tcc.api.nid.ConcurrentBitSet;
+import org.ihtsdo.otf.tcc.api.nid.NativeIdSetBI;
+import org.ihtsdo.otf.tcc.api.nid.NativeIdSetItrBI;
+import org.ihtsdo.otf.tcc.api.nid.NidSetBI;
 import org.ihtsdo.otf.tcc.api.refex.RefexChronicleBI;
 import org.ihtsdo.otf.tcc.api.relationship.RelationshipVersionBI;
+import org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI;
+import org.ihtsdo.otf.tcc.api.thread.NamedThreadFactory;
+import org.ihtsdo.otf.tcc.datastore.id.MemoryCacheBdb;
+import org.ihtsdo.otf.tcc.datastore.temp.AceLog;
+import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
 import org.ihtsdo.otf.tcc.model.cc.P;
 import org.ihtsdo.otf.tcc.model.cc.attributes.ConceptAttributes;
 import org.ihtsdo.otf.tcc.model.cc.attributes.ConceptAttributesRevision;
@@ -41,9 +50,6 @@ import org.ihtsdo.otf.tcc.model.cc.refex.RefexRevision;
 import org.ihtsdo.otf.tcc.model.cc.relationship.Relationship;
 import org.ihtsdo.otf.tcc.model.cc.relationship.RelationshipRevision;
 import org.ihtsdo.otf.tcc.model.cs.ChangeSetWriterHandler;
-import org.ihtsdo.otf.tcc.api.thread.NamedThreadFactory;
-import static org.ihtsdo.otf.tcc.datastore.Bdb.indexers;
-import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
 import org.ihtsdo.otf.tcc.model.index.service.IndexerBI;
 
 public class BdbCommitManager {
@@ -385,7 +391,16 @@ public class BdbCommitManager {
 
     public static boolean forget(ConceptAttributeVersionBI attr) throws IOException {
         ConceptChronicle c = Bdb.getConcept(attr.getConceptNid());
-      ConceptAttributes a = (ConceptAttributes) attr;
+        // TODO: Workaround based on 2 uses for this method with each handling different Object
+        // 1) To forget changes to the ConceptAttribute component called by: forget(ConceptAttrbituesVersionBI)
+        // 2) To forget changes to entire concept called by: forget(ConceptVersionBI);
+
+        ConceptAttributes a; 
+        try {
+            a = (ConceptAttributes)attr;
+        } catch (ClassCastException e) {
+        	a = ((ConceptAttributes.Version)attr).getPrimordialVersion();
+        }
 
         if ((a.getTime() != Long.MAX_VALUE) && (a.getTime() != Long.MIN_VALUE)) {
 
@@ -422,7 +437,7 @@ public class BdbCommitManager {
 
 
    public static void forget(DescriptionVersionBI desc) throws IOException {
-      Description d = (Description) desc;
+      Description d = ((Description.Version) desc).getPrimordialVersion();
         ConceptChronicle c = Bdb.getConcept(d.getConceptNid());
 
         if (d.getTime() != Long.MAX_VALUE) {
@@ -463,7 +478,7 @@ public class BdbCommitManager {
 
    @SuppressWarnings("unchecked")
    public static void forget(RefexChronicleBI extension) throws IOException {
-      RefexMember m         = (RefexMember) extension;
+      RefexMember m = ((RefexMember.Version) extension).getPrimordialVersion();
       ConceptChronicle      c         = Bdb.getConcept(m.getAssemblageNid());
       ComponentBI  component = Bdb.getComponent(m.getReferencedComponentNid());
 
@@ -525,7 +540,7 @@ public class BdbCommitManager {
 
    public static void forget(RelationshipVersionBI rel) throws IOException {
       ConceptChronicle      c = Bdb.getConcept(rel.getOriginNid());
-      Relationship r = (Relationship) rel;
+      Relationship r = ((Relationship.Version)rel).getPrimordialVersion();
 
         if (r.getTime() != Long.MAX_VALUE) {
 
