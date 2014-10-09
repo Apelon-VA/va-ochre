@@ -483,6 +483,12 @@ public class TccRestClient extends Termstore {
    }
 
    @Override
+   public void removePropertyChangeListener(PropertyChangeListener l)
+   {
+      throw new UnsupportedOperationException("Not supported yet.");
+   }
+
+@Override
    public void addUncommitted(ConceptChronicleBI cc) throws IOException {
       throw new UnsupportedOperationException("Not supported yet.");
    }

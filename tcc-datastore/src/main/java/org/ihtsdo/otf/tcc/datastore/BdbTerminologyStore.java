@@ -132,6 +132,11 @@ public class BdbTerminologyStore extends Termstore {
     public void addPropertyChangeListener(CONCEPT_EVENT pce, PropertyChangeListener l) {
         GlobalPropertyChange.addPropertyChangeListener(pce, l);
     }
+    
+    @Override
+    public void removePropertyChangeListener( PropertyChangeListener l) {
+        GlobalPropertyChange.removePropertyChangeListener(l);
+    }
 
     @Override
     public void addRelOrigin(int destinationCNid, int originCNid) throws IOException {

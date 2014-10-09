@@ -34,6 +34,8 @@ public interface TerminologyDI {
     void addChangeSetGenerator(String key, ChangeSetGeneratorBI writer);
 
     void addPropertyChangeListener(TerminologyStoreDI.CONCEPT_EVENT pce, PropertyChangeListener l);
+    
+    void removePropertyChangeListener( PropertyChangeListener l) ;
 
     void addTermChangeListener(TermChangeListener cl);
 

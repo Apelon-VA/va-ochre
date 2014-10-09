@@ -100,8 +100,20 @@ public class TerminologySnapshot implements TerminologySnapshotDI, FxTerminology
    public void addPropertyChangeListener(CONCEPT_EVENT pce, PropertyChangeListener l) {
       store.addPropertyChangeListener(pce, l);
    }
+   
+   
 
-   /**
+    /**
+     * @see org.ihtsdo.otf.tcc.api.store.TerminologyDI#removePropertyChangeListener(java.beans.PropertyChangeListener)
+     */
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener l)
+    {
+        store.removePropertyChangeListener(l);
+        
+    }
+
+    /**
     * Method description
     *
     *
