@@ -195,9 +195,7 @@ public class BdbPathManager {
                 return p;
             }
         }
-        System.out.println("nid = " + nid);
-        System.out.println("TERM_AUX_PATH = " + ReferenceConcepts.TERM_AUXILIARY_PATH.getUuids());
-        System.out.println("TERM_AUX_PATH = " + pathMap.get(ReferenceConcepts.TERM_AUXILIARY_PATH.getNid()));
+
         pathMap.put(
                 nid,
                 pathMap.get(ReferenceConcepts.TERM_AUXILIARY_PATH.getNid()));
