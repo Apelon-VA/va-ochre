@@ -47,10 +47,15 @@ public class ConceptSpecWithDescriptions extends ConceptSpec
 
 	/**
 	 * @param parentConcept - used as the destination in a relspec, with a type of {@link Snomed#IS_A} and a source of this spec being created.
+	 * Optional - not used if null is passed.
 	 */
 	public ConceptSpecWithDescriptions(String fsn, UUID uuid, String[] synonyms, String[] definitions, ConceptSpec parentConcept)
 	{
 		super(fsn, uuid, parentConcept);
+		if (parentConcept == null)
+		{
+			setRelSpecs(new RelSpec[0]);
+		}
 		fsn_ = fsn;
 		if (synonyms != null)
 		{
