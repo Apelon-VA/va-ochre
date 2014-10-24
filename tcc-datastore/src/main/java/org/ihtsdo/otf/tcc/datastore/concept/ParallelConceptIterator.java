@@ -15,7 +15,6 @@ import com.sleepycat.je.OperationStatus;
 
 import org.ihtsdo.otf.tcc.api.concept.ProcessUnfetchedConceptDataBI;
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
-import org.ihtsdo.otf.tcc.datastore.temp.AceLog;
 import org.ihtsdo.otf.tcc.model.cc.concept.ConceptChronicle;
 import org.ihtsdo.otf.tcc.model.cc.concept.ConceptVersion;
 
@@ -37,6 +36,7 @@ import org.ihtsdo.otf.tcc.api.concept.ConceptFetcherBI;
  */
 public class ParallelConceptIterator implements Callable<Boolean>, ConceptFetcherBI {
 
+	private static final Logger LOG = Logger.getLogger(ParallelConceptIterator.class.getName());
     static boolean verbose = true;
     /**
      * Field description
@@ -200,12 +200,10 @@ public class ParallelConceptIterator implements Callable<Boolean>, ConceptFetche
 
         int roKey = first;
         int mutableKey = first;
-        if (verbose) {
-            System.out.println("Parallel concept iterator starting.\n" + " First: " + first + " last: "
-                    + last + " roKey: " + roKey + " mutableKey: " + mutableKey
-                    + " processedCount: " + processedCount + " countToProcess: "
-                    + countToProcess);
-        }
+        LOG.log((verbose ? Level.INFO : Level.FINE), "Parallel concept iterator starting.\n" + " First: " + first + " last: "
+                + last + " roKey: " + roKey + " mutableKey: " + mutableKey
+                + " processedCount: " + processedCount + " countToProcess: "
+                + countToProcess);
 
         try {
             DatabaseEntry roFoundKey = new DatabaseEntry();
@@ -238,7 +236,7 @@ public class ParallelConceptIterator implements Callable<Boolean>, ConceptFetche
                         if (processedCount < countToProcess) {
                             task.updateProgress(processedCount, countToProcess);
                         } else {
-                            System.out.println("processedCount !< countToProcess: " + processedCount + "/" + countToProcess);
+                            LOG.info("processedCount !< countToProcess: " + processedCount + "/" + countToProcess);
                             task.updateProgress(processedCount, processedCount);
                         }
                     }
@@ -288,19 +286,18 @@ public class ParallelConceptIterator implements Callable<Boolean>, ConceptFetche
                 }
             }
 
-            if (verbose) {
-                System.out.println("Parallel concept iterator finished.\n" + " First: " + first + " last: "
-                        + last + " roKey: " + roKey + " mutableKey: " + mutableKey
-                        + " processedCount: " + processedCount + " countToProcess: "
-                        + countToProcess);
-            }
+            LOG.log((verbose ? Level.INFO : Level.FINE), "Parallel concept iterator finished.\n" + " First: " + first + " last: "
+                    + last + " roKey: " + roKey + " mutableKey: " + mutableKey
+                    + " processedCount: " + processedCount + " countToProcess: "
+                    + countToProcess);
+            
             if (task != null) {
                 task.updateMessage("Finished. Processed: " + processedCount + " items");
                 task.updateProgress(countToProcess, countToProcess);
             }
             return true;
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            LOG.log(Level.SEVERE, "Unexpected Error processing concepts", ex);
             throw new Exception(ex);
         } finally {
             roCursor.close();
