@@ -36,7 +36,7 @@ import org.ihtsdo.otf.tcc.api.concept.ConceptFetcherBI;
  */
 public class ParallelConceptIterator implements Callable<Boolean>, ConceptFetcherBI {
 
-	private static final Logger LOG = Logger.getLogger(ParallelConceptIterator.class.getName());
+    private static final Logger LOG = Logger.getLogger(ParallelConceptIterator.class.getName());
     static boolean verbose = true;
     /**
      * Field description
