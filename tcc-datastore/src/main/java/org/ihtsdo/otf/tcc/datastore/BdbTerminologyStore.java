@@ -85,10 +85,14 @@ public class BdbTerminologyStore extends Termstore {
                 }
                 Bdb.selectJeProperties(new File(bdbLocation), new File(bdbLocation));
                 Bdb.setup(bdbLocation, this);
-                LOG.info("Database setup complete");
-                setupComplete.countDown();
+                
             } catch (IOException ex) {
                 Logger.getLogger(BdbTerminologyStore.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            finally
+            {
+                LOG.info("Database setup complete");
+                setupComplete.countDown();
             }
         } else {
             LOG.info("Database setup already initialized");
