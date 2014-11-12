@@ -568,7 +568,7 @@ public class BdbCommitManager {
         } else {
 
             // have to forget "all" references to component...
-            c.getRelationshipsOutgoing().remove((Relationship) rel);
+            c.getRelationshipsOutgoing().remove(r);
             c.getData().getSrcRelNids().remove(rel.getNid());
             r.primordialStamp = -1;
         }
