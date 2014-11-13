@@ -534,17 +534,17 @@ public class TccRestClient extends Termstore {
    }
 
    @Override
-   public void commit() throws IOException {
+   public boolean commit() throws IOException {
       throw new UnsupportedOperationException("Not supported yet.");
    }
 
    @Override
-   public void commit(ConceptChronicleBI cc) throws IOException {
+   public boolean commit(ConceptChronicleBI cc) throws IOException {
       throw new UnsupportedOperationException("Not supported yet.");
    }
 
    @Override
-   public void commit(ConceptVersionBI cv) throws IOException {
+   public boolean commit(ConceptVersionBI cv) throws IOException {
       throw new UnsupportedOperationException("Not supported yet.");
    }
 

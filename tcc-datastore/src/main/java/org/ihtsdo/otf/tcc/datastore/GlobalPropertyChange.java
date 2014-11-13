@@ -19,6 +19,8 @@ import java.beans.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI;
 import org.ihtsdo.otf.tcc.api.store.TerminologyDI.CONCEPT_EVENT;
 
@@ -28,6 +30,8 @@ import org.ihtsdo.otf.tcc.api.store.TerminologyDI.CONCEPT_EVENT;
  */
 public class GlobalPropertyChange {
     
+    private static Logger log = Logger.getLogger(GlobalPropertyChange.class.getName());
+
     private static class WeakRefListener implements PropertyChangeListener {
         WeakReference<PropertyChangeListener> wr;
         int hash; 
@@ -50,7 +54,7 @@ public class GlobalPropertyChange {
                     listenerToRemove.add(this);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.log(Level.WARNING, "Disabling property change listener because of exception", e);
                 listenerToRemove.add(this);
             }
         }
@@ -93,8 +97,11 @@ public class GlobalPropertyChange {
                 } else {
                     vetoListenerToRemove.add(this);
                 }
+            } catch (PropertyVetoException e)
+            {
+                throw e;
             } catch (Exception e) {
-                e.printStackTrace();
+                log.log(Level.WARNING, "Disabling property change listener because of exception", e);
                 vetoListenerToRemove.add(this);
             }
         }

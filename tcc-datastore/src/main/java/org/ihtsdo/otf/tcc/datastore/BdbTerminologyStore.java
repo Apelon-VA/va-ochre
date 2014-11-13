@@ -188,19 +188,19 @@ public class BdbTerminologyStore extends Termstore {
     }
 
     @Override
-    public void commit() throws IOException {
-        BdbCommitManager.commit(ChangeSetPolicy.MUTABLE_ONLY, ChangeSetWriterThreading.SINGLE_THREAD);
+    public boolean commit() throws IOException {
+        return BdbCommitManager.commit(ChangeSetPolicy.MUTABLE_ONLY, ChangeSetWriterThreading.SINGLE_THREAD);
     }
 
     @Override
-    public void commit(ConceptChronicleBI cc) throws IOException {
-        BdbCommitManager.commit((ConceptChronicle) cc, ChangeSetPolicy.MUTABLE_ONLY,
+    public boolean commit(ConceptChronicleBI cc) throws IOException {
+        return BdbCommitManager.commit((ConceptChronicle) cc, ChangeSetPolicy.MUTABLE_ONLY,
                 ChangeSetWriterThreading.SINGLE_THREAD);
     }
 
     @Override
-    public void commit(ConceptVersionBI concept) throws IOException {
-        this.commit(concept.getChronicle());
+    public boolean commit(ConceptVersionBI concept) throws IOException {
+        return this.commit(concept.getChronicle());
     }
 
     @Override

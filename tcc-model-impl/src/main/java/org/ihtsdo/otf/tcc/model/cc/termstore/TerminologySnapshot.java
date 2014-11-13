@@ -232,8 +232,8 @@ public class TerminologySnapshot implements TerminologySnapshotDI, FxTerminology
     * @throws IOException
     */
    @Override
-   public void commit() throws IOException {
-      store.commit();
+   public boolean commit() throws IOException {
+      return store.commit();
    }
 
    /**
@@ -245,7 +245,7 @@ public class TerminologySnapshot implements TerminologySnapshotDI, FxTerminology
     * @throws IOException
     */
    @Override
-   public void commit(ConceptChronicleBI cc) throws IOException {
+   public boolean commit(ConceptChronicleBI cc) throws IOException {
       throw new UnsupportedOperationException();
    }
 
@@ -258,8 +258,8 @@ public class TerminologySnapshot implements TerminologySnapshotDI, FxTerminology
     * @throws IOException
     */
    @Override
-   public void commit(ConceptVersionBI cv) throws IOException {
-      commit(cv);
+   public boolean commit(ConceptVersionBI cv) throws IOException {
+      return commit(cv);
    }
 
    /**
