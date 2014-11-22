@@ -96,6 +96,64 @@ public enum RefexDynamicValidatorType
 		return displayName_;
 	}
 	
+	public boolean validatorSupportsType(RefexDynamicDataType type)
+	{
+		//These are supported by all types - external specifies itself, what it supports, and we always include UNKNOWN.
+		if (this == UNKNOWN || this == EXTERNAL)
+		{
+			return true;
+		}
+		
+		switch (type)
+		{
+			case BOOLEAN: case POLYMORPHIC: 
+			{
+				//technically, regexp would work here... but makes no sense.
+				return false;
+			}	
+			case DOUBLE: case FLOAT: case INTEGER: case LONG:
+			{
+				if (this == GREATER_THAN || this == GREATER_THAN_OR_EQUAL || 
+						this == LESS_THAN || this == LESS_THAN_OR_EQUAL || 
+						this == INTERVAL || this == REGEXP)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			case NID: case UUID:
+			{
+				if (this == IS_CHILD_OF || this == IS_KIND_OF || this == REGEXP)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			case STRING: case BYTEARRAY:
+			{
+				if (this == REGEXP)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			default:
+			{
+				logger.warning("Unexpected case!");
+				return false;
+			}
+		}
+	}
+	
 	//TODO Dan notes - once again, implementation has no business being in the API... but because the entire Blueprint stack was implemented in the wrong place...
 	//I have to implement this here so it can be used in blueprint.
 	
