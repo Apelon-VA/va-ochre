@@ -45,4 +45,13 @@ public interface ExternalValidatorBI
 	 * @throws RuntimeException - if it fails the validator, this exception should contain a user-friendly reason why.
 	 */
 	public boolean validate(RefexDynamicDataBI userData, RefexDynamicStringBI validatorDefinitionData, ViewCoordinate vc) throws RuntimeException;
+	
+	/**
+	 * Return true or false, depending on whether this validator implementation supports the specified data type.
+	 * @param validatorDefinitionData - The string used to locate the validator implementation (up to the first '|' character - see 
+	 * {@link RefexDynamicValidatorType} for details) and any other data that was stored with the validator assignment (after the first '|'
+	 * character)
+	 * @param dataType - The datatype to inquire about
+	 */
+	public boolean validatorSupportsType(RefexDynamicStringBI validatorDefinitionData, RefexDynamicDataType dataType);
 }
