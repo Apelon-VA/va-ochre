@@ -100,7 +100,7 @@ public enum RefexDynamicDataType {
 		/*
 		 * Implementation note - these used to be defined in the constructor, and stored in a local variable - but
 		 * that lead to a circular loop between the references of static elements in this class and RefexDynamic, 
-		 * specifically in the constructors - which would through maven / surefire for a loop - resulting in a 
+		 * specifically in the constructors - which would throw maven / surefire for a loop - resulting in a 
 		 * class not found exception... which was a PITA to track down.  So, don't do that....
 		 */
 		switch (this)
