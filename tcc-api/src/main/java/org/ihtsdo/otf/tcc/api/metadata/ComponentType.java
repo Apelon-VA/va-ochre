@@ -103,4 +103,16 @@ public enum ComponentType
 			return UNKNOWN;
 		}
 	}
+	
+	public static ComponentType parse(String name)
+	{
+		for (ComponentType ct : values())
+		{
+			if (ct.name().equals(name) || ct.niceName_.equals(name))
+			{
+				return ct;
+			}
+		}
+		return UNKNOWN;
+	}
 }

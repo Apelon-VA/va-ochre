@@ -19,9 +19,18 @@
 package org.ihtsdo.otf.tcc.api.refexDynamic.data;
 
 import java.math.BigDecimal;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import org.ihtsdo.otf.tcc.api.chronicle.ComponentChronicleBI;
+import org.ihtsdo.otf.tcc.api.conattr.ConceptAttributeChronicleBI;
+import org.ihtsdo.otf.tcc.api.concept.ConceptChronicleBI;
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
+import org.ihtsdo.otf.tcc.api.description.DescriptionChronicleBI;
+import org.ihtsdo.otf.tcc.api.media.MediaChronicleBI;
+import org.ihtsdo.otf.tcc.api.metadata.ComponentType;
+import org.ihtsdo.otf.tcc.api.refex.RefexChronicleBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicChronicleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicFloatBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI;
@@ -29,6 +38,7 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicLongBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicNidBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicStringBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicUUIDBI;
+import org.ihtsdo.otf.tcc.api.relationship.RelationshipChronicleBI;
 import org.ihtsdo.otf.tcc.api.store.Ts;
 import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
 
@@ -80,6 +90,7 @@ public enum RefexDynamicValidatorType
 	EXTERNAL("External"), //see class docs above - implemented by an ExternalValidatorBI
 	IS_CHILD_OF("Is Child Of"), //OTF is child of - which only includes immediate (not recursive) children on the 'Is A' relationship. 
 	IS_KIND_OF("Is Kind Of"), //OTF kind of - which is child of - but recursive, and self (heart disease is a kind-of heart disease);
+	COMPONENT_TYPE("Component Type Restriction"),  //specify which type of nid can be put into a UUID or nid column
 	UNKNOWN("Unknown");  //Not a real validator, only exists to allow GUI convenience, or potentially store other validator data that we don't support in OTF
 	//but we may need to store / retreive
 	
@@ -126,7 +137,7 @@ public enum RefexDynamicValidatorType
 			}
 			case NID: case UUID:
 			{
-				if (this == IS_CHILD_OF || this == IS_KIND_OF || this == REGEXP)
+				if (this == IS_CHILD_OF || this == IS_KIND_OF || this == REGEXP || this == COMPONENT_TYPE)
 				{
 					return true;
 				}
@@ -254,6 +265,110 @@ public enum RefexDynamicValidatorType
 			}
 			catch (Exception e)
 			{
+				logger.log(Level.WARNING, "Failure executing validator", e);
+				throw new RuntimeException("Failure executing validator", e);
+			}
+		}
+		else if (this == RefexDynamicValidatorType.COMPONENT_TYPE)
+		{
+			try
+			{
+				int nid;
+
+				if (userData instanceof RefexDynamicUUIDBI)
+				{
+					RefexDynamicUUIDBI uuid = (RefexDynamicUUIDBI) userData;
+					if (!Ts.get().hasUuid(uuid.getDataUUID()))
+					{
+						throw new RuntimeException("The specified UUID can not be found in the database, so the validator cannot execute");
+					}
+					else
+					{
+						nid = Ts.get().getNidForUuids(uuid.getDataUUID());
+					}
+				}
+				else if (userData instanceof RefexDynamicNidBI)
+				{
+					nid = ((RefexDynamicNidBI) userData).getDataNid();
+				}
+				else
+				{
+					throw new RuntimeException("Userdata is invalid for a COMPONENT_TYPE comparison");
+				}
+				
+				ComponentChronicleBI<?> cc = Ts.get().getComponent(nid);
+				
+				String valData = validatorDefinitionData.getDataObject().toString().trim();
+				
+				ComponentType ct = ComponentType.parse(valData);
+				
+				switch (ct)
+				{
+					//In the strange land of Workbench, concept attributes have the same NID as concepts....
+					case CONCEPT: case CONCEPT_ATTRIBUTES:
+					{
+						if (!(cc instanceof ConceptChronicleBI) && !(cc instanceof ConceptAttributeChronicleBI))
+						{
+							throw new RuntimeException("The specified component must be of type " + ct.toString());
+						}
+						return true;
+					}
+					case DESCRIPTION:
+					{
+						if (!(cc instanceof DescriptionChronicleBI))
+						{
+							throw new RuntimeException("The specified component must be of type " + ct.toString());
+						}
+						return true;
+					}
+					case MEDIA:
+					{
+						if (!(cc instanceof MediaChronicleBI))
+						{
+							throw new RuntimeException("The specified component must be of type " + ct.toString());
+						}
+						return true;
+					}
+					case RELATIONSHIP:
+					{
+						if (!(cc instanceof RelationshipChronicleBI))
+						{
+							throw new RuntimeException("The specified component must be of type " + ct.toString());
+						}
+						return true;
+					}
+					case SEMEME:
+					{
+						if (!(cc instanceof RefexChronicleBI<?>))
+						{
+							throw new RuntimeException("The specified component must be of type " + ct.toString());
+						}
+						return true;
+					}
+					case SEMEME_DYNAMIC:
+					{
+						if (!(cc instanceof RefexDynamicChronicleBI<?>))
+						{
+							throw new RuntimeException("The specified component must be of type " + ct.toString());
+						}
+						return true;
+					}
+					case UNKNOWN:
+					{
+						throw new RuntimeException("Couldn't determine validator type from validator data '" + valData + "'");
+					}
+
+					default:
+						throw new RuntimeException("Unexpected error");
+				}
+			}
+			catch (RuntimeException e)
+			{
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.log(Level.WARNING, "Failure executing validator", e);
 				throw new RuntimeException("Failure executing validator", e);
 			}
 		}
