@@ -309,7 +309,7 @@ public enum RefexDynamicValidatorType
 					{
 						if (!(cc instanceof ConceptChronicleBI) && !(cc instanceof ConceptAttributeChronicleBI))
 						{
-							throw new RuntimeException("The specified component must be of type " + ct.toString());
+							throw new RuntimeException("The specified component must be of type " + ct.toString() + ", not " + cc.getClass().getSimpleName());
 						}
 						return true;
 					}
@@ -317,7 +317,7 @@ public enum RefexDynamicValidatorType
 					{
 						if (!(cc instanceof DescriptionChronicleBI))
 						{
-							throw new RuntimeException("The specified component must be of type " + ct.toString());
+							throw new RuntimeException("The specified component must be of type " + ct.toString() + ", not " + cc.getClass().getSimpleName());
 						}
 						return true;
 					}
@@ -325,7 +325,7 @@ public enum RefexDynamicValidatorType
 					{
 						if (!(cc instanceof MediaChronicleBI))
 						{
-							throw new RuntimeException("The specified component must be of type " + ct.toString());
+							throw new RuntimeException("The specified component must be of type " + ct.toString() + ", not " + cc.getClass().getSimpleName());
 						}
 						return true;
 					}
@@ -333,7 +333,7 @@ public enum RefexDynamicValidatorType
 					{
 						if (!(cc instanceof RelationshipChronicleBI))
 						{
-							throw new RuntimeException("The specified component must be of type " + ct.toString());
+							throw new RuntimeException("The specified component must be of type " + ct.toString() + ", not " + cc.getClass().getSimpleName());
 						}
 						return true;
 					}
@@ -341,7 +341,7 @@ public enum RefexDynamicValidatorType
 					{
 						if (!(cc instanceof RefexChronicleBI<?>))
 						{
-							throw new RuntimeException("The specified component must be of type " + ct.toString());
+							throw new RuntimeException("The specified component must be of type " + ct.toString() + ", not " + cc.getClass().getSimpleName());
 						}
 						return true;
 					}
@@ -349,7 +349,7 @@ public enum RefexDynamicValidatorType
 					{
 						if (!(cc instanceof RefexDynamicChronicleBI<?>))
 						{
-							throw new RuntimeException("The specified component must be of type " + ct.toString());
+							throw new RuntimeException("The specified component must be of type " + ct.toString() + ", not " + cc.getClass().getSimpleName());
 						}
 						return true;
 					}
@@ -361,6 +361,10 @@ public enum RefexDynamicValidatorType
 					default:
 						throw new RuntimeException("Unexpected error");
 				}
+			}
+			catch (ArrayIndexOutOfBoundsException e)
+			{
+				throw new RuntimeException("The entry doesn't appear to be a valid NID");
 			}
 			catch (RuntimeException e)
 			{
