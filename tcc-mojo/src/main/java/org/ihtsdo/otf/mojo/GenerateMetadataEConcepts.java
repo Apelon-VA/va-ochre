@@ -39,6 +39,7 @@ import org.ihtsdo.otf.tcc.api.blueprint.RefexDynamicCAB;
 import org.ihtsdo.otf.tcc.api.blueprint.RelationshipCAB;
 import org.ihtsdo.otf.tcc.api.coordinate.Status;
 import org.ihtsdo.otf.tcc.api.lang.LanguageCode;
+import org.ihtsdo.otf.tcc.api.metadata.ComponentType;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
 import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
 import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRf2;
@@ -220,7 +221,8 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				if (cs instanceof DynamicRefexConceptSpec)
 				{
 					DynamicRefexConceptSpec drcs = (DynamicRefexConceptSpec)cs;
-					turnConceptIntoDynamicRefexAssemblageConcept(converted, drcs.isAnnotationStyle(), drcs.getRefexDescription(), drcs.getRefexColumns());
+					turnConceptIntoDynamicRefexAssemblageConcept(converted, drcs.isAnnotationStyle(), drcs.getRefexDescription(), drcs.getRefexColumns(), 
+							drcs.getReferencedComponentTypeRestriction());
 				}
 				
 				if (RefexDynamic.REFEX_DYNAMIC_INDEX_CONFIGURATION.getUuids()[0].equals(cs.getUuids()[0]))
@@ -541,7 +543,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 	 * See {@link RefexDynamicUsageDescription} class for more details on this format.
 	 */
 	private void turnConceptIntoDynamicRefexAssemblageConcept(TtkConceptChronicle concept, boolean annotationStyle, String refexDescription,
-			RefexDynamicColumnInfo[] columns) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException
+			RefexDynamicColumnInfo[] columns, ComponentType referencedComponentTypeRestriction) throws PropertyVetoException, NoSuchAlgorithmException, UnsupportedEncodingException
 	{
 		concept.setAnnotationStyleRefex(annotationStyle);
 		//Add the special synonym to establish this as an assemblage concept
@@ -564,6 +566,13 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 				data[6] = (col.getValidatorData() == null ? null : convertPolymorphicDataColumn(col.getValidatorData(), col.getValidatorData().getRefexDataType()));
 				addDynamicAnnotation(concept.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_DEFINITION.getUuids()[0], data);
 			}
+		}
+		
+		if (referencedComponentTypeRestriction != null && ComponentType.UNKNOWN != referencedComponentTypeRestriction)
+		{
+			TtkRefexDynamicData[] data = new TtkRefexDynamicData[1];
+			data[0] = new TtkRefexDynamicString(referencedComponentTypeRestriction.name());
+			addDynamicAnnotation(concept.getConceptAttributes(), RefexDynamic.REFEX_DYNAMIC_REFERENCED_COMPONENT_RESTRICTION.getUuids()[0], data);
 		}
 	}
 	

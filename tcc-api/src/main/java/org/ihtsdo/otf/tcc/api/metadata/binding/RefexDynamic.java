@@ -114,6 +114,14 @@ public class RefexDynamic
 			new String[] {"Contains a String which has a comma seperated list of the column positions within the referenced sememe assemblage which should have their values indexed."},
 			REFEX_DYNAMIC_COLUMNS);
 	
+	//Used for referenced component type restrictions
+	public static ConceptSpecWithDescriptions REFEX_COLUMN_REFERENCED_COMPONENT_TYPE = new ConceptSpecWithDescriptions("referenced component type restriction", 
+			UUID.fromString("902f97b6-2ef4-59d7-b6f9-01278a00061c"),
+			new String[] {"referenced component type restriction"},
+			new String[] {"Stores the (optional) referenced component type restriction selection which will be used by the validator to check the user input for the "
+					+ "referenced component when creating an instance of a dynamic sememe"},
+			REFEX_DYNAMIC_COLUMNS);
+	
 	//This is the extended description type that must be attached to a description within a concept to make the concept valid for use as an 
 	//assemblage concept for RefexDynamic refexes.  The description annotated with this type describes the intent of 
 	//using the concept containing the description as an assemblage concept.
@@ -146,6 +154,21 @@ public class RefexDynamic
 				new RefexDynamicColumnInfo(4, RefexDynamic.REFEX_COLUMN_REQUIRED.getUuids()[0], RefexDynamicDataType.BOOLEAN, null, false, null, null),
 				new RefexDynamicColumnInfo(5, RefexDynamic.REFEX_COLUMN_VALIDATOR.getUuids()[0], RefexDynamicDataType.STRING, null, false, null, null),
 				new RefexDynamicColumnInfo(6, RefexDynamic.REFEX_COLUMN_VALIDATOR_DATA.getUuids()[0], RefexDynamicDataType.POLYMORPHIC, null, false, null, null)},
+			REFEX_DYNAMIC_TYPES);
+	
+	//This is the assemblage type that is optionally attached to an assemblage itself, to declare type restrictions on the referenced component
+	//of the refex
+	//TODO - [refex] it would have been useful to be able to declare a regexp restriction on the values of this column (and probably others) but can't do it, 
+	//because I don't have any of the implementations on the classpath here.  something else to rethink?
+	public static DynamicRefexConceptSpec REFEX_DYNAMIC_REFERENCED_COMPONENT_RESTRICTION = new DynamicRefexConceptSpec("dynamic sememe referenced component restriction", 
+			UUID.fromString("0d94ceeb-e24f-5f1a-84b2-1ac35f671db5"),
+			new String[] {"dynamic sememe referenced component restriction"},
+			new String[0],
+			true, 
+			"This concept is used as an assemblage for defining new Sememe extensions.  "
+				+ "The attached data column describes limits restriction(s) placed on the referenced component type.",
+			new RefexDynamicColumnInfo[] {
+				new RefexDynamicColumnInfo(0, RefexDynamic.REFEX_COLUMN_REFERENCED_COMPONENT_TYPE.getUuids()[0], RefexDynamicDataType.STRING, null, true, null, null)},
 			REFEX_DYNAMIC_TYPES);
 	
 	//This is the assemblage type that is used to record the current configuration of the Indexer for Dynamic Refexes.

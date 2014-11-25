@@ -29,6 +29,7 @@ import org.ihtsdo.otf.tcc.api.concept.ConceptVersionBI;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.coordinate.StandardViewCoordinates;
 import org.ihtsdo.otf.tcc.api.description.DescriptionVersionBI;
+import org.ihtsdo.otf.tcc.api.metadata.ComponentType;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
 import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
 import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRf2;
@@ -80,6 +81,11 @@ import org.ihtsdo.otf.tcc.api.store.Ts;
  * this description should explain the the overall purpose of this Refex.
  * <br>
  * <br>
+ * The assemblage concept may also contain a single {@link RefexDynamicVersionBI} annotation of type {@link RefexDynamic#REFEX_DYNAMIC_REFERENCED_COMPONENT_RESTRICTION}
+ * with a single string column which can be parsed as a {@link ComponentType} - which will restrict the type of nid that can be placed 
+ * into the referenced component field when creating an instance of the assemblage.
+ * <br>
+ * <br>
  * This class provides an implementation for parsing the interesting bits out of an assemblage concept.
  * 
  * For an implementation on creating them, 
@@ -96,6 +102,8 @@ public class RefexDynamicUsageDescription
 	String name_;
 	boolean annotationStyle_;
 	RefexDynamicColumnInfo[] refexColumnInfo_;
+	ComponentType referencedComponentTypeRestriction_;
+	
 	private static LRURefexDynamicDescriptorCache<Integer, RefexDynamicUsageDescription> cache_ = 
 			new LRURefexDynamicDescriptorCache<Integer, RefexDynamicUsageDescription>(25);
 	
@@ -165,7 +173,7 @@ public class RefexDynamicUsageDescription
 		if (StringUtils.isEmpty(refexUsageDescription_))
 		{
 			throw new IOException("The Assemblage concept: " + assemblageConcept + " is not correctly assembled for use as an Assemblage for " 
-					+ "a RefexDynamicData Refex Type.  It must contain a description of type Description with an annotation of type " + 
+					+ "a RefexDynamicData Refex Type.  It must contain a description of type Definition with an annotation of type " + 
 					"RefexDynamic.REFEX_DYNAMIC_DEFINITION_DESCRIPTION");
 		}
 		
@@ -231,6 +239,35 @@ public class RefexDynamicUsageDescription
 							+ "that is parseable as a RefexDynamicDataType");
 				}
 			}
+			else if (rd.getAssemblageNid() == RefexDynamic.REFEX_DYNAMIC_REFERENCED_COMPONENT_RESTRICTION.getNid())
+			{
+				RefexDynamicDataBI[] refexDefinitionData = rd.getData();
+				if (refexDefinitionData == null || refexDefinitionData.length < 1)
+				{
+					throw new IOException("The Assemblage concept: " + assemblageConcept + " is not correctly assembled for use as an Assemblage for " 
+							+ "a RefexDynamicData Refex Type.  If it contains a " + RefexDynamic.REFEX_DYNAMIC_REFERENCED_COMPONENT_RESTRICTION.getFsn()
+							+ " then it must contain a single column of data, of type string, parseable as a " + ComponentType.class.getName());
+				}
+				
+				//col 0 is Referenced component restriction information - as a string. 
+				try
+				{
+					ComponentType type = ComponentType.parse(refexDefinitionData[0].getDataObject().toString());
+					if (type == ComponentType.UNKNOWN)
+					{
+						//just ignore - it shouldn't have been saved that way anyway.
+					}
+					else
+					{
+						referencedComponentTypeRestriction_ = type;
+					}
+				}
+				catch (Exception e)
+				{
+					throw new IOException("The Assemblage concept: " + assemblageConcept + " is not correctly assembled for use as an Assemblage for " 
+							+ "a RefexDynamicData Refex Type.  The component type restriction annotation has an invalid value");
+				}
+			}
 		}
 		
 		refexColumnInfo_ = new RefexDynamicColumnInfo[allowedColumnInfo.size()];
@@ -294,6 +331,16 @@ public class RefexDynamicUsageDescription
 			refexColumnInfo_ = new RefexDynamicColumnInfo[] {};
 		}
 		return refexColumnInfo_;
+	}
+	
+	/**
+	 * Return the {@link ComponentType} of the restriction on referenced components for this refex (if any - may return null)
+	 * 
+	 * If there is a restriction, the nid set for the component type of this refex must resolve to the matching type.
+	 */
+	public ComponentType getReferencedComponentTypeRestriction()
+	{
+		return referencedComponentTypeRestriction_;
 	}
 	
 	/**

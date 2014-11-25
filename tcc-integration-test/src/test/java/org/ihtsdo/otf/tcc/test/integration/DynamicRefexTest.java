@@ -117,12 +117,12 @@ public class DynamicRefexTest
 				//Build concept 2
 				//assemblage is -- annotation style refex
 				RefexDynamicUsageDescriptionBuilder.createNewRefexDynamicUsageDescriptionConcept(c2.getDescription(), 
-						c2.getDescription(), "annotation style test data", new RefexDynamicColumnInfo[] {}, null, true);
+						c2.getDescription(), "annotation style test data", new RefexDynamicColumnInfo[] {}, null, true, null);
 				
 				//Build concept 3
 				//assemblage is refset style refex 
 				RefexDynamicUsageDescriptionBuilder.createNewRefexDynamicUsageDescriptionConcept(c3.getDescription(), 
-						c3.getDescription(), "refset style test data", new RefexDynamicColumnInfo[] {}, null, false);
+						c3.getDescription(), "refset style test data", new RefexDynamicColumnInfo[] {}, null, false, null);
 				
 				concept2 = Ts.get().getConceptVersion(vc, c2.getLenient().getConceptNid());
 				concept3 = Ts.get().getConceptVersion(vc, c3.getLenient().getConceptNid());

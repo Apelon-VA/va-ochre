@@ -29,16 +29,26 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 import org.ihtsdo.otf.tcc.api.chronicle.ComponentBI;
+import org.ihtsdo.otf.tcc.api.chronicle.ComponentChronicleBI;
+import org.ihtsdo.otf.tcc.api.conattr.ConceptAttributeChronicleBI;
+import org.ihtsdo.otf.tcc.api.concept.ConceptChronicleBI;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.coordinate.Status;
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
+import org.ihtsdo.otf.tcc.api.description.DescriptionChronicleBI;
+import org.ihtsdo.otf.tcc.api.media.MediaChronicleBI;
+import org.ihtsdo.otf.tcc.api.metadata.ComponentType;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
+import org.ihtsdo.otf.tcc.api.refex.RefexChronicleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicBuilderBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicChronicleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicVersionBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicValidatorType;
+import org.ihtsdo.otf.tcc.api.relationship.RelationshipChronicleBI;
 import org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI;
 import org.ihtsdo.otf.tcc.api.store.Ts;
 import org.ihtsdo.otf.tcc.api.uuid.UuidT5Generator;
@@ -57,8 +67,6 @@ import org.ihtsdo.otf.tcc.api.uuid.UuidT5Generator;
 @SuppressWarnings("deprecation")
 public class RefexDynamicCAB extends CreateOrAmendBlueprint
 {
-	//TODO [REFEX] QUESTION - Jesse had  desire to further specify what sort of item a refex can be used on (Concept/desc/rels)
-	//But that doesn't really cover all the cases, as you can also nest annotations... 
 	public static final UUID refexDynamicNamespace = RefexDynamic.REFEX_DYNAMIC_NAMESPACE.getUuids()[0];
 
 	/**
@@ -599,8 +607,73 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 	{
 		RefexDynamicUsageDescription rdud = RefexDynamicUsageDescription.read(getRefexAssemblageNid());
 		
-		//Note, this could be done before the code above, but I'd rather ensure that the Assemblage concept is properly configured, 
-		//even if they are not providing data.
+		//Make sure the referenced component meets the ref component restrictions, if any are present.
+		if (rdud.getReferencedComponentTypeRestriction() != null && rdud.getReferencedComponentTypeRestriction() != ComponentType.UNKNOWN)
+		{
+			//Once again, blueprint is in the entire wrong code package, and I can't reuse the validator implementation.  So I have to 
+			//do copy/paste code inheritance for this....
+			ComponentChronicleBI<?> cc = getReferencedComponent();
+			if (cc == null)
+			{
+				cc =  Ts.get().getComponent(getReferencedComponentUuid());
+			}
+			ComponentType ct = rdud.getReferencedComponentTypeRestriction(); 
+			switch (ct)
+			{
+				//In the strange land of Workbench, concept attributes have the same NID as concepts....
+				case CONCEPT: case CONCEPT_ATTRIBUTES:
+				{
+					if (!(cc instanceof ConceptChronicleBI) && !(cc instanceof ConceptAttributeChronicleBI))
+					{
+						throw new InvalidCAB("The specified component must be of type " + ct.toString());
+					}
+					break;
+				}
+				case DESCRIPTION:
+				{
+					if (!(cc instanceof DescriptionChronicleBI))
+					{
+						throw new InvalidCAB("The specified component must be of type " + ct.toString());
+					}
+					break;
+				}
+				case MEDIA:
+				{
+					if (!(cc instanceof MediaChronicleBI))
+					{
+						throw new InvalidCAB("The specified component must be of type " + ct.toString());
+					}
+					break;
+				}
+				case RELATIONSHIP:
+				{
+					if (!(cc instanceof RelationshipChronicleBI))
+					{
+						throw new InvalidCAB("The specified component must be of type " + ct.toString());
+					}
+					break;
+				}
+				case SEMEME:
+				{
+					if (!(cc instanceof RefexChronicleBI<?>))
+					{
+						throw new InvalidCAB("The specified component must be of type " + ct.toString());
+					}
+					break;
+				}
+				case SEMEME_DYNAMIC:
+				{
+					if (!(cc instanceof RefexDynamicChronicleBI<?>))
+					{
+						throw new InvalidCAB("The specified component must be of type " + ct.toString());
+					}
+					break;
+				}
+				default:
+					throw new InvalidCAB("Unexpected error");
+			}
+		}
+
 		if (data == null)
 		{
 			return;

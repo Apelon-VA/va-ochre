@@ -36,6 +36,7 @@ import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.coordinate.EditCoordinate;
 import org.ihtsdo.otf.tcc.api.coordinate.StandardViewCoordinates;
 import org.ihtsdo.otf.tcc.api.lang.LanguageCode;
+import org.ihtsdo.otf.tcc.api.metadata.ComponentType;
 import org.ihtsdo.otf.tcc.api.metadata.binding.RefexDynamic;
 import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
 import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRf2;
@@ -91,6 +92,9 @@ public class RefexDynamicUsageDescriptionBuilder
 	 * @param columns - The column information for this new refex.  May be an empty list or null.
 	 * @param parentConcept  - optional - if null, uses {@link RefexDynamic#REFEX_DYNAMIC_TYPES}
 	 * @param annotationStyle - true for annotation style storage, false for memberset storage
+	 * @param referencedComponentRestriction - optional - may be null - if provided - this restricts the type of object referenced by the nid or 
+	 * UUID that is set for the referenced component in an instance of this refex.  If {@link ComponentType#UNKNOWN} is passed, it is ignored, as 
+	 * if it were null.
 	 * @return a reference to the newly created refex item
 	 * @throws IOException
 	 * @throws ContradictionException
@@ -98,7 +102,7 @@ public class RefexDynamicUsageDescriptionBuilder
 	 * @throws PropertyVetoException
 	 */
 	public static RefexDynamicUsageDescription createNewRefexDynamicUsageDescriptionConcept(String refexFSN, String refexPreferredTerm, 
-			String refexDescription, RefexDynamicColumnInfo[] columns, UUID parentConcept, boolean annotationStyle) throws 
+			String refexDescription, RefexDynamicColumnInfo[] columns, UUID parentConcept, boolean annotationStyle, ComponentType referencedComponentRestriction) throws 
 			IOException, ContradictionException, InvalidCAB, PropertyVetoException
 	{
 		LanguageCode lc = LanguageCode.EN_US;
@@ -153,6 +157,17 @@ public class RefexDynamicUsageDescriptionBuilder
 				//TODO file a another bug, this API is atrocious.  If you put the annotation on the concept, it gets silently ignored.
 				cab.getConceptAttributeAB().addAnnotationBlueprint(rCab);
 			}
+		}
+		
+		if (referencedComponentRestriction != null && ComponentType.UNKNOWN != referencedComponentRestriction)
+		{
+			RefexDynamicCAB rCab = new RefexDynamicCAB(cab.getComponentUuid(), RefexDynamic.REFEX_DYNAMIC_REFERENCED_COMPONENT_RESTRICTION.getUuids()[0]);
+			
+			RefexDynamicDataBI[] data = new RefexDynamicDataBI[1];
+			data[0] = new RefexDynamicString(referencedComponentRestriction.name());
+			rCab.setData(data, null);  //View Coordinate is only used to evaluate validators - but there are no validators assigned to the RefexDefinition refex
+			//so we can get away with passing null
+			cab.getConceptAttributeAB().addAnnotationBlueprint(rCab);
 		}
 		
 		//Build this on the lowest level path, otherwise, other code that references this will fail (as it doesn't know about custom paths)

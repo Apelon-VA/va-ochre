@@ -19,6 +19,7 @@
 package org.ihtsdo.otf.tcc.api.spec;
 
 import java.util.UUID;
+import org.ihtsdo.otf.tcc.api.metadata.ComponentType;
 import org.ihtsdo.otf.tcc.api.metadata.binding.Snomed;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
 
@@ -33,6 +34,7 @@ public class DynamicRefexConceptSpec extends ConceptSpecWithDescriptions
 	private boolean annotationStyle_;
 	private String refexDescription_;
 	private RefexDynamicColumnInfo[] refexColumns_;
+	private ComponentType referencedComponentRestriction_;
 
 	/**
 	 * 
@@ -59,10 +61,29 @@ public class DynamicRefexConceptSpec extends ConceptSpecWithDescriptions
 	public DynamicRefexConceptSpec(String fsn, UUID uuid, String[] synonyms, String[] definitions, boolean annotationStyle, String refexDescription,
 			RefexDynamicColumnInfo[] columns, ConceptSpec parentConcept)
 	{
+		this(fsn, uuid, synonyms, definitions, annotationStyle, refexDescription, columns, parentConcept, null);
+	}
+	
+	/**
+	 * @param fsn
+	 * @param uuid
+	 * @param synonyms
+	 * @param definitions
+	 * @param annotationStyle - true to build this as an annotation style, false for member style
+	 * @param refexDescription - describe the purpose of the use of this refex
+	 * @param columns - The definitions of the attached data columns that are allowed on this refex
+	 * @param parentConcept - used as the destination in a relspec, with a type of {@link Snomed#IS_A} and a source of this spec being created.
+	 * @param referencedComponentRestriction - optional - used to limit the type of nid that can be used as the referenced component in an instance
+	 * of this sememe.
+	 */
+	public DynamicRefexConceptSpec(String fsn, UUID uuid, String[] synonyms, String[] definitions, boolean annotationStyle, String refexDescription,
+			RefexDynamicColumnInfo[] columns, ConceptSpec parentConcept, ComponentType referencedComponentRestriction)
+	{
 		super(fsn, uuid, synonyms, definitions, parentConcept);
 		annotationStyle_ = annotationStyle;
 		refexDescription_ = refexDescription;
 		refexColumns_ = columns;
+		referencedComponentRestriction_ = referencedComponentRestriction;
 	}
 
 	/**
@@ -87,5 +108,10 @@ public class DynamicRefexConceptSpec extends ConceptSpecWithDescriptions
 	public RefexDynamicColumnInfo[] getRefexColumns()
 	{
 		return refexColumns_;
+	}
+	
+	public ComponentType getReferencedComponentTypeRestriction()
+	{
+		return referencedComponentRestriction_;
 	}
 }
