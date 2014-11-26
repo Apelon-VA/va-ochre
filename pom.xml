@@ -225,7 +225,7 @@ the specific language governing permissions and limitations under the License. -
                     <preparationGoals>clean install</preparationGoals>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <remoteTagging>true</remoteTagging>
-                    <!--arguments>-Pintegration-test</arguments-->
+                    <arguments>-Pintegration-test</arguments>
                     <tagNameFormat>tcc-@{project.version}</tagNameFormat>
                     <!-- Disable the site deploy - do not want this to run from a branch!  Bug filed https://jira.ihtsdotools.org/browse/OTFISSUE-6 -->
                     <!--goals>deploy site site:stage scm-publish:publish-scm</goals-->
