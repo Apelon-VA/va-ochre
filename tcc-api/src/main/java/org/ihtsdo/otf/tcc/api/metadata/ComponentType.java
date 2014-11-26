@@ -36,6 +36,10 @@ import org.ihtsdo.otf.tcc.api.relationship.RelationshipVersionBI;
  *
  * @author <a href="mailto:daniel.armbrust.list@gmail.com">Dan Armbrust</a> 
  */
+
+//TODO get this tied to whatever concepts are linked via TypedComponentVersionBI - not sure if there are hard relationships there - at least get the UUIDs 
+//in here as constants
+
 public enum ComponentType
 {
 	CONCEPT("Concept"), 
