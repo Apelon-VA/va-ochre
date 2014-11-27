@@ -986,7 +986,13 @@ public abstract class Termstore implements PersistentStoreI {
                     }
                 }
             }
+            List<IndexStatusListenerBI> islList = Hk2Looker.get().getAllServices(IndexStatusListenerBI.class);
+            
             for (IndexerBI i : indexers) {
+                for (IndexStatusListenerBI isl : islList)
+                {
+                    isl.reindexBegan(i);
+                }
                 i.clearIndex();
             }
         }
@@ -1025,8 +1031,17 @@ public abstract class Termstore implements PersistentStoreI {
         }
 
         public void commit() {
+            List<IndexStatusListenerBI> islList = Hk2Looker.get().getAllServices(IndexStatusListenerBI.class);
+            
             for (IndexerBI i : indexers) {
                 i.commitWriter();
+                if (islList != null)
+                {
+                    for (IndexStatusListenerBI isl : islList)
+                    {
+                        isl.reindexCompleted(i);
+                    }
+                }
             }
         }
     }
