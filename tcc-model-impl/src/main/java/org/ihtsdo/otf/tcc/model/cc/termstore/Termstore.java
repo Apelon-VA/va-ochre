@@ -68,6 +68,7 @@ import org.ihtsdo.otf.tcc.api.chronicle.ProcessComponentChronicleBI;
 import org.ihtsdo.otf.tcc.api.concept.ConceptFetcherBI;
 import org.ihtsdo.otf.tcc.api.concept.ProcessUnfetchedConceptDataBI;
 import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
+import org.ihtsdo.otf.tcc.model.index.service.IndexStatusListenerBI;
 import org.ihtsdo.otf.tcc.model.index.service.IndexerBI;
 
 /**
