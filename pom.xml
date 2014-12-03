@@ -24,23 +24,9 @@ the specific language governing permissions and limitations under the License. -
         of all changes.
     </description>
     <scm>
-        <connection>scm:git:https://github.com/Apelon-VA/OTF-Versioning-Service.git</connection>
-        <developerConnection>scm:git:git@github.com:Apelon-VA/OTF-Versioning-Service.git</developerConnection>
         <url>https://github.com/Apelon-VA/OTF-Versioning-Service</url>
-        <tag>va-branch</tag>
     </scm>
     <distributionManagement>
-        <!-- I don't normally define these here, but the override doesn't seem to work when it is configured in a parent.  Sigh.  Maven. -->
-        <repository>
-          <id>maestro-deploy</id>
-          <name>VA Public Releases Repository</name>
-          <url>http://va-archiva-host:8082/archiva/repository/va-releases/</url>
-        </repository>
-        <snapshotRepository>
-          <id>maestro-deploy</id>
-          <name>VA Public Snapshots Repository</name>
-          <url>http://va-archiva-host:8082/archiva/repository/va-snapshots/</url>
-        </snapshotRepository>
         <site>
             <id>site</id>
             <url>scm:git:git@github.com:Apelon-VA/OTF-Versioning-Service.git</url>
@@ -48,7 +34,7 @@ the specific language governing permissions and limitations under the License. -
     </distributionManagement>
 
     <properties>
-        <branch>TCC ${project.scm.tag}</branch>
+        <branch>TCC va</branch> <!-- gitflow doesn't use scm variables - not sure how to automate this -->
         <hk2.version>2.2.0-b14</hk2.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <drools.version>5.5.0.Final</drools.version>
@@ -218,24 +204,29 @@ the specific language governing permissions and limitations under the License. -
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>1.0-m4.3</version>
                 <configuration>
-                    <preparationGoals>clean install</preparationGoals>
+                    <pushReleases>false</pushReleases>
+                    <noDeploy>true</noDeploy>
+                    <noTag>true</noTag>
+
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <remoteTagging>true</remoteTagging>
-                    <arguments>-Pintegration-test</arguments>
-                    <tagNameFormat>tcc-@{project.version}</tagNameFormat>
-                    <!-- Disable the site deploy - do not want this to run from a branch!  Bug filed https://jira.ihtsdotools.org/browse/OTFISSUE-6 -->
-                    <!--goals>deploy site site:stage scm-publish:publish-scm</goals-->
-                    <goals>deploy</goals>
+                    <scmCommentPrefix>[jgitflow-plugin]</scmCommentPrefix>
+                    <enableSshAgent>true</enableSshAgent>
+                    <flowInitContext>
+                        <masterBranchName>va-master</masterBranchName>
+                        <developBranchName>va-develop</developBranchName>
+                        <featureBranchPrefix>va-feature-</featureBranchPrefix>
+                        <releaseBranchPrefix>va-release-</releaseBranchPrefix>
+                        <hotfixBranchPrefix>va-hotfix-</hotfixBranchPrefix>
+                    </flowInitContext>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -258,6 +249,12 @@ the specific language governing permissions and limitations under the License. -
     <profiles>
         <profile>
             <id>integration-test</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <modules>
                 <module>tcc-integration-test</module>
             </modules>
