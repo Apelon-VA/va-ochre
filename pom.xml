@@ -208,10 +208,7 @@ the specific language governing permissions and limitations under the License. -
                 <artifactId>jgitflow-maven-plugin</artifactId>
                 <version>1.0-m4.3</version>
                 <configuration>
-                    <pushReleases>false</pushReleases>
-                    <noDeploy>true</noDeploy>
-                    <noTag>true</noTag>
-
+                    <pushReleases>true</pushReleases>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <scmCommentPrefix>[jgitflow-plugin]</scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
