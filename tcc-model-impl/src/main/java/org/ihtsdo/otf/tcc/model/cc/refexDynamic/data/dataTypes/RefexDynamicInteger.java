@@ -34,6 +34,11 @@ import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 public class RefexDynamicInteger extends RefexDynamicData implements RefexDynamicIntegerBI {
 
 	private ObjectProperty<Integer> property_;
+	
+	protected RefexDynamicInteger(byte[] data)
+	{
+		super(data);
+	}
 
 	protected RefexDynamicInteger(byte[] data, int assemblageNid, int columnNumber)
 	{
@@ -84,6 +89,9 @@ public class RefexDynamicInteger extends RefexDynamicData implements RefexDynami
 		return property_;
 	}
 
+	/**
+	 * Returns a 4 byte array
+	 */
 	protected static byte[] intToByteArray(int integer) {
 		byte[] bytes = new byte[4];
 		bytes[0] = (byte) (integer >> 24);

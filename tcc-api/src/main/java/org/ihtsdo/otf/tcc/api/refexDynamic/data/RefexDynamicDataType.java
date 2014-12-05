@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.UUID;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicArrayBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicBooleanBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
@@ -45,6 +46,7 @@ public enum RefexDynamicDataType {
 	DOUBLE(108, RefexDynamicDoubleBI.class, "Double"),
 	UUID(109, RefexDynamicUUIDBI.class, "UUID"),
 	POLYMORPHIC(110, RefexDynamicPolymorphicBI.class, "Unspecified"),
+	ARRAY(111, RefexDynamicArrayBI.class, "Array"),
 	UNKNOWN(Byte.MAX_VALUE, null, "Unknown");
 
 	private int externalizedToken_;
@@ -73,6 +75,8 @@ public enum RefexDynamicDataType {
 				return UUID;
 			case 110:
 				return POLYMORPHIC;
+			case 111:
+				return ARRAY;
 			default:
 				return UNKNOWN;
 		}
@@ -116,6 +120,7 @@ public enum RefexDynamicDataType {
 			case STRING: return RefexDynamic.REFEX_DT_STRING.getUuids()[0];
 			case UNKNOWN: return RefexDynamic.UNKNOWN_CONCEPT.getUuids()[0];
 			case UUID: return RefexDynamic.REFEX_DT_UUID.getUuids()[0];
+			case ARRAY: return RefexDynamic.REFEX_DT_ARRAY.getUuids()[0];
 
 			default: throw new RuntimeException("Implementation error");
 		}
@@ -162,6 +167,9 @@ public enum RefexDynamicDataType {
 		}
 		if (RefexDynamicPolymorphicBI.class.isAssignableFrom(c)) {
 			return POLYMORPHIC;
+		}
+		if (RefexDynamicArrayBI.class.isAssignableFrom(c)) {
+			return ARRAY;
 		}
 		return UNKNOWN;
 	}

@@ -43,6 +43,11 @@ public abstract class RefexDynamicData implements RefexDynamicDataBI
 	
 	protected byte[] data_;
 	
+	protected RefexDynamicData(byte[] data)
+	{
+		data_ = data;
+	}
+	
 	protected RefexDynamicData(byte[] data, int assemblageNid, int columnNumber)
 	{
 		data_ = data;

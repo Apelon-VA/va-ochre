@@ -35,6 +35,11 @@ import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 public class RefexDynamicDouble extends RefexDynamicData implements RefexDynamicDoubleBI {
 
 	private ObjectProperty<Double> property_;
+	
+	protected RefexDynamicDouble(byte[] data)
+	{
+		super(data);
+	}
 
 	protected RefexDynamicDouble(byte[] data, int assemblageNid, int columnNumber)
 	{

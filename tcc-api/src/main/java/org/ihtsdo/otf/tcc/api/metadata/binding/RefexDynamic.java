@@ -223,6 +223,9 @@ public class RefexDynamic
 	public static ConceptSpec REFEX_DT_POLYMORPHIC = new ConceptSpec("polymorphic", 
 			UUID.fromString("3d634fd6-1498-5e8b-b914-e75b42018397"),
 			REFEX_DATA_TYPES);
+	public static ConceptSpec REFEX_DT_ARRAY = new ConceptSpec("array", 
+			UUID.fromString("318622e6-dd7a-5651-851d-2d5c2af85767"),
+			REFEX_DATA_TYPES);
 	
 	//The following data types already exist, but I'm also adding them to our hierarchy for clarity
 	//(assuming you generate concepts from this constants file and load them into the DB, anyway)

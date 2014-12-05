@@ -16,7 +16,6 @@
 
 package org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.dataTypes;
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -40,9 +39,8 @@ public class RefexDynamicByteArray extends RefexDynamicData implements RefexDyna
 		super(data, assemblageNid, columnNumber);
 	}
 	
-	public RefexDynamicByteArray(byte[] bytes) throws PropertyVetoException {
-		super();
-		data_ = bytes;
+	public RefexDynamicByteArray(byte[] bytes) {
+		super(bytes);
 	}
 
 	/**

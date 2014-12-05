@@ -36,6 +36,11 @@ import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 public class RefexDynamicUUID extends RefexDynamicData implements RefexDynamicUUIDBI {
 
 	private ObjectProperty<UUID> property_;
+	
+	protected RefexDynamicUUID(byte[] data)
+	{
+		super(data);
+	}
 
 	protected RefexDynamicUUID(byte[] data, int assemblageNid, int columnNumber)
 	{

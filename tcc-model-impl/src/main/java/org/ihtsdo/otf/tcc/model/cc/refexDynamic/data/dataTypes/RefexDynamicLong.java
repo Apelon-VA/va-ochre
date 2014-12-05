@@ -35,6 +35,11 @@ import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 public class RefexDynamicLong extends RefexDynamicData implements RefexDynamicLongBI {
 
 	private ObjectProperty<Long> property_;
+	
+	protected RefexDynamicLong(byte[] data)
+	{
+		super(data);
+	}
 
 	protected RefexDynamicLong(byte[] data, int assemblageNid, int columnNumber)
 	{

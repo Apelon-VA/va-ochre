@@ -46,6 +46,7 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicArrayBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicBooleanBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
@@ -226,6 +227,10 @@ public class RefexDynamicUsageDescriptionBuilder
 				else if (RefexDynamicDataType.UUID == columnType)
 				{
 					result = (RefexDynamicUUIDBI)defaultValue;
+				}
+				else if (RefexDynamicDataType.ARRAY == columnType)
+				{
+					result = (RefexDynamicArrayBI<?>)defaultValue;
 				}
 				else if (RefexDynamicDataType.POLYMORPHIC == columnType)
 				{
