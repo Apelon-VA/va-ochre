@@ -188,6 +188,12 @@ public interface TerminologyStoreDI extends TerminologyDI {
 
     boolean hasUncommittedChanges();
 
+    /**
+     * Returns true or false based on whether the data store contains the specified UUID.  A UUID must be provided, passing null will 
+     * result in a runtime exception, not false.
+     * 
+     * @throws IllegalArgumentException if the memberUUID is null
+     */
     boolean hasUuid(UUID memberUUID);
 
     boolean hasUuid(List<UUID> memberUUIDs);
