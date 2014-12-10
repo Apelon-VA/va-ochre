@@ -788,9 +788,14 @@ public class BdbTerminologyStore extends Termstore {
         return false;
     }
 
+    /**
+     * @see org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI#hasUuid(java.util.UUID)
+     */
     @Override
     public boolean hasUuid(UUID memberUUID) {
-        assert memberUUID != null;
+        if (memberUUID == null) {
+            throw new IllegalArgumentException("A UUID must be specified.");
+        }
 
         return Bdb.hasUuid(memberUUID);
     }
