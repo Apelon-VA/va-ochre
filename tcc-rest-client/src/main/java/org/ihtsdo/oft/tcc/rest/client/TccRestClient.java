@@ -441,8 +441,14 @@ public class TccRestClient extends Termstore {
       return false;
    }
 
+   /**
+    * @see org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI#hasUuid(java.util.UUID)
+    */
    @Override
    public boolean hasUuid(UUID memberUUID) {
+      if (memberUUID == null) {
+           throw new IllegalArgumentException("A UUID must be specified.");
+      }
       WebTarget r = restClient.target(serverUrlStr + "uuid/" + memberUUID.toString());
 
       return Boolean.valueOf(r.request(MediaType.TEXT_PLAIN).get(String.class));
