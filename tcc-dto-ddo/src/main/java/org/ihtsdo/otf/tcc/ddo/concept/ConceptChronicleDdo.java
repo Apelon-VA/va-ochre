@@ -281,7 +281,7 @@ public class ConceptChronicleDdo implements Serializable {
                     boolean foundType = false;
 
                     for (RelationshipVersionBI rv : rel.getVersions(ss.getViewCoordinate())) {
-                        if (isaNid != rv.getTypeNid()) {
+                        if (isaNid == rv.getTypeNid()) {
                             foundType = true;
 
                             break;
