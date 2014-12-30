@@ -193,9 +193,9 @@ public interface TerminologyStoreDI extends TerminologyDI {
      * null will result in a runtime exception, not false.
      * @throws IllegalArgumentException if the memberUUID is null
      */
-    boolean hasConcept(UUID cUUID) throws IOException;
+    boolean hasConcept(UUID cUUID);
     
-    boolean hasConcept(int cNid) throws IOException;
+    boolean hasConcept(int cNid);
 
     /**
      * Returns true or false based on whether the data store contains the specified UUID.  A UUID must be provided, passing null will 

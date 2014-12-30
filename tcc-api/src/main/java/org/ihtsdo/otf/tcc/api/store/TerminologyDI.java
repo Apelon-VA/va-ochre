@@ -167,7 +167,7 @@ public interface TerminologyDI {
 
     Collection<Integer> getNidCollection(Collection<UUID> uuids) throws IOException;
 
-    int getNidForUuids(UUID... uuids) throws IOException;
+    int getNidForUuids(UUID... uuids);
 
     /**
      * Retrieve the concept nid from a specified nid.

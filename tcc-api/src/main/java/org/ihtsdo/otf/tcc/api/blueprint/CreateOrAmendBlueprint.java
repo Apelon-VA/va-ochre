@@ -615,11 +615,7 @@ public abstract class CreateOrAmendBlueprint implements PropertyChangeListener {
     public int getInt(ComponentProperty key) {
         Object obj = properties.get(key);
         if (obj instanceof UUID) {
-            try {
-                return Ts.get().getNidForUuids((UUID) obj);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            return Ts.get().getNidForUuids((UUID) obj);
         }
         return (Integer) obj;
     }

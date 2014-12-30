@@ -869,7 +869,7 @@ public class TerminologySnapshot implements TerminologySnapshotDI, FxTerminology
     * @throws IOException
     */
    @Override
-   public int getNidForUuids(UUID... uuids) throws IOException {
+   public int getNidForUuids(UUID... uuids) {
       return P.s.getNidForUuids(uuids);
    }
 
