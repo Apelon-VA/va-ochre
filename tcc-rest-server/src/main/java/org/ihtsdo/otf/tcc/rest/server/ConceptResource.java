@@ -18,6 +18,7 @@ import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
 import org.ihtsdo.otf.tcc.api.concept.ConceptChronicleBI;
 import org.ihtsdo.otf.tcc.api.coordinate.StandardViewCoordinates;
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
+import org.ihtsdo.otf.tcc.api.store.Ts;
 import org.ihtsdo.otf.tcc.dto.TtkConceptChronicle;
 import org.ihtsdo.otf.tcc.model.cc.P;
 import org.ihtsdo.otf.tcc.model.cc.concept.ConceptDataFetcherI;
@@ -28,6 +29,19 @@ import org.ihtsdo.otf.tcc.model.cc.concept.ConceptDataFetcherI;
  */
 @Path("chronicle/concept")
 public class ConceptResource {
+
+    @GET
+    @Path("hasConcept/{id}")
+    @Produces("text/plain")
+    public String hasConcept(@PathParam("id") String uuidOrNid) throws IOException {
+       if (uuidOrNid.length() == 36) {
+           return Boolean.toString(Ts.get().hasConcept(UUID.fromString(uuidOrNid)));
+            
+        } else {
+           return Boolean.toString(Ts.get().hasConcept(Integer.parseInt(uuidOrNid)));
+        }
+        
+    }
 
     @GET
     @Path("{id}")

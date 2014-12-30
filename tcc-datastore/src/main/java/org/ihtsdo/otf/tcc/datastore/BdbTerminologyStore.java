@@ -761,7 +761,22 @@ public class BdbTerminologyStore extends Termstore {
         return Bdb.isConcept(cNid);
     }
 
+    /**
+     * @see org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI#hasConcept(java.util.UUID)
+     */
     @Override
+    public boolean hasConcept(UUID cUUID) throws IOException
+    {
+        //first call hasUuid, because this checks if it exists without storing it.
+        if (!hasUuid(cUUID))
+        {
+            return false;
+        }
+        //If we do have a UUID, check if we have a concept.  Don't want to call this first, as it permanently stores the UUID as a side effect.
+        return hasConcept(getNidForUuids(cUUID));
+    }
+
+	@Override
     public boolean hasPath(int nid) throws IOException {
         return BdbPathManager.get().hasPath(nid);
     }
@@ -777,7 +792,9 @@ public class BdbTerminologyStore extends Termstore {
 
     @Override
     public boolean hasUuid(List<UUID> memberUUIDs) {
-        assert memberUUIDs != null;
+        if (memberUUIDs == null) {
+            throw new IllegalArgumentException("A UUID must be specified.");
+        }
 
         for (UUID uuid : memberUUIDs) {
             if (Bdb.hasUuid(uuid)) {

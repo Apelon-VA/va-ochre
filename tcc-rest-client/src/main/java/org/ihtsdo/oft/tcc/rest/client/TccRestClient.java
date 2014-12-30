@@ -453,6 +453,19 @@ public class TccRestClient extends Termstore {
 
       return Boolean.valueOf(r.request(MediaType.TEXT_PLAIN).get(String.class));
    }
+   
+   /**
+    * @see org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI#hasConcept(java.util.UUID)
+    */
+   @Override
+   public boolean hasConcept(UUID cUUID) throws IOException
+   {
+      if (cUUID == null) {
+           throw new IllegalArgumentException("A UUID must be specified.");
+      }
+      WebTarget r = restClient.target(serverUrlStr + "concept/hasConcept/" + cUUID.toString());
+      return Boolean.valueOf(r.request(MediaType.TEXT_PLAIN).get(String.class));
+   }
 
    //J-
 
