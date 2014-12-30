@@ -107,7 +107,9 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
     //~--- constructors --------------------------------------------------------
     private ConceptChronicle(int nid) throws IOException {
         super();
-        assert nid != Integer.MAX_VALUE : "nid == Integer.MAX_VALUE";
+        if (nid == Integer.MAX_VALUE) {
+        	throw new IllegalArgumentException("Constructing ConceptChronicle(nid) with nid==" + nid + " (Integer.MAX_VALUE)");
+        }
         this.nid = nid;
         this.hashCode = Hashcode.compute(nid);
 
@@ -128,7 +130,9 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
 
     private ConceptChronicle(int nid, NidDataInMemory conceptData) throws IOException {
         super();
-        assert nid != Integer.MAX_VALUE : "nid == Integer.MAX_VALUE";
+        if (nid == Integer.MAX_VALUE) {
+        	throw new IllegalArgumentException("Constructing ConceptChronicle(nid, NidDataInMemory) with nid==" + nid + " (Integer.MAX_VALUE)");
+        }
         this.nid = nid;
         this.hashCode = Hashcode.compute(nid);
 
@@ -668,7 +672,9 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
     }
 
     public boolean readyToWrite() {
-        assert nid != Integer.MAX_VALUE : "nid == Integer.MAX_VALUE";
+    	if (nid == Integer.MAX_VALUE) {
+    		throw new IllegalArgumentException("Calling readyToWrite() with nid==" + nid + " (Integer.MAX_VALUE)");
+    	}
         assert data.readyToWrite() : toLongString();
 
         return true;
@@ -839,7 +845,9 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
         DataInputStream dis = new DataInputStream(is);
         int nid = dis.readInt();
 
-        assert nid != Integer.MAX_VALUE : "nid == Integer.MAX_VALUE";
+        if (nid == Integer.MAX_VALUE) {
+        	throw new IllegalArgumentException("Calling get(InputStream) with nid==" + nid + " (Integer.MAX_VALUE)");
+        }
 
         ConceptChronicle c = conceptsCRHM.get(nid);
         NidDataInMemory ndim = new NidDataInMemory(is);
@@ -858,7 +866,9 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
     }
 
     public static ConceptChronicle get(int nid) throws IOException {
-        assert nid != Integer.MAX_VALUE : "nid == Integer.MAX_VALUE";
+    	if (nid == Integer.MAX_VALUE) {
+        	throw new IllegalArgumentException("Calling get(nid) with nid==" + nid + " (Integer.MAX_VALUE)");
+        }
 
         ConceptChronicle c = conceptsCRHM.get(nid);
 
@@ -906,8 +916,9 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
     }
 
     public static ConceptChronicle get(int nid, byte[] roBytes, byte[] mutableBytes) throws IOException {
-        assert nid != Integer.MAX_VALUE : "nid == Integer.MAX_VALUE";
-
+    	if (nid == Integer.MAX_VALUE) {
+        	throw new IllegalArgumentException("Calling get(nid, byte[], byte[]) with nid==" + nid + " (Integer.MAX_VALUE)");
+        }
         ConceptChronicle c = conceptsCRHM.get(nid);
 
         if (c == null) {
