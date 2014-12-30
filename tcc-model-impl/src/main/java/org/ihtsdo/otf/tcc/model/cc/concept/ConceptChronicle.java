@@ -108,7 +108,7 @@ public class ConceptChronicle implements ConceptChronicleBI, Comparable<ConceptC
     private ConceptChronicle(int nid) throws IOException {
         super();
         if (nid == Integer.MAX_VALUE) {
-        	throw new IllegalArgumentException("Constructing ConceptChronicle(nid) with nid==" + nid + " (Integer.MAX_VALUE)");
+            throw new IllegalArgumentException("Constructing ConceptChronicle(nid) with nid==" + nid + " (Integer.MAX_VALUE)");
         }
         this.nid = nid;
         this.hashCode = Hashcode.compute(nid);
