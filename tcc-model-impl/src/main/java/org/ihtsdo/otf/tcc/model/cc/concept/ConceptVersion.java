@@ -1258,7 +1258,7 @@ public class ConceptVersion implements ConceptVersionBI, Comparable<ConceptVersi
       return P.s.getPossibleChildren(concept.nid, vc).length == 0;
    }
 
-   // TODO
+   // TODO (artf231824)
    @Override
    public boolean isMember(int collectionNid) throws IOException {
       boolean isMember = false;

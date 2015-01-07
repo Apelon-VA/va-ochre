@@ -28,7 +28,7 @@ public class TtkRefexDynamicMemberChronicle extends TtkComponentChronicle<TtkRef
 
 	@XmlAttribute public UUID componentUuid;
 	@XmlAttribute public UUID refexAssemblageUuid;
-	//TODO [REFEX] the XML tags are not yet tested - may not be correct
+	//TODO (artf231861) [REFEX] the XML tags are not yet tested - may not be correct
 	@XmlElement private TtkRefexDynamicData[] data_;
 
 	public TtkRefexDynamicMemberChronicle()
@@ -82,7 +82,7 @@ public class TtkRefexDynamicMemberChronicle extends TtkComponentChronicle<TtkRef
 		Iterator<? extends RefexDynamicVersionBI<?>> itr = refexes.iterator();
 		RefexDynamicVersionBI<?> rv = itr.next();
 
-		//TODO [REFEX] seems to be duplicating work done in the other constructor called above... look at this closer.
+		//TODO (artf231859) [REFEX] seems to be duplicating work done in the other constructor called above... look at this closer.
 		this.data_ = new TtkRefexDynamicData[rv.getData().length];
 		for (int i = 0; i < data_.length; i++)
 		{
@@ -120,7 +120,7 @@ public class TtkRefexDynamicMemberChronicle extends TtkComponentChronicle<TtkRef
 
 		this.componentUuid = transformer.transform(another.componentUuid, another, ComponentFields.REFEX_REFERENCED_COMPONENT_UUID);
 		this.refexAssemblageUuid = transformer.transform(another.refexAssemblageUuid, another, ComponentFields.REFEX_COLLECTION_UUID);
-		//TODO [REFEX] do I need a transformer?
+		//TODO (artf231854) [REFEX] do I need a transformer?
 		this.data_ = new TtkRefexDynamicData[another.getData().length];
 		for (int i = 0; i < data_.length; i++)
 		{

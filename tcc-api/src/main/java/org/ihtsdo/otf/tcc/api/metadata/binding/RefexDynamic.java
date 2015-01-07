@@ -158,7 +158,7 @@ public class RefexDynamic
 	
 	//This is the assemblage type that is optionally attached to an assemblage itself, to declare type restrictions on the referenced component
 	//of the refex
-	//TODO - [refex] it would have been useful to be able to declare a regexp restriction on the values of this column (and probably others) but can't do it, 
+	//TODO (artf231825) - [refex] it would have been useful to be able to declare a regexp restriction on the values of this column (and probably others) but can't do it, 
 	//because I don't have any of the implementations on the classpath here.  something else to rethink?
 	public static DynamicRefexConceptSpec REFEX_DYNAMIC_REFERENCED_COMPONENT_RESTRICTION = new DynamicRefexConceptSpec("dynamic sememe referenced component restriction", 
 			UUID.fromString("0d94ceeb-e24f-5f1a-84b2-1ac35f671db5"),
