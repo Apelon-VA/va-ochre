@@ -19,6 +19,7 @@
 package org.ihtsdo.otf.tcc.api.refexDynamic.data;
 
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicArrayBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicStringBI;
 import org.jvnet.hk2.annotations.Contract;
 
@@ -37,21 +38,21 @@ public interface ExternalValidatorBI
 {
 	/**
 	 * @param userData - The user entry to validate.
-	 * @param validatorDefinitionData - The string used to locate the validator implementation (up to the first '|' character - see 
-	 * {@link RefexDynamicValidatorType} for details) and any other data that was stored with the validator assignment (after the first '|'
-	 * character)
+	 * @param validatorDefinitionData - The string used to locate the validator implementation is stored in the first position of the array.
+	 * see {@link RefexDynamicValidatorType} for details) and any other data that was stored with the validator assignment (any additional items
+	 * in the array)
 	 * @param vc - the view coordinate that was passed in to the validate call.
 	 * @return - true if valid, exception otherwise.
 	 * @throws RuntimeException - if it fails the validator, this exception should contain a user-friendly reason why.
 	 */
-	public boolean validate(RefexDynamicDataBI userData, RefexDynamicStringBI validatorDefinitionData, ViewCoordinate vc) throws RuntimeException;
+	public boolean validate(RefexDynamicDataBI userData, RefexDynamicArrayBI<RefexDynamicStringBI> validatorDefinitionData, ViewCoordinate vc) throws RuntimeException;
 	
 	/**
 	 * Return true or false, depending on whether this validator implementation supports the specified data type.
-	 * @param validatorDefinitionData - The string used to locate the validator implementation (up to the first '|' character - see 
-	 * {@link RefexDynamicValidatorType} for details) and any other data that was stored with the validator assignment (after the first '|'
-	 * character)
+	 * @param validatorDefinitionData - The string used to locate the validator implementation is stored in the first position of the array.
+	 * see {@link RefexDynamicValidatorType} for details) and any other data that was stored with the validator assignment (any additional items
+	 * in the array)
 	 * @param dataType - The datatype to inquire about
 	 */
-	public boolean validatorSupportsType(RefexDynamicStringBI validatorDefinitionData, RefexDynamicDataType dataType);
+	public boolean validatorSupportsType(RefexDynamicArrayBI<RefexDynamicStringBI> validatorDefinitionData, RefexDynamicDataType dataType);
 }

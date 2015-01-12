@@ -35,6 +35,11 @@ public class RefexDynamicString extends RefexDynamicData implements RefexDynamic
 
 	private ObjectProperty<String> property_;
 
+	protected RefexDynamicString(byte[] data)
+	{
+		super(data);
+	}
+
 	protected RefexDynamicString(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);

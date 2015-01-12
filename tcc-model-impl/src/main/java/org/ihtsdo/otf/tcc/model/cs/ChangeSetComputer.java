@@ -290,6 +290,7 @@ public class ChangeSetComputer implements ComputeEConceptForChangeSetI {
         ec.setPathUuid(P.s.getUuidPrimordialForNid(v.getPathNid()));
         ec.setStatus(v.getStatus());
         ec.setAuthorUuid(P.s.getUuidPrimordialForNid(v.getAuthorNid()));
+        ec.setModuleUuid(P.s.getUuidPrimordialForNid(v.getModuleNid()));
         ec.setTime(v.getTime());
 
         if (v.getAdditionalIdentifierParts() != null) {
@@ -307,6 +308,7 @@ public class ChangeSetComputer implements ComputeEConceptForChangeSetI {
                     eIdv.setPathUuid(P.s.getUuidPrimordialForNid(idv.getPathNid()));
                     eIdv.setStatus(idv.getStatus());
                     eIdv.setAuthorUuid(P.s.getUuidPrimordialForNid(idv.getAuthorNid()));
+                    eIdv.setModuleUuid(P.s.getUuidPrimordialForNid(idv.getModuleNid()));
                     eIdv.setTime(idv.getTime());
                 }
             }
@@ -397,6 +399,7 @@ public class ChangeSetComputer implements ComputeEConceptForChangeSetI {
         ev.setPathUuid(P.s.getUuidPrimordialForNid(v.getPathNid()));
         ev.setStatus(v.getStatus());
         ev.setAuthorUuid(P.s.getUuidPrimordialForNid(v.getAuthorNid()));
+        ev.setModuleUuid(P.s.getUuidPrimordialForNid(v.getModuleNid()));
         ev.setTime(v.getTime());
         ec.revisions.add(ev);
     }

@@ -34,7 +34,11 @@ import org.ihtsdo.otf.tcc.model.cc.refexDynamic.data.RefexDynamicData;
 public class RefexDynamicNid extends RefexDynamicData implements RefexDynamicNidBI {
 	
 	private ObjectProperty<Integer> property_;
-
+	
+	protected RefexDynamicNid(byte[] data)
+	{
+		super(data);
+	}
 	protected RefexDynamicNid(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);

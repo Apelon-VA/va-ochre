@@ -93,7 +93,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 	private final long defaultTime_ = System.currentTimeMillis();
 	private final LanguageCode lang_ = LanguageCode.EN;
 	private final UUID isARelUuid_ = Snomed.IS_A.getUuids()[0];
-	private final UUID definingCharacteristicUuid_ = SnomedMetadataRf2.STATED_RELATIONSHIP_RF2.getUuids()[0];
+	private final UUID definingCharacteristicStatedUuid_ = SnomedMetadataRf2.STATED_RELATIONSHIP_RF2.getUuids()[0];
 	private final UUID notRefinableUuid = SnomedMetadataRf2.NOT_REFINABLE_RF2.getUuids()[0];
 	private final UUID descriptionAcceptableUuid_ = SnomedMetadataRf2.ACCEPTABLE_RF2.getUuids()[0];
 	private final UUID descriptionPreferredUuid_ = SnomedMetadataRf2.PREFERRED_RF2.getUuids()[0];
@@ -365,7 +365,8 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 
 		for (RelSpec rs : cs.getRelSpecs())
 		{
-			addRelationship(cc, rs.getDestinationSpec().getUuids()[0], rs.getRelTypeSpec().getUuids()[0], null);
+			addRelationship(cc, rs.getDestinationSpec().getUuids()[0], rs.getRelTypeSpec().getUuids()[0], 
+					(rs.getCharacteristicSpec() == null ? null : rs.getCharacteristicSpec().getUuids()[0]), null);
 		}
 		return cc;
 	}
@@ -470,7 +471,7 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 	 * @param relTypeUuid - is optional - if not provided, the default value of IS_A_REL is used.
 	 * @param time - if null, source concept time is used
 	 */
-	private TtkRelationshipChronicle addRelationship(TtkConceptChronicle eConcept, UUID targetUuid, UUID relTypeUuid, Long time)
+	private TtkRelationshipChronicle addRelationship(TtkConceptChronicle eConcept, UUID targetUuid, UUID relTypeUuid, UUID relCharacteristicUUID, Long time)
 	{
 		try
 		{
@@ -482,14 +483,17 @@ public class GenerateMetadataEConcepts extends AbstractMojo
 			}
 
 			TtkRelationshipChronicle rel = new TtkRelationshipChronicle();
-			//this is what {@link RelationshipCAB} does
 			rel.setRelGroup(0);
+			rel.setCharacteristicUuid(relCharacteristicUUID == null ? definingCharacteristicStatedUuid_ : relCharacteristicUUID);
+			//this is what {@link RelationshipCAB} does (mostly)
 			rel.setPrimordialComponentUuid((UuidT5Generator.get(RelationshipCAB.relSpecNamespace, eConcept.getPrimordialUuid().toString() + relTypeUuid.toString()
-					+ targetUuid.toString() + rel.getRelGroup())));
+					+ targetUuid.toString() + rel.getRelGroup() 
+					+ (rel.getCharacteristicUuid().equals(definingCharacteristicStatedUuid_) ? "" : rel.getCharacteristicUuid().toString()))));
+					//This last line (above) is not being done by RelationshipCAB - but I think it is broken.  It needs to take the characteristic type into 
+					//account when generating a UUID, otherwise, we get duplicates.
 			rel.setC1Uuid(eConcept.getPrimordialUuid());
 			rel.setTypeUuid(relTypeUuid == null ? isARelUuid_ : relTypeUuid);
 			rel.setC2Uuid(targetUuid);
-			rel.setCharacteristicUuid(definingCharacteristicUuid_);
 			rel.setRefinabilityUuid(notRefinableUuid);
 			
 			setRevisionAttributes(rel, null, time == null ? eConcept.getConceptAttributes().getTime() : time);

@@ -224,6 +224,10 @@ public abstract class TtkRevision implements ExternalStampBI {
     }
 
     public static CharSequence informAboutUuid(UUID uuid) {
+        if (uuid == null)
+        {
+            return "null";
+        }
         if (Ts.get() == null) {
             return uuid.toString();
         }
@@ -335,25 +339,24 @@ public abstract class TtkRevision implements ExternalStampBI {
             time = Long.MIN_VALUE;
         }
 
-        assert pathUuid != null : this;
-        assert authorUuid != null : this;
-        assert status != null : this;
-        assert moduleUuid != null : this;
+        if (pathUuid == null) {
+            throw new IllegalArgumentException("pathUuid must not be null - failed in " + this.toString());
+        }
+        if (authorUuid == null) {
+            throw new IllegalArgumentException("authorUuid must not be null - failed in " + this.toString());
+        }
+        if (status == null) {
+            throw new IllegalArgumentException("status must not be null - failed in " + this.toString());
+        }
+        if (moduleUuid == null) {
+            throw new IllegalArgumentException("moduleUuid must not be null - failed in " + this.toString());
+        }
+
         out.writeLong(pathUuid.getMostSignificantBits());
         out.writeLong(pathUuid.getLeastSignificantBits());
         out.writeBoolean(status == Status.ACTIVE);
-
-        if (authorUuid == null) {
-            authorUuid = unspecifiedUserUuid;
-        }
-
         out.writeLong(authorUuid.getMostSignificantBits());
         out.writeLong(authorUuid.getLeastSignificantBits());
-
-        if (moduleUuid == null) {
-            moduleUuid = unspecifiedModuleUuid;
-        }
-
         out.writeLong(moduleUuid.getMostSignificantBits());
         out.writeLong(moduleUuid.getLeastSignificantBits());
         out.writeLong(time);

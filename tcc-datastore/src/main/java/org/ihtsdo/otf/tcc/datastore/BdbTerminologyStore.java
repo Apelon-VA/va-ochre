@@ -607,7 +607,7 @@ public class BdbTerminologyStore extends Termstore {
     }
 
     @Override
-    public int getNidForUuids(UUID... uuids) throws IOException {
+    public int getNidForUuids(UUID... uuids) {
         return Bdb.uuidToNid(uuids);
     }
 
@@ -757,11 +757,26 @@ public class BdbTerminologyStore extends Termstore {
     }
 
     @Override
-    public boolean hasConcept(int cNid) throws IOException {
+    public boolean hasConcept(int cNid) {
         return Bdb.isConcept(cNid);
     }
 
+    /**
+     * @see org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI#hasConcept(java.util.UUID)
+     */
     @Override
+    public boolean hasConcept(UUID cUUID)
+    {
+        //first call hasUuid, because this checks if it exists without storing it.
+        if (!hasUuid(cUUID))
+        {
+            return false;
+        }
+        //If we do have a UUID, check if we have a concept.  Don't want to call this first, as it permanently stores the UUID as a side effect.
+        return hasConcept(getNidForUuids(cUUID));
+    }
+
+	@Override
     public boolean hasPath(int nid) throws IOException {
         return BdbPathManager.get().hasPath(nid);
     }
@@ -777,7 +792,9 @@ public class BdbTerminologyStore extends Termstore {
 
     @Override
     public boolean hasUuid(List<UUID> memberUUIDs) {
-        assert memberUUIDs != null;
+        if (memberUUIDs == null) {
+            throw new IllegalArgumentException("A UUID must be specified.");
+        }
 
         for (UUID uuid : memberUUIDs) {
             if (Bdb.hasUuid(uuid)) {
@@ -788,9 +805,14 @@ public class BdbTerminologyStore extends Termstore {
         return false;
     }
 
+    /**
+     * @see org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI#hasUuid(java.util.UUID)
+     */
     @Override
     public boolean hasUuid(UUID memberUUID) {
-        assert memberUUID != null;
+        if (memberUUID == null) {
+            throw new IllegalArgumentException("A UUID must be specified.");
+        }
 
         return Bdb.hasUuid(memberUUID);
     }

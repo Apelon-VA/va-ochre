@@ -30,36 +30,60 @@ public class RefexDynamicTypeToClassUtility
 {
 	public static RefexDynamicData typeToClass(RefexDynamicDataType type, byte[] data, int assemblageNid, int columnNumber) 
 	{
-		if (RefexDynamicDataType.NID == type) {
-			return new RefexDynamicNid(data, assemblageNid, columnNumber);
+		switch (type)
+		{
+			case ARRAY: return new RefexDynamicArray<RefexDynamicData>(data, assemblageNid, columnNumber);
+			case BOOLEAN: return new RefexDynamicBoolean(data, assemblageNid, columnNumber);
+			case BYTEARRAY: return new RefexDynamicByteArray(data, assemblageNid, columnNumber);
+			case DOUBLE: return new RefexDynamicDouble(data, assemblageNid, columnNumber);
+			case FLOAT: return new RefexDynamicFloat(data, assemblageNid, columnNumber);
+			case INTEGER: return new RefexDynamicInteger(data, assemblageNid, columnNumber);
+			case LONG: return new RefexDynamicLong(data, assemblageNid, columnNumber);
+			case NID: return new RefexDynamicNid(data, assemblageNid, columnNumber);
+			case STRING: return new RefexDynamicString(data, assemblageNid, columnNumber);
+			case UUID: return new RefexDynamicUUID(data, assemblageNid, columnNumber);
+			case POLYMORPHIC: case UNKNOWN: throw new RuntimeException("No implementation exists for type unknown");
+			default: throw new RuntimeException("Implementation error");
 		}
-		if (RefexDynamicDataType.STRING == type) {
-			return new RefexDynamicString(data, assemblageNid, columnNumber);
+	}
+	
+	protected static RefexDynamicData typeToClass(RefexDynamicDataType type, byte[] data)
+	{
+		switch (type)
+		{
+			case ARRAY: return new RefexDynamicArray<RefexDynamicData>(data);
+			case BOOLEAN: return new RefexDynamicBoolean(data);
+			case BYTEARRAY: return new RefexDynamicByteArray(data);
+			case DOUBLE: return new RefexDynamicDouble(data);
+			case FLOAT: return new RefexDynamicFloat(data);
+			case INTEGER: return new RefexDynamicInteger(data);
+			case LONG: return new RefexDynamicLong(data);
+			case NID: return new RefexDynamicNid(data);
+			case STRING: return new RefexDynamicString(data);
+			case UUID: return new RefexDynamicUUID(data);
+			case UNKNOWN: case POLYMORPHIC: throw new RuntimeException("Should be impossible");
+			default:
+				throw new RuntimeException("Design failure");
 		}
-		if (RefexDynamicDataType.INTEGER == type) {
-			return new RefexDynamicInteger(data, assemblageNid, columnNumber);
+	}
+	
+	protected static Class<? extends RefexDynamicData> implClassForType(RefexDynamicDataType type)
+	{
+		switch (type)
+		{
+			case ARRAY: return RefexDynamicArray.class;
+			case BOOLEAN: return RefexDynamicBoolean.class;
+			case BYTEARRAY: return RefexDynamicByteArray.class;
+			case DOUBLE: return RefexDynamicDouble.class;
+			case FLOAT: return RefexDynamicFloat.class;
+			case INTEGER: return RefexDynamicInteger.class;
+			case LONG: return RefexDynamicLong.class;
+			case NID: return RefexDynamicNid.class;
+			case STRING: return RefexDynamicString.class;
+			case UUID: return RefexDynamicUUID.class;
+			case UNKNOWN: case POLYMORPHIC: throw new RuntimeException("Should be impossible");
+			default:
+				throw new RuntimeException("Design failure");
 		}
-		if (RefexDynamicDataType.BOOLEAN == type) {
-			return new RefexDynamicBoolean(data, assemblageNid, columnNumber);
-		}
-		if (RefexDynamicDataType.LONG == type) {
-			return new RefexDynamicLong(data, assemblageNid, columnNumber);
-		}
-		if (RefexDynamicDataType.BYTEARRAY == type) {
-			return new RefexDynamicByteArray(data, assemblageNid, columnNumber);
-		}
-		if (RefexDynamicDataType.FLOAT == type) {
-			return new RefexDynamicFloat(data, assemblageNid, columnNumber);
-		}
-		if (RefexDynamicDataType.DOUBLE == type) {
-			return new RefexDynamicDouble(data, assemblageNid, columnNumber);
-		}
-		if (RefexDynamicDataType.UUID == type) {
-			return new RefexDynamicUUID(data, assemblageNid, columnNumber);
-		}
-		if (RefexDynamicDataType.POLYMORPHIC == type || RefexDynamicDataType.UNKNOWN == type) {
-			throw new RuntimeException("No implementation exists for type unknown");
-		}
-		throw new RuntimeException("Implementation error");
 	}
 }

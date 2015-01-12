@@ -290,7 +290,7 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 	
 	private void read()
 	{
-		//TODO [REFEX] figure out language details
+		//TODO (artf231856) [REFEX] figure out language details
 		String fsn = null;
 		String acceptableSynonym = null;
 		String acceptableDefinition = null;
@@ -417,7 +417,7 @@ public class RefexDynamicColumnInfo implements Comparable<RefexDynamicColumnInfo
 	 *         )}
 	 *     )
 	 * 
-	 * //TODO [REFEX] figure out language details (how we know what language to put on the name/description
+	 * //TODO (artf231856) [REFEX] figure out language details (how we know what language to put on the name/description
 	 * @throws ContradictionException 
 	 * @throws InvalidCAB 
 	 * @throws IOException 

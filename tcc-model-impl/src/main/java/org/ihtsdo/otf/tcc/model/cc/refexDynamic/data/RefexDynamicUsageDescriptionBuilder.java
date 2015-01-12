@@ -46,6 +46,7 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicArrayBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicBooleanBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicByteArrayBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
@@ -85,7 +86,7 @@ public class RefexDynamicUsageDescriptionBuilder
 	 * 
 	 * The concept will be created under the concept {@link RefexDynamic#REFEX_DYNAMIC_TYPES} if a parent is not specified
 	 * 
-	 * //TODO [REFEX] figure out language details (how we know what language to put on the name/description
+	 * //TODO (artf231856) [REFEX] figure out language details (how we know what language to put on the name/description
 	 * @param refexFSN - The FSN for this refex concept that will be created.
 	 * @param refexPreferredTerm - The preferred term for this refex concept that will be created.
 	 * @param refexDescription - A user friendly string the explains the overall intended purpose of this refex (what it means, what it stores)
@@ -226,6 +227,10 @@ public class RefexDynamicUsageDescriptionBuilder
 				else if (RefexDynamicDataType.UUID == columnType)
 				{
 					result = (RefexDynamicUUIDBI)defaultValue;
+				}
+				else if (RefexDynamicDataType.ARRAY == columnType)
+				{
+					result = (RefexDynamicArrayBI<?>)defaultValue;
 				}
 				else if (RefexDynamicDataType.POLYMORPHIC == columnType)
 				{

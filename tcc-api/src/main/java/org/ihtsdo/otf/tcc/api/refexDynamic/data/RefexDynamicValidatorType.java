@@ -31,6 +31,7 @@ import org.ihtsdo.otf.tcc.api.media.MediaChronicleBI;
 import org.ihtsdo.otf.tcc.api.metadata.ComponentType;
 import org.ihtsdo.otf.tcc.api.refex.RefexChronicleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.RefexDynamicChronicleBI;
+import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicArrayBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicDoubleBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicFloatBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.dataTypes.RefexDynamicIntegerBI;
@@ -64,16 +65,16 @@ import org.ihtsdo.otf.tcc.lookup.Hk2Looker;
  * {@link RefexDynamicValidatorType#IS_KIND_OF}
  * The validatorDefinitionData should be either an {@link RefexDynamicNidBI} or a {@link RefexDynamicUUIDBI}.
  * 
- * For {@link RefexDynamicValidatorType#EXTERNAL} the validatorDefinitionData should be a {@link RefexDynamicStringBI} 
- * which contains the name of an HK2 named service which implements  {@link ExternalValidatorBI} - the name that you provide 
- * should be the value of the '@Name' annotation within the class which implements the ExternalValidatorBI class.  This code 
- * will request that implementation (by name) and pass the validation call to it.
+ * For {@link RefexDynamicValidatorType#EXTERNAL} the validatorDefinitionData should be a {@link RefexDynamicArrayBI<RefexDynamicStringBI>} 
+ * which contains (in the first position of the array) the name of an HK2 named service which implements {@link ExternalValidatorBI} 
+ * the name that you provide should be the value of the '@Name' annotation within the class which implements the ExternalValidatorBI class.  
+ * This code will request that implementation (by name) and pass the validation call to it.
  * 
- * Optionally, the validatorDefinitionData can contain a "|" character - only the characters leading up to the first instance of a "|" 
- * will be considered as the '@Name' to be used for the HK2 lookup.  Anything after the "|" separator is ignored, and may be used
- * by the external validator implementation to store other data.  For example, if the validatorDefinitionData {@link RefexDynamicStringBI}
- * contains "mySuperRefexValidator|somespecialmappingdata|some other mapping data" then the following HK2 call will be made to locate 
- * the validator implementation (and validate):
+ * Optionally, the validatorDefinitionData more that one {@link RefexDynamicStringBI} in the array - only the first position of the array 
+ * will be considered as the '@Name' to be used for the HK2 lookup.  All following data is ignored, and may be used by the external validator 
+ * implementation to store other data.  For example, if the validatorDefinitionData {@link RefexDynamicArrayBI<RefexDynamicStringBI>}
+ * contains an array of strings such as new String[]{"mySuperRefexValidator", "somespecialmappingdata", "some other mapping data"} 
+ * then the following HK2 call will be made to locate the validator implementation (and validate):
  * <pre>
  *   ExternalValidatorBI validator = Hk2Looker.get().getService(ExternalValidatorBI.class, "mySuperRefexValidator");
  *   return validator.validate(userData, validatorDefinitionData, viewCoordinate);
@@ -177,6 +178,7 @@ public enum RefexDynamicValidatorType
 	 * @param viewCoordinate - The View Coordinate - not needed for some types of validations. Null allowed when unneeded (for math based tests, for example)
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean passesValidator(RefexDynamicDataBI userData, RefexDynamicDataBI validatorDefinitionData, ViewCoordinate viewCoordinate)
 	{
 		if (validatorDefinitionData == null)
@@ -186,20 +188,17 @@ public enum RefexDynamicValidatorType
 		if (this == RefexDynamicValidatorType.EXTERNAL)
 		{
 			ExternalValidatorBI validator = null;
+			RefexDynamicStringBI[] valNameInfo = null;
+			RefexDynamicArrayBI<RefexDynamicStringBI> stringValidatorDefData = null;
 			String valName = null;
-			RefexDynamicStringBI stringValidatorDefData = null;
 			if (validatorDefinitionData != null)
 			{
-				stringValidatorDefData = (RefexDynamicStringBI)validatorDefinitionData;
-				valName = stringValidatorDefData.getDataString();
+				stringValidatorDefData = (RefexDynamicArrayBI<RefexDynamicStringBI>)validatorDefinitionData;
+				valNameInfo = stringValidatorDefData.getDataArray();
 			}
-			if (valName != null && valName.length() > 0)
+			if (valNameInfo != null && valNameInfo.length > 0)
 			{
-				int index = valName.indexOf('|');
-				if (index > 0)
-				{
-					valName = valName.substring(0, index);
-				}
+				valName = valNameInfo[0].getDataString();
 				logger.fine("Looking for an ExternalValidatorBI with the name of '" + valName + "'");
 				validator = Hk2Looker.get().getService(ExternalValidatorBI.class, valName);
 			}

@@ -111,7 +111,7 @@ public class RefexDynamicUsageDescription
 
 	public static RefexDynamicUsageDescription read(int assemblageNid) throws IOException, ContradictionException
 	{
-		//TODO [REFEX] test and see if my cache mechanism is working right (especially stamp check)
+		//TODO (artf231860) [REFEX] test and see if my cache mechanism is working right (especially stamp check)
 		RefexDynamicUsageDescription temp = cache_.get(assemblageNid);
 		if (temp == null || 
 				Ts.get().getConceptVersion(StandardViewCoordinates.getWbAuxiliary(), assemblageNid).getConceptAttributesActive().getStamp() != temp.stampNid_)

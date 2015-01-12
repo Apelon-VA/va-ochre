@@ -35,6 +35,11 @@ public class RefexDynamicBoolean extends RefexDynamicData implements RefexDynami
 
 	private ObjectProperty<Boolean> property_;
 
+	protected RefexDynamicBoolean(byte[] data)
+	{
+		super(data);
+	}
+	
 	protected RefexDynamicBoolean(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);

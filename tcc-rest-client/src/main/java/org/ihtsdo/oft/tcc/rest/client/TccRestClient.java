@@ -290,7 +290,7 @@ public class TccRestClient extends Termstore {
    }
 
    @Override
-   public int getNidForUuids(UUID... uuids) throws IOException {
+   public int getNidForUuids(UUID... uuids) {
       StringBuilder uuidSetStringBuilder = new StringBuilder();
 
       for (int i = 0; i < uuids.length; i++) {
@@ -429,7 +429,7 @@ public class TccRestClient extends Termstore {
    }
 
    @Override
-   public boolean hasConcept(int cNid) throws IOException {
+   public boolean hasConcept(int cNid) {
       if (ConceptChronicle.getIfInMap(cNid) != null) {
          return true;
       }
@@ -441,10 +441,29 @@ public class TccRestClient extends Termstore {
       return false;
    }
 
+   /**
+    * @see org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI#hasUuid(java.util.UUID)
+    */
    @Override
    public boolean hasUuid(UUID memberUUID) {
+      if (memberUUID == null) {
+           throw new IllegalArgumentException("A UUID must be specified.");
+      }
       WebTarget r = restClient.target(serverUrlStr + "uuid/" + memberUUID.toString());
 
+      return Boolean.valueOf(r.request(MediaType.TEXT_PLAIN).get(String.class));
+   }
+   
+   /**
+    * @see org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI#hasConcept(java.util.UUID)
+    */
+   @Override
+   public boolean hasConcept(UUID cUUID)
+   {
+      if (cUUID == null) {
+           throw new IllegalArgumentException("A UUID must be specified.");
+      }
+      WebTarget r = restClient.target(serverUrlStr + "concept/hasConcept/" + cUUID.toString());
       return Boolean.valueOf(r.request(MediaType.TEXT_PLAIN).get(String.class));
    }
 

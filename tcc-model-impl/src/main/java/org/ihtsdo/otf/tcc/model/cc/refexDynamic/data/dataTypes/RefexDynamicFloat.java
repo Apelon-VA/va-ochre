@@ -35,6 +35,11 @@ public class RefexDynamicFloat extends RefexDynamicData implements RefexDynamicF
 
 	private ObjectProperty<Float> property_;
 
+	protected RefexDynamicFloat(byte[] data)
+	{
+		super(data);
+	}
+
 	protected RefexDynamicFloat(byte[] data, int assemblageNid, int columnNumber)
 	{
 		super(data, assemblageNid, columnNumber);

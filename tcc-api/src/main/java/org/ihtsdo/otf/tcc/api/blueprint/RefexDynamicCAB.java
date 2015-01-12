@@ -47,7 +47,6 @@ import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicColumnInfo;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataBI;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicDataType;
 import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicUsageDescription;
-import org.ihtsdo.otf.tcc.api.refexDynamic.data.RefexDynamicValidatorType;
 import org.ihtsdo.otf.tcc.api.relationship.RelationshipChronicleBI;
 import org.ihtsdo.otf.tcc.api.store.TerminologyStoreDI;
 import org.ihtsdo.otf.tcc.api.store.Ts;
@@ -610,8 +609,8 @@ public class RefexDynamicCAB extends CreateOrAmendBlueprint
 		//Make sure the referenced component meets the ref component restrictions, if any are present.
 		if (rdud.getReferencedComponentTypeRestriction() != null && rdud.getReferencedComponentTypeRestriction() != ComponentType.UNKNOWN)
 		{
-			//Once again, blueprint is in the entire wrong code package, and I can't reuse the validator implementation.  So I have to 
-			//do copy/paste code inheritance for this....
+			//Once again, blueprint is in the entire wrong code package, and I can't reuse the {@link RefexDynamicValidatorType#passesValidator(...)} 
+			//implementation.  So I have to do copy/paste code inheritance for this.... all because I can't construct an instance of the validator data to pass in.
 			ComponentChronicleBI<?> cc = getReferencedComponent();
 			if (cc == null)
 			{

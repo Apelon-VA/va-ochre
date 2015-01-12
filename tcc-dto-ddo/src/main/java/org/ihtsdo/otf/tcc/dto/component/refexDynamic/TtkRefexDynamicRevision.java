@@ -15,7 +15,7 @@ import org.ihtsdo.otf.tcc.dto.component.transformer.ComponentTransformerBI;
 public class TtkRefexDynamicRevision extends TtkRevision
 {
 	public static final long serialVersionUID = 1;
-	//TODO [REFEX] the XML tags are not yet tested - may not be correct
+	//TODO (artf231861) [REFEX] the XML tags are not yet tested - may not be correct
 	@XmlElement private TtkRefexDynamicData[] data_;
 
 	public TtkRefexDynamicRevision()
@@ -42,7 +42,7 @@ public class TtkRefexDynamicRevision extends TtkRevision
 	public TtkRefexDynamicRevision(TtkRefexDynamicRevision another, ComponentTransformerBI transformer)
 	{
 		super(another, transformer);
-		this.data_ = another.data_;  //TODO [REFEX] do we need transformer support for the data?  No idea what it is used for.
+		this.data_ = another.data_;  //TODO (artf231855) [REFEX] do we need transformer support for the data?  No idea what it is used for.
 	}
 
 	//~--- methods -------------------------------------------------------------
