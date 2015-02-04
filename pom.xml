@@ -212,6 +212,8 @@ the specific language governing permissions and limitations under the License. -
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <scmCommentPrefix>[jgitflow-plugin]</scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
+                    <allowSnapshots>true</allowSnapshots>
+                    <enableFeatureVersions>true</enableFeatureVersions>
                     <flowInitContext>
                         <masterBranchName>va-master</masterBranchName>
                         <developBranchName>va-develop</developBranchName>
