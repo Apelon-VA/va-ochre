@@ -58,8 +58,8 @@ public final class ConceptCB extends CreateOrAmendBlueprint {
 
     public static final UUID conceptSpecNamespace =
             UUID.fromString("620d1f30-5285-11e0-b8af-0800200c9a66");
-    private static final UUID usRefexUuid = SnomedMetadataRf2.US_ENGLISH_REFSET_RF2.getUuids()[0];
-    private static final UUID gbRefexUuid = SnomedMetadataRf2.GB_ENGLISH_REFSET_RF2.getUuids()[0];
+    public static final UUID usRefexUuid = SnomedMetadataRf2.US_ENGLISH_REFSET_RF2.getUuids()[0];
+    public static final UUID gbRefexUuid = SnomedMetadataRf2.GB_ENGLISH_REFSET_RF2.getUuids()[0];
     private Object lastPropigationId = Long.MIN_VALUE;
 
     private String fullySpecifiedName;
@@ -582,62 +582,70 @@ public final class ConceptCB extends CreateOrAmendBlueprint {
         this.recomputeUuid();
         addPreferredNameDialectRefexes(perferredNameBlueprint, dialect);
     }
-
-    /**
-     * Adds the appropriate dialect refexes to the preferred name description blueprint.
-     *
-     * @param preferredBlueprint the preferred name description blueprint
-     * @param dialect the dialect of the preferred name, only supports en-gb and en-us
-     * @throws UnsupportedEncodingException indicates an unsupported encoding exception has occurred
-     * @throws IOException signals that an I/O exception has occurred
-     * @throws InvalidCAB if the any of the values in blueprint to make are invalid
-     * @throws ContradictionException if more than one version is found for a given position or view
-     * coordinate
-     */
+    
     private void addPreferredNameDialectRefexes(DescriptionCAB preferredBlueprint, LanguageCode dialect) throws 
-            UnsupportedEncodingException, IOException, InvalidCAB, ContradictionException {
-        RefexCAB usAnnot;
-        RefexCAB gbAnnot;
-        if (dialect == LanguageCode.EN) {
-            usAnnot = new RefexCAB(RefexType.CID,
-                    preferredBlueprint.getComponentUuid(),
-                    usRefexUuid, idDirective, refexDirective);
-            usAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
-            if (moduleUuid != null) {
-                usAnnot.properties.put(ComponentProperty.MODULE_ID, moduleUuid);
-            }
-
-            gbAnnot = new RefexCAB(RefexType.CID,
-                    preferredBlueprint.getComponentUuid(),
-                    gbRefexUuid, idDirective, refexDirective);
-            gbAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
-            if (moduleUuid != null) {
-                gbAnnot.properties.put(ComponentProperty.MODULE_ID, moduleUuid);
-            }
-            preferredBlueprint.addAnnotationBlueprint(usAnnot);
-            preferredBlueprint.addAnnotationBlueprint(gbAnnot);
-        } else if (dialect == LanguageCode.EN_US) {
-            usAnnot = new RefexCAB(RefexType.CID,
-                    preferredBlueprint.getComponentUuid(),
-                    usRefexUuid, idDirective, refexDirective);
-            usAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
-            if (moduleUuid != null) {
-                usAnnot.properties.put(ComponentProperty.MODULE_ID, moduleUuid);
-            }
-            preferredBlueprint.addAnnotationBlueprint(usAnnot);
-        } else if (dialect == LanguageCode.EN_GB) {
-            gbAnnot = new RefexCAB(RefexType.CID,
-                    preferredBlueprint.getComponentUuid(),
-                    gbRefexUuid, idDirective, refexDirective);
-            gbAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
-            if (moduleUuid != null) {
-                gbAnnot.properties.put(ComponentProperty.MODULE_ID, moduleUuid);
-            }
-            preferredBlueprint.addAnnotationBlueprint(gbAnnot);
-        } else {
-            throw new InvalidCAB("Dialect not supported: " + dialect.getFormatedLanguageCode());
-        }
+        UnsupportedEncodingException, IOException, InvalidCAB, ContradictionException {
+        preferredBlueprint.makePreferredNameDialectRefexes(dialect);
     }
+
+    //TODO - Dan notes - I moved this to where it belongs.... (descriptionCAB, not here) and made it public, so it could actually
+    //be used somewhere useful... but I didn't take along the module stuff.  Don't think I need it - as noted else where in here,
+    //the way module is being handled in this class makes no sense to me.
+//    /**
+//     * Adds the appropriate dialect refexes to the preferred name description blueprint.
+//     *
+//     * @param preferredBlueprint the preferred name description blueprint
+//     * @param dialect the dialect of the preferred name, only supports en-gb and en-us
+//     * @throws UnsupportedEncodingException indicates an unsupported encoding exception has occurred
+//     * @throws IOException signals that an I/O exception has occurred
+//     * @throws InvalidCAB if the any of the values in blueprint to make are invalid
+//     * @throws ContradictionException if more than one version is found for a given position or view
+//     * coordinate
+//     */
+//    private void addPreferredNameDialectRefexes(DescriptionCAB preferredBlueprint, LanguageCode dialect) throws 
+//            UnsupportedEncodingException, IOException, InvalidCAB, ContradictionException {
+//        RefexCAB usAnnot;
+//        RefexCAB gbAnnot;
+//        if (dialect == LanguageCode.EN) {
+//            usAnnot = new RefexCAB(RefexType.CID,
+//                    preferredBlueprint.getComponentUuid(),
+//                    usRefexUuid, idDirective, refexDirective);
+//            usAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
+//            if (moduleUuid != null) {
+//                usAnnot.properties.put(ComponentProperty.MODULE_ID, moduleUuid);
+//            }
+//
+//            gbAnnot = new RefexCAB(RefexType.CID,
+//                    preferredBlueprint.getComponentUuid(),
+//                    gbRefexUuid, idDirective, refexDirective);
+//            gbAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
+//            if (moduleUuid != null) {
+//                gbAnnot.properties.put(ComponentProperty.MODULE_ID, moduleUuid);
+//            }
+//            preferredBlueprint.addAnnotationBlueprint(usAnnot);
+//            preferredBlueprint.addAnnotationBlueprint(gbAnnot);
+//        } else if (dialect == LanguageCode.EN_US) {
+//            usAnnot = new RefexCAB(RefexType.CID,
+//                    preferredBlueprint.getComponentUuid(),
+//                    usRefexUuid, idDirective, refexDirective);
+//            usAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
+//            if (moduleUuid != null) {
+//                usAnnot.properties.put(ComponentProperty.MODULE_ID, moduleUuid);
+//            }
+//            preferredBlueprint.addAnnotationBlueprint(usAnnot);
+//        } else if (dialect == LanguageCode.EN_GB) {
+//            gbAnnot = new RefexCAB(RefexType.CID,
+//                    preferredBlueprint.getComponentUuid(),
+//                    gbRefexUuid, idDirective, refexDirective);
+//            gbAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
+//            if (moduleUuid != null) {
+//                gbAnnot.properties.put(ComponentProperty.MODULE_ID, moduleUuid);
+//            }
+//            preferredBlueprint.addAnnotationBlueprint(gbAnnot);
+//        } else {
+//            throw new InvalidCAB("Dialect not supported: " + dialect.getFormatedLanguageCode());
+//        }
+//    }
 
     /**
      * Updates an the text associated with the specified preferred name description blueprint. Removes
