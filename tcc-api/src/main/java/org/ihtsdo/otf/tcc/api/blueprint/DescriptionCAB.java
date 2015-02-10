@@ -23,11 +23,13 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import org.ihtsdo.otf.tcc.api.contradiction.ContradictionException;
+import org.ihtsdo.otf.tcc.api.refex.RefexType;
 import org.ihtsdo.otf.tcc.api.store.Ts;
 import org.ihtsdo.otf.tcc.api.coordinate.ViewCoordinate;
 import org.ihtsdo.otf.tcc.api.description.DescriptionChronicleBI;
 import org.ihtsdo.otf.tcc.api.description.DescriptionVersionBI;
 import org.ihtsdo.otf.tcc.api.lang.LanguageCode;
+import org.ihtsdo.otf.tcc.api.metadata.binding.SnomedMetadataRfx;
 import org.ihtsdo.otf.tcc.api.uuid.UuidT5Generator;
 
 /**
@@ -400,5 +402,42 @@ public class DescriptionCAB extends CreateOrAmendBlueprint {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Adds the appropriate dialect refexes to the preferred name description blueprint.
+     *
+     * @param preferredBlueprint the preferred name description blueprint
+     * @param dialect the dialect of the preferred name, only supports en-gb and en-us
+     * @throws UnsupportedEncodingException indicates an unsupported encoding exception has occurred
+     * @throws IOException signals that an I/O exception has occurred
+     * @throws InvalidCAB if the any of the values in blueprint to make are invalid
+     * @throws ContradictionException if more than one version is found for a given position or view
+     * coordinate
+     */
+    public void makePreferredNameDialectRefexes(LanguageCode dialect) throws 
+            UnsupportedEncodingException, IOException, InvalidCAB, ContradictionException {
+        RefexCAB usAnnot;
+        RefexCAB gbAnnot;
+        if (dialect == LanguageCode.EN) {
+            usAnnot = new RefexCAB(RefexType.CID, this.getComponentUuid(), ConceptCB.usRefexUuid, idDirective, refexDirective);
+            usAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
+
+            gbAnnot = new RefexCAB(RefexType.CID, this.getComponentUuid(), ConceptCB.gbRefexUuid, idDirective, refexDirective);
+            gbAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
+
+            this.addAnnotationBlueprint(usAnnot);
+            this.addAnnotationBlueprint(gbAnnot);
+        } else if (dialect == LanguageCode.EN_US) {
+            usAnnot = new RefexCAB(RefexType.CID, this.getComponentUuid(), ConceptCB.usRefexUuid, idDirective, refexDirective);
+            usAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
+            this.addAnnotationBlueprint(usAnnot);
+        } else if (dialect == LanguageCode.EN_GB) {
+            gbAnnot = new RefexCAB(RefexType.CID, this.getComponentUuid(), ConceptCB.gbRefexUuid, idDirective, refexDirective);
+            gbAnnot.put(ComponentProperty.COMPONENT_EXTENSION_1_ID, SnomedMetadataRfx.getDESC_PREFERRED_NID());
+            this.addAnnotationBlueprint(gbAnnot);
+        } else {
+            throw new InvalidCAB("Dialect not supported: " + dialect.getFormatedLanguageCode());
+        }
     }
 }

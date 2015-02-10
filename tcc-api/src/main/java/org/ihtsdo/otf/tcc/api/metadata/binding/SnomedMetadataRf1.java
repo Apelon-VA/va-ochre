@@ -28,11 +28,11 @@ public class SnomedMetadataRf1 {
     // SCT ID: none.
     // SCT Enum: DescriptionType 3
     public static ConceptSpec FULLY_SPECIFIED_DESCRIPTION_TYPE =
-            new ConceptSpec("fully specified name (description type)",
+            new ConceptSpec("RF1 fully specified name (description type)",
             UUID.fromString("5e1fe940-8faf-11db-b606-0800200c9a66"));
     // SCT ID: none.
     public static ConceptSpec SYNOMYM_DESCRIPTION_TYPE_RF1 =
-            new ConceptSpec("synonym (description type)",
+            new ConceptSpec("RF1 synonym (description type)",
             UUID.fromString("d6fad981-7df6-3388-94d8-238cc0465a79"));
     /*** DescriptionType ***/
     /*** Acceptability ***/
@@ -41,7 +41,7 @@ public class SnomedMetadataRf1 {
     // SCT Enum: DescriptionType 1 -- Preferred
     // SCT ID: none.
     public static ConceptSpec PREFERRED_TERM_DESCRIPTION_TYPE_RF1 =
-            new ConceptSpec("preferred term (description type)",
+            new ConceptSpec("RF1 preferred term (description type)",
             UUID.fromString("d8e3b37d-7c11-33ef-b1d0-8769e2264d44"));
     public static ConceptSpec PREFERRED_ACCEPTABILITY_RF1 =
             new ConceptSpec("preferred acceptability",
